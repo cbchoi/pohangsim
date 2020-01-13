@@ -19,8 +19,11 @@ class GarbageCan(BehaviorModelExecutor):
         
         self.insert_output_port("respond")
         
+        
         self.insert_input_port("check")
         self.insert_input_port("recv")
+        
+        
         
         self.can_size = size
         self.cur_amount = 0
@@ -28,17 +31,18 @@ class GarbageCan(BehaviorModelExecutor):
 
     def ext_trans(self, port, msg):
         if port == "check":
+            #print('[check]#')
             self._cur_state = "PROCESS"
-            
         if port =="recv":
             data = msg.retrieve()
-            print(data[0])
-            
+            self.cur_amount += data[0]
+            print("[fam]!", self.cur_amount)
 
     def output(self):
         if self._cur_state == "PROCESS":
+            #print('[check]$')
             msg = SysMessage(self.get_name(), "respond")
-            msg.insert(self.cur_amount)
+            msg.insert(float(self.cur_amount/self.can_size))
             return msg
             
         return None
