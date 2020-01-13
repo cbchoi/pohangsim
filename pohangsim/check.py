@@ -21,34 +21,49 @@ class Check(BehaviorModelExecutor):
         self.insert_input_port("request")
         self.insert_input_port("checked")
         
-        self.insert_output_port("check")
+        self.insert_output_port("check_garbagecan")
         self.insert_output_port("gov_report")
-        
+
+        self.human_id_map = {}
+        self.human_port_map = {}         
         self.satis_func = satis_func
         self.satisfaction = 100
 
+    def register_human(self, human_id):
+        in_p = "before_satisfaction[{0}]".format(human_id)
+        out_p = "after_satisfaction[{0}]".format(human_id)
+        
+        self.human_id_map[human_id] = out_p
+        self.human_port_map[in_p] = 0
+        
+        self.insert_input_port(in_p)
+        self.insert_output_port(out_p)
+        
+        return (in_p, out_p)
+        
+    def get_human_port_map(self):
+        return self.human_map
+        
     def ext_trans(self,port, msg):
-        if port == "request":
+        if port == self.human_port_map:
             #print('[check]!')
             self._cur_state = "CHECK"
-            
-        if port =="checked":
-            #print("[check]%")
-            value = msg.retrieve()[0]
+            #value = msg.retrieve()[0]
             
             #print(value)
-            self.satisfaction += self.satis_func(value)
+        if port =="respond":
+            #print("[check]%")
+            self.satisfaction += self.satis_func(msg.retrieve()[0])
             if self.satisfaction >= 100:
                 self.satisfaction = 100
-            
-            #print(self.satisfaction)
             if self.satisfaction < 0:
                 self._cur_state = "REPORT"
+        print(self.get_name() + str(self.satisfaction))
 
     def output(self):
         if self._cur_state=="CHECK":
             #print('[check]@')
-            msg = SysMessage(self.get_name(), "check")
+            msg = SysMessage(self.get_name(), "check_garbagecan")
             return msg
             
         if self._cur_state == "REPORT":
