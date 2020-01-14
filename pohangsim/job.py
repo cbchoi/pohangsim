@@ -1,191 +1,224 @@
-x
+import random
 
-        self.stat = stat
+from core_component import Statistic
+from core_component import HumanType
+from core_component import TimeStruct
 
-    def get_unit_time(self):
-        delta = self.stat.get_delta()
-        return self.hour + float(self.minute)/60 + delta
-        
-        
-class HumanType(object):
-    def __init__(self, _type, _wakeup, _sleep, _out, _in, _trash):
-        self.type = _type
-        self.wakeup = _wakeup
-        self.sleep = _sleep
-        self.b_out =_out
-        self.b_in = _in
-        self.trash = _trash
-        
+class AFF(HumanType):
+    def __init__(self, _id):
+        HumanType.__init__(self, _id)
+        pass
         
     def get_type(self):
-        return self.type
+        return "AFF"
 
     def get_wakeup(self):
-        # random
-        return self.wakeup
+         return TimeStruct(5, 22, Statistic(0, 0, 1))
     
     def get_sleep(self):
-        return self.sleep
+        return TimeStruct(22, 14, Statistic(0, 0, 1))
 
     def get_out(self):
-        return self.b_out
+        return TimeStruct(6, 30, Statistic(0, 0, 1)) #
 
     def get_in(self):
-        return self.b_in
+        return TimeStruct(17, 0, Statistic(0, 0, 1))
+    
+    def get_trash(self):
+        return 1
+        
+    def get_satisfaction_func(self, trash):
+        if trash >= 0.5:
+            return -10
+        elif trash < 0.5:
+            return 10
+        elif trash <= 0:
+            return 50
+
+class Housewife(HumanType):
+    def __init__(self,_id):
+        HumanType.__init__(self ,_id)
+        pass
+    
+    def get_type(self):
+        return "Housewife"
+        
+    def get_wakeup(self):
+        return TimeStruct(6, 17, Statistic(0, 0, 1))
+    
+    def get_sleep(self):
+        return TimeStruct(23, 21, Statistic(0, 0, 1))
+        
+    def get_out(self):
+        return TimeStruct(13, 0, Statistic(0, 0, 1))
+        
+    def get_in(self):
+        return TimeStruct(15, 0, Statistic(0, 0, 1))
         
     def get_trash(self):
-        return self.trash
-
-
-
-class AFF(object):
-    @staticmethod
-    def get_type():
-        return "AFF"
+        return 1
+ 
         
-    @staticmethod
-    def get_wakeup_time():
-        return TimeStruct(5, 22, Statistic(0, 0, 1))
+    def get_satisfaction_func(self, trash):
+        if trash >= 0.5:
+            return -10
+        elif trash < 0.5:
+            return 10
+        elif trash <= 0.1:
+            return 50
+
+class Student(HumanType):
+    def __init__(self,_id):
+        HumanType.__init__(self ,_id)
+        pass
     
-    @staticmethod    
-    def get_sleep_time():
-        return TimeStruct(22, 14, Statistic(0, 0, 1))
+    def get_type(self):
+        return "Student"
+
+    def get_wakeup(self):
+        return TimeStruct(7,58, Statistic(0, 0, 1))
         
-    @staticmethod
-    def get_out_time():
-        return TimeStruct(1, 0, Statistic(0, 0, 1))
-        
-    @staticmethod
-    def get_in_time():
-        return TimeStruct(17, 0, Statistic(0, 0, 1))
-        
-    @staticmethod
-    def get_trash():
-        return 0.9
-        
-'''
-class Self_employment(object):
-    @staticmethod
-    def get_wakeup_time():
-        return TimeStruct(6,43)
-        
-    @staticmethod        
-    def get_sleep():
-        return TimeStruct(23,54)
+    def get_sleep(self):
+        return TimeStruct(24,51, Statistic(0, 0, 1))
   
-    @staticmethod        
-    def get_out_time():
-        return TimeStruct(6,43)
-        
-    @staticmethod
-    def get_in_time():
-        return TimeStruct(20,00)
+    def get_out(self):
+        return TimeStruct(8,28, Statistic(0, 0, 1))
 
-    @staticmethod
-    def get_trash():
-        return 0.9
+    def get_in(self):
+        return TimeStruct(21,00, Statistic(0, 0, 1))
 
-class Blue_collar(object):
-    @staticmethod
-    def get_wakeup_time():
-        return TimeStruct(6, 22, Statistic(0, 0, 1))
+    def get_trash(self):
+        return 1          
+
+    def get_satisfaction_func(self, trash):
+        if trash >= 0.5:
+            return -10
+        elif trash < 0.5:
+            return 10
+        elif trash == 0:
+            return 50
+
+class Self_employment(HumanType):
+    def __init__(self,_id):
+        HumanType.__init__(self ,_id)
+        pass
     
-    @staticmethod    
-    def get_sleep_time():
-        return TimeStruct(23, 35, Statistic(0, 0, 1))
-        
-    @staticmethod
-    def get_out_time():
-        return TimeStruct(6, 22, Statistic(0, 0, 1))
-        
-    @staticmethod
-    def get_in_time():
-        return TimeStruct(17, 30, Statistic(0, 0, 1))
-        
-    @staticmethod
-    def get_trash():
-        return 0.9
-    
-class White_collar(object):
-    @staticmethod
-    def get_wakeup_time():
-        return TimeStruct(6, 36, Statistic(0, 0, 1))
-    
-    @staticmethod    
-    def get_sleep_time():
-        return TimeStruct(23, 53, Statistic(0, 0, 1))
-        
-    @staticmethod
-    def get_out_time():
-        return TimeStruct(6, 36, Statistic(0, 0, 1))
-        
-    @staticmethod
-    def get_in_time():
-        return TimeStruct(17, 30, Statistic(0, 0, 1))
-        
-    @staticmethod
-    def get_trash():
-        return 0.9
+    def get_type(self):
+        return "Self_employment"
 
-class White_collar():
-    wakeup='6:36:00'
-    sleep='23:53:00'
-    come_out='6:36:00'
-    come_in='18:50'
-    
-
-
-class Housewife():
-    wakeup='6:17:00'
-    sleep='23:21:00'
-    come_out='13:00:00'
-    come_in='15:00:00'
-    
-
-
-class Student(object):
-    @staticmethod
-    def get_wakeup_time():
-        return TimeStruct(7,58)
+    def get_wakeup(self):
+        return TimeStruct(6,43, Statistic(0, 0, 1))
         
-    @staticmethod        
-    def get_sleep():
-        return TimeStruct(24,51)
+    def get_sleep(self):
+        return TimeStruct(23,54, Statistic(0, 0, 1))
   
-    @staticmethod        
-    def get_out_time():
-        return TimeStruct(7,58)
-        
-    @staticmethod
-    def get_in_time():
-        return TimeStruct(21,00)
+    def get_out(self):
+        return TimeStruct(6,43, Statistic(0, 0, 1))
 
-    @staticmethod
-    def get_trash():
-        return 0.9
+    def get_in(self):
+        return TimeStruct(20,00, Statistic(0, 0, 1))
+
+    def get_trash(self):
+        return 1          
+
+    def get_satisfaction_func(self, trash):
+        if trash >= 0.5:
+            return -10
+        elif trash < 0.5:
+            return 10
+        elif trash == 0:
+            return 50
+
+class Blue_collar(HumanType):
+    def __init__(self,_id):
+        HumanType.__init__(self ,_id)
+        pass
     
-class Inoccupation(object):
-    @staticmethod
-    def get_wakeup_time():
-        return TimeStruct(6,26)
-        
-    @staticmethod        
-    def get_sleep():
-        return TimeStruct(23,16)
-  
-    @staticmethod        
-    def get_out_time():
-        return TimeStruct(6,26)
-        
-    @staticmethod
-    def get_in_time():
-        return TimeStruct(17,00)
+    def get_type(self):
+        return "Blue_collar"
 
-    @staticmethod
-    def get_trash():
+    def get_wakeup(self):
+        return TimeStruct(6,22, Statistic(0, 0, 1))
+        
+    def get_sleep(self):
+        return TimeStruct(23,35, Statistic(0, 0, 1))
+  
+    def get_out(self):
+        return TimeStruct(6,22, Statistic(0, 0, 1))
+
+    def get_in(self):
+        return TimeStruct(17,30, Statistic(0, 0, 1))
+
+    def get_trash(self):
+        return 1          
+
+    def get_satisfaction_func(self, trash):
+        if trash >= 0.5:
+            return -10
+        elif trash < 0.5:
+            return 10
+        elif trash == 0:
+            return 50
         return 0.9
 
+class White_collar(HumanType):
+    def __init__(self,_id):
+        HumanType.__init__(self ,_id)
+        pass
+    
+    def get_type(self):
+        return "White_collar"
 
-def random_job():
-    human=random.choice([AFF(),Self_employment(),White_collar(),Blue_collar(),Housewife(),Student(),Inoccupation()])
-'''
+    def get_wakeup(self):
+        return TimeStruct(6,36, Statistic(0, 0, 1))
+        
+    def get_sleep(self):
+        return TimeStruct(23,53, Statistic(0, 0, 1))
+  
+    def get_out(self):
+        return TimeStruct(6,36, Statistic(0, 0, 1))
+
+    def get_in(self):
+        return TimeStruct(17,30, Statistic(0, 0, 1))
+
+    def get_trash(self):
+        return 1          
+
+    def get_satisfaction_func(self, trash):
+        if trash >= 0.5:
+            return -10
+        elif trash < 0.5:
+            return 10
+        elif trash == 0:
+            return 50
+    
+class Inoccupation(HumanType):
+    def __init__(self,_id):
+        HumanType.__init__(self ,_id)
+        pass
+    
+    def get_type(self):
+        return "Inoccupation"
+
+    def get_wakeup(self):
+        return TimeStruct(6,26, Statistic(0, 0, 1))
+        
+    def get_sleep(self):
+        return TimeStruct(23,16, Statistic(0, 0, 1))
+  
+    def get_out(self):
+        return TimeStruct(6,26, Statistic(0, 0, 1))
+
+    def get_in(self):
+        return TimeStruct(17,00, Statistic(0, 0, 1))
+
+    def get_trash(self):
+        return 1          
+
+    def get_satisfaction_func(self, trash):
+        if trash >= 0.5:
+            return -10
+        elif trash < 0.5:
+            return 10
+        elif trash == 0:
+            return 50
