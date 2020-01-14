@@ -1,23 +1,23 @@
 from abc import *
+import numpy as np
 
 class Statistic(object):
     def __init__(self, seed, mean, stddev):
         self.mean = mean
         self.stddev = stddev
         self.rseed = seed
-        
+
     def get_mean(self):
         return self.mean
         
     def get_stddev(self):
-        return self.get_stddev()
+        return self.stddev
     
     def get_seed(self):
         return self.rseed
         
     def get_delta(self):
-        #val = random.randint(-5, 5)/10
-        val = 0
+        val=np.random.normal(self.mean,self.stddev)
         # calculate delta
         return val
         
