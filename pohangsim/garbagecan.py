@@ -19,8 +19,8 @@ class GarbageCan(BehaviorModelExecutor):
         self.insert_state("PROC_TRUCK", 0)
         
         #checker port
-        self.insert_output_port("res_check") #checker에게 garbage 값 리턴
-        self.insert_input_port("check_garbage") #checker 에게  garbage 비율 요청 메세지를 받는 포트
+        #self.insert_output_port("res_check") #checker에게 garbage 값 리턴
+        #self.insert_input_port("check_garbage") #checker 에게  garbage 비율 요청 메세지를 받는 포트
         
         #trash input from family
         self.insert_input_port("recv_garbage")  #family가 garbage 배출할때 받는 포트
@@ -34,10 +34,32 @@ class GarbageCan(BehaviorModelExecutor):
 
         self.req_empty_amount = 0
 
+        self.human_id_map = {}
+        self.human_port_map = {} 
+
+        self.recv_checker_port = []
+
+    def register_human(self, human_id):
+        #checker port
+        in_p = "before_satisfaction[{0}]".format(human_id)
+        out_p = "after_satisfaction[{0}]".format(human_id)
+        
+        self.human_id_map[human_id] = out_p
+        self.human_port_map[in_p] = out_p
+        
+        self.insert_input_port(in_p)
+        self.insert_output_port(out_p)
+        
+        return (in_p, out_p)
+        
+    def get_human_port_map(self):
+        return self.human_map
+
     def ext_trans(self, port, msg):
-        if port == "check_garbage":     #garbage 비율  Process
+        if port in self.human_port_map:     #garbage 비율  Process
             #print('[check]1')
             self._cur_state = "PROCESS"
+            self.recv_checker_port.append(port)
         if port == "recv_garbage":       #garbage 누적
             data = msg.retrieve()
             self.cur_amount += data[0]
@@ -51,9 +73,14 @@ class GarbageCan(BehaviorModelExecutor):
     def output(self):
         if self._cur_state == "PROCESS":  
             #print('[check]$')
-            msg = SysMessage(self.get_name(), "res_check")
+            #print(self.human_port_map[self.recv_checker_port])
+            port = self.recv_checker_port.pop(0)
+            msg = SysMessage(self.get_name(), self.human_port_map[port])
             msg.insert(float(self.cur_amount/self.can_size))
+            #print("$")
+            print("[gc] " + str(float(self.cur_amount/self.can_size)))
             return msg
+
         if self._cur_state == "PROC_TRUCK":
             #print("!@@")
             if self.req_empty_amount < 0:
@@ -67,6 +94,9 @@ class GarbageCan(BehaviorModelExecutor):
 
     def int_trans(self):
         if self._cur_state == "PROCESS":
-            self._cur_state = "IDLE"
+            if len(self.recv_checker_port) > 0:
+                self._cur_state = "PROCESS"
+            else:
+                self._cur_state = "IDLE"
         elif self._cur_state == "PROC_TRUCK":
             self._cur_state = "IDLE"
