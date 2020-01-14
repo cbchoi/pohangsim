@@ -37,25 +37,24 @@ SystemSimulator().get_engine("sname").register_entity(c)
 g = GarbageCan(0, 40, "gc", 'sname', 10)
 SystemSimulator().get_engine("sname").register_entity(g)
 
-h_id=-27
-mod = sys.modules[__name__]
-
 def get_human_id():
     global h_id
     h_id += 1
     return h_id
 
-
-#hlist1  = [Self_employment(0),Self_employment(1)]
-hlist2  = [Self_employment(1),Self_employment(2),Student(3)]
-#hlist3  = [Student(get_human_id()),Student(get_human_id())]
-#hlist4  = [Student(get_human_id())]
-hlist5  = [Housewife(4),Blue_collar(5),Inoccupation(6),Student(7)]
-#hlist6  = [White_collar(get_human_id()),White_collar(get_human_id()),Inoccupation(get_human_id())]
-#hlist7  = [Blue_collar(get_human_id()),Blue_collar(get_human_id()),Blue_collar(get_human_id())]
-#hlist8  = [Blue_collar(get_human_id()),Blue_collar(get_human_id()),Blue_collar(get_human_id())]
-#hlist9  = [AFF(get_human_id()),Inoccupation(get_human_id()),Housewife(get_human_id())]
-#hlist10 = [White_collar(get_human_id()),White_collar(get_human_id()),Housewife(get_human_id())]
+hlist=[]
+fam=[]
+file = open('human.txt','r')
+lines = file.readlines()
+file.close()
+for i in range(len(lines)):    
+    line=lines[i].split('\n')[0]
+    elements=(line.split(','))
+    for j in elements:
+        fam.append(eval(j))
+    hlist.append(fam)
+    fam=[]
+print(hlist)
 
 ftype1 = FamilyType(20)
 ftype2 = FamilyType(15)
@@ -66,8 +65,8 @@ gv = Government(0, 40,"government","sname")
 SystemSimulator().get_engine("sname").register_entity(gv)
 
 #Family Register
-
-for htype in hlist2:
+print(type(Self_employment(1)))
+for htype in hlist[1]:
     #hid = get_human_id()
     name = htype.get_name()
     cname = "check[{0}]".format(htype.get_name())
@@ -92,7 +91,7 @@ for htype in hlist2:
     
     #SystemSimulator().get_engine("sname").coupling_relation(h1, "trash", g, "recv")
 
-for htype in hlist5:
+for htype in hlist[3]:
     name = htype.get_name()
     cname = "check[{0}]".format(htype.get_name())
     
