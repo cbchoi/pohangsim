@@ -16,7 +16,7 @@ class Check(BehaviorModelExecutor):
         self.init_state("IDLE")
         self.insert_state("IDLE", Infinite)
         self.insert_state("CHECK", 0)
-        self.insert_state("REPORT", 0)
+        self.insert_state("REPORT",0)
         
         self.insert_input_port("request")
         self.insert_input_port("checked") # from garbage can
