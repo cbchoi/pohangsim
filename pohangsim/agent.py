@@ -54,7 +54,7 @@ for i in range(len(lines)):
         fam.append(eval(j))
     hlist.append(fam)
     fam=[]
-print(hlist)
+
 
 ftype1 = FamilyType(20)
 ftype2 = FamilyType(15)
@@ -72,6 +72,7 @@ for htype in hlist[1]:
     cname = "check[{0}]".format(htype.get_name())
     ch = Check(0, 40, name, "sname", htype.get_satisfaction_func, htype.get_id())
     h1 = Human(0, 40, cname, "sname", htype)
+    print( cname)
 
     SystemSimulator().get_engine("sname").register_entity(h1)
     SystemSimulator().get_engine("sname").register_entity(ch)
@@ -129,6 +130,13 @@ SystemSimulator().get_engine("sname").coupling_relation(None, "start", c, "start
 SystemSimulator().get_engine("sname").coupling_relation(None, "end", c, "end")
 
 #SystemSimulator().get_engine("sname").insert_external_event("report", None)
+SystemSimulator().get_engine("sname").coupling_relation(None, "start", gt, "start")
+SystemSimulator().get_engine("sname").coupling_relation(None, "end", gt, "end")
+
+# Connect Truck & Can
+ports = gt.register_garbage_can(0)
+SystemSimulator().get_engine("sname").coupling_relation(g, "res_garbage", gt, ports[0])
+SystemSimulator().get_engine("sname").coupling_relation(gt, ports[1], g, "req_empty")
 
 SystemSimulator().get_engine("sname").insert_external_event("start", None)
 SystemSimulator().get_engine("sname").simulate()
