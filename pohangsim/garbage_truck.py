@@ -12,9 +12,9 @@ class GarbageTruck(BehaviorModelExecutor):
 
         self.init_state("IDLE")
         self.insert_state("IDLE", Infinite)
-        self.insert_state("INITAL_APPROACH", 2)
+        self.insert_state("INITAL_APPROACH", 5)
         self.insert_state("REQUEST", 0)
-        self.insert_state("APPROACH", 10)
+        self.insert_state("APPROACH", 24)
 
         self.insert_input_port("start")
         self.insert_input_port("end")
@@ -34,6 +34,7 @@ class GarbageTruck(BehaviorModelExecutor):
     def register_garbage_can(self, garbage_can_id):
         in_p = "trash_from_can[{0}]".format(garbage_can_id)
         out_p = "empty_can[{0}]".format(garbage_can_id)
+        #print ('[truck_id]',garbage_can_id)
         
         self.garbage_id_map[garbage_can_id] = out_p
         self.garbage_port_map[in_p] = 0
@@ -55,11 +56,11 @@ class GarbageTruck(BehaviorModelExecutor):
         elif port in self.garbage_port_map:
             self.garbage_port_map[port] += msg.retrieve()[0] # 각 건물별 쓰레기 수거량 분석
             self.truck_current_storage += msg.retrieve()[0]
-            #print(self.truck_current_storage)
+            #print("[truck_storage]"+  str(port) + ":" +str(self.garbage_port_map[port]),self.truck_current_storage)
             
     def output(self):
         if self._cur_state == "REQUEST":
-            msg = SysMessage(self.get_name(), self.garbage_id_map[self.cur_index])
+            msg = SysMessage(self.get_name(), self.garbage_id_map[self.schedule[self.cur_index][0]])
             msg.insert(-1)
             return msg
         return None
@@ -68,18 +69,20 @@ class GarbageTruck(BehaviorModelExecutor):
         if self._cur_state == "INITAL_APPROACH":
             self._cur_state = "REQUEST"
         elif self._cur_state == "REQUEST":
-            if self.cur_index < len(self.schedule):
+            if self.cur_index < len(self.schedule)-1:
                 self.cur_index += 1
                 self._cur_state = "REQUEST"
-                next_can_delay = 1
+                next_can_delay = self.schedule[self.cur_index][1]
                 self.update_state(self._cur_state, next_can_delay)
             else:
                 self._cur_state = "APPROACH"
         elif self._cur_state == "APPROACH":
             self.cur_index = 0
             self.accummulated_garbage += self.truck_current_storage
+            #print ('[truck_end]',self.truck_current_storage)
             self.truck_current_storage = 0
             self._cur_state = "REQUEST"
     
-    def __del__(self):
-        print(self.accummulated_garbage)
+#    def __del__(self):
+#       self.accummulated_garbage += self.truck_current_storage
+#        print(self.accummulated_garbage)
