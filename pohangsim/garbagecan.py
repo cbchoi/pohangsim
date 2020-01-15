@@ -37,6 +37,9 @@ class GarbageCan(BehaviorModelExecutor):
         self.human_id_map = {}
         self.human_port_map = {} 
 
+        self.family_id_map = {}
+        self.family_port_map = {} 
+
         self.recv_checker_port = []
 
     def register_human(self, human_id):
@@ -51,19 +54,38 @@ class GarbageCan(BehaviorModelExecutor):
         self.insert_output_port(out_p)
         
         return (in_p, out_p)
-        
+
     def get_human_port_map(self):
         return self.human_map
+
+    def register_family(self, family_id):
+        #checker port
+        #print ("[fam_id]",family_id)
+        in_p = "trash_from_family[{0}]".format(family_id)
+        out_p = "trash[{0}]".format(family_id)
+        
+        self.family_id_map[family_id] = out_p
+        self.family_port_map[in_p] = out_p
+        
+        self.insert_input_port(in_p)
+        self.insert_output_port(out_p)
+        
+        return (in_p, out_p)
+
+    def get_family_port_map(self):
+        return self.family_map        
 
     def ext_trans(self, port, msg):
         if port in self.human_port_map:     #garbage 비율  Process
             #print('[check]1')
             self._cur_state = "PROCESS"
             self.recv_checker_port.append(port)
-        if port == "recv_garbage":       #garbage 누적
+
+        if port in self.family_port_map:       #garbage 누적
+            #print("fam_port",port)
             data = msg.retrieve()
             self.cur_amount += data[0]
-            #print("[fam]1", self.cur_amount)
+            #print("[gabagecan]1", self.get_name(),self.cur_amount, data)
             
         if port == "req_empty":  #garbage 양 반환 process
             #print("[truck]1")
@@ -78,7 +100,7 @@ class GarbageCan(BehaviorModelExecutor):
             msg = SysMessage(self.get_name(), self.human_port_map[port])
             msg.insert(float(self.cur_amount/self.can_size))
             #print("$")
-            print("[gc] " + str(float(self.cur_amount/self.can_size)))
+            #print("[gc] " + str(float(self.cur_amount/self.can_size)))
             return msg
 
         if self._cur_state == "PROC_TRUCK":
