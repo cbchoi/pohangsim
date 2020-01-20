@@ -14,7 +14,7 @@ import math
 class Clock(BehaviorModelExecutor):
     def __init__(self, instance_time, destruct_time, name, engine_name):
         BehaviorModelExecutor.__init__(self, instance_time, destruct_time, name, engine_name)
-        self.init_state("WAKE")
+        self.init_state("IDLE")
         self.insert_state("IDLE", Infinite)
         self.insert_state("WAKE", 1.1)
   

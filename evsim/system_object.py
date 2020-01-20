@@ -23,3 +23,6 @@ class SysObject(object):
     def __lt__(self, other):
         return self.__object_id < other.__object_id
 
+    # added by cbchoi 2020-01-21
+    def get_obj_id(self):
+        return self.__object_id
