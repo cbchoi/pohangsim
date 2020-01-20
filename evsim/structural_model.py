@@ -1,8 +1,9 @@
-# from system_entity.attribute import *
+from evsim.definition import CoreModel
 from collections import OrderedDict
 
-class StructuralModel(object):
+class StructuralModel(CoreModel):
     def __init__(self, _name=""):
+        super(StructuralModel, self).__init__(_name)
         self._name = _name
         self._models = []
         # Input Ports Declaration
