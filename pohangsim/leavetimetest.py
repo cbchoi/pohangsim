@@ -6,7 +6,7 @@ from evsim.system_message import SysMessage
 from evsim.definition import *
 
 from config import *
-from instance.config import *
+#from instance.config import *
 
 from clock import Clock
 from core_component import HumanType

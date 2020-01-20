@@ -7,7 +7,7 @@ import os
 import datetime
 
 from config import *
-from instance.config import *
+#from instance.config import *
 
 class Government(BehaviorModelExecutor):
     def __init__(self, instance_time, destruct_time, name, engine_name):

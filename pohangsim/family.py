@@ -7,7 +7,7 @@ import os
 import datetime
 
 from config import *
-from instance.config import *
+#from instance.config import *
 
 import math
 
