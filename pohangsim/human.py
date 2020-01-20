@@ -34,6 +34,11 @@ class Human(BehaviorModelExecutor):
                         
     def output(self):
         if self._cur_state == "WAIT":
+<<<<<<< HEAD
+=======
+            #print("[human] " + self.get_name())
+
+>>>>>>> 2ec7064cd5ae8cfb03698678195fe5a41ca727bd
             msg = SysMessage(self.get_name(), "trash")
             msg.insert(self.human.get_trash())
             msg.insert(self.human.get_id())
