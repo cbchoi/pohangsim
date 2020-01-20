@@ -44,8 +44,8 @@ class GarbageCan(BehaviorModelExecutor):
 
     def register_human(self, human_id):
         #checker port
-        in_p = "before_satisfaction[{0}]".format(human_id)
-        out_p = "after_satisfaction[{0}]".format(human_id)
+        in_p = "check_trash[{0}]".format(human_id)
+        out_p = "check_trash[{0}]".format(human_id)
         
         self.human_id_map[human_id] = out_p
         self.human_port_map[in_p] = out_p
