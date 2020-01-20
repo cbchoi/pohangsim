@@ -82,7 +82,13 @@ class GarbageTruck(BehaviorModelExecutor):
             #print ('[truck_end]',self.truck_current_storage)
             self.truck_current_storage = 0
             self._cur_state = "REQUEST"
+<<<<<<< HEAD
+
+    def __del__(self):
+        print(self.accummulated_garbage)
+=======
     
 #    def __del__(self):
 #       self.accummulated_garbage += self.truck_current_storage
 #        print(self.accummulated_garbage)
+>>>>>>> 2ec7064cd5ae8cfb03698678195fe5a41ca727bd
