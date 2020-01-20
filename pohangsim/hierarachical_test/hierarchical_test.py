@@ -46,7 +46,7 @@ class HT02(StructuralModel):
 
 se = SystemSimulator()
 
-SystemSimulator().register_engine("sname", SIMULATION_MODE)
+SystemSimulator().register_engine("sname", SIMULATION_MODE, TIME_DENSITY)
 SystemSimulator().get_engine("sname").insert_input_port("start")
 SystemSimulator().get_engine("sname").insert_input_port("end")
 SystemSimulator().get_engine("sname").insert_output_port("out")
@@ -57,3 +57,4 @@ SystemSimulator().get_engine("sname").coupling_relation(None, "start", c, "start
 SystemSimulator().get_engine("sname").coupling_relation(c, "out", None, "out")
 #SystemSimulator().get_engine("sname").insert_external_event("start", None)
 SystemSimulator().get_engine("sname").simulate()
+print(SystemSimulator().get_engine("sname").get_generated_event())

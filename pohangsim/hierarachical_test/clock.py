@@ -16,7 +16,7 @@ class Clock(BehaviorModelExecutor):
         BehaviorModelExecutor.__init__(self, instance_time, destruct_time, name, engine_name)
         self.init_state("WAKE")
         self.insert_state("IDLE", Infinite)
-        self.insert_state("WAKE", 1)
+        self.insert_state("WAKE", 1.1)
   
         self.insert_input_port("start")
         self.insert_input_port("end")
