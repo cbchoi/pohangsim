@@ -14,7 +14,6 @@ from evsim.default_message_catcher import *
 from evsim.behavior_model import *
 from evsim.system_object import *
 
-
 class SysExecutor(SysObject, BehaviorModel):
 
     EXTERNAL_SRC = "SRC"
@@ -110,6 +109,13 @@ class SysExecutor(SysObject, BehaviorModel):
             self.port_map[(src_obj, out_port)] = [(dst_obj, in_port)]
             # self.port_map_wName.append((src_obj.get_name(), out_port, dst_obj.get_name(), in_port))
 
+    def _coupling_relation(self, src, dst):
+        if src in self.port_map:
+            self.port_map[src].append(dst)
+        else:
+            self.port_map[src] = [dst]
+            # self.port_map_wName.append((src_obj.get_name(), out_port, dst_obj.get_name(), in_port))
+
     '''
     def update_coupling_relation(self):
         self.port_map.clear()
@@ -142,6 +148,7 @@ class SysExecutor(SysObject, BehaviorModel):
                 destination = port_pair
                 if destination is None:
                     print("Destination Not Found")
+                    print(self.port_map)               
                     raise AssertionError
 
                 if destination[0] is None:
@@ -159,14 +166,45 @@ class SysExecutor(SysObject, BehaviorModel):
                     # self.min_schedule_item.append((destination[0].time_advance() + self.global_time, destination[0]))
 
     def flattening(self, _model):
-        # register model to engine
-        for m in _model.retrieve_models():
-            self.register_entity(m)
         # handle external output coupling
-
+        for k, v in _model.retrieve_external_output_coupling().items():
+            for coupling in self.port_map[v]:
+                self._coupling_relation(k, coupling)
+            del self.port_map[v]
+        '''
         # handle external input coupling
+        for k, v in _model.retrieve_external_input_coupling():
+            port_key_lst = []
+            for sk, sv in self.port_map:
+                for port_pair in sv:
+                    if port_pair == (_model, k[1]):
+                        port_key_lst.append((sk, sv))
+
+            for key in port_key_lst:
+                self.port_map[key[0]].remove(key[1])
+                self.port_map[key[0]].append(())
+
+                self.coupling_relation(k, coupling)
+            del self.port_map[(self, out_port)]
+        '''        
         # handle internal coupling
-        pass
+        for k, v, in _model.retrieve_internal_coupling():
+            self.coupling_relation(k, v)
+        
+        # manage model hierarchical 
+        for m in _model.retrieve_models():
+            if m.get_type() == ModelType.STRUCTURAL:
+                self.flattening(m)
+            else:
+                self.register_entity(m)
+
+        del_lst = []
+        for k, model_lst in self.waiting_obj_map.items():
+            if _model in model_lst:
+                del_lst.append(k)
+
+        for target in del_lst:
+            self.waiting_obj_map[target].remove(_model)
 
     def init_sim(self):
         self.simulation_mode = SimulationMode.SIMULATION_RUNNING
@@ -175,7 +213,7 @@ class SysExecutor(SysObject, BehaviorModel):
         for model_lst in self.waiting_obj_map.values():
             for model in model_lst:
                 if model.get_type() == ModelType.STRUCTURAL:
-                    self.flattening(_model)
+                    self.flattening(model)
 
         # setup inital time        
         if self.active_obj_map is None:

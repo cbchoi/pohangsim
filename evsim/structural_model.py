@@ -1,37 +1,15 @@
-from evsim.definition import CoreModel
+from evsim.definition import CoreModel, ModelType
 from collections import OrderedDict
 
 class StructuralModel(CoreModel):
     def __init__(self, _name=""):
-        super(StructuralModel, self).__init__(_name)
-        self._name = _name
+        super(StructuralModel, self).__init__(_name, ModelType.STRUCTURAL)
+
         self._models = []
-        # Input Ports Declaration
-        self._input_ports = []
-        # Output Ports Declaration
-        self._output_ports = []
 
         self.external_input_coupling_map = {}
         self.external_output_coupling_map = {}
         self.internal_coupling_map = {}
-
-    def set_name(self, _name):
-        self._name = _name
-
-    def get_name(self):
-        return self._name
-
-    def insert_input_port(self, port):
-        self._input_ports.append(port)
-
-    def retrieve_input_ports(self):
-        return self._input_ports
-
-    def insert_output_port(self, port):
-        self._output_ports.append(port)
-
-    def retrieve_output_ports(self):
-        return self._output_ports
 
     def insert_model(self, model):
         self._models.append(model)
@@ -40,11 +18,14 @@ class StructuralModel(CoreModel):
         return self._models
 
     def insert_external_input_coupling(self, src_port, internal_model, dst_port):
-        self.external_input_coupling_map[(None, src_port)] = (internal_model, dst_port)
-        pass
+        if (None, src_port) in self.external_input_coupling_map:
+            self.external_input_coupling_map[(self, src_port)] = [(internal_model, dst_port)]
+        else:
+            self.external_input_coupling_map[(self, src_port)].append((internal_model, dst_port))
 
     def insert_external_output_coupling(self, internal_model, src_port, dst_port):
-        self.external_output_coupling_map[(internal_model, src_port)] = (None, dst_port)
+        self.external_output_coupling_map[(internal_model, src_port)] = (self, dst_port)
+        
         pass
 
     def insert_internal_coupling(self, src_model, src_port, dst_model, dst_port):
@@ -60,6 +41,8 @@ class StructuralModel(CoreModel):
     def retrieve_internal_coupling(self):
         return self.internal_coupling_map
 
+    def get_create_time(self):
+        return 0
 '''
 TODO: serialize using dill
     def serialize(self):
