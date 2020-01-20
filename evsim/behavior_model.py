@@ -1,10 +1,9 @@
-# from system_entity.attribute import *
 from collections import OrderedDict
-from evsim.definition import CoreModel
+from evsim.definition import CoreModel, ModelType
 
 class BehaviorModel(CoreModel):
     def __init__(self, _name=""):
-        super(BehaviorModel, self).__init__(_name)
+        super(BehaviorModel, self).__init__(_name, ModelType.BEHAVIORAL)
         self._states = {}
 
         self.external_transition_map_tuple = {}

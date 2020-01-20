@@ -33,7 +33,9 @@ class SysExecutor(SysObject, BehaviorModel):
         self.active_obj_map = {}
         # dictionary for object to ports
         self.port_map = {}
-        #self.port_map_wName = []
+        
+        # added by cbchoi 2020.01.20
+        self.hierarchical_structure = {}
 
         self.min_schedule_item = deque()
 
@@ -132,6 +134,7 @@ class SysExecutor(SysObject, BehaviorModel):
     def output_handling(self, obj, msg):
         if msg is not None:
             pair = (obj, msg.get_dst())
+
             if pair not in self.port_map:
                 self.port_map[pair] = [(self.active_obj_map["dc"], "uncaught")]
 
@@ -155,16 +158,34 @@ class SysExecutor(SysObject, BehaviorModel):
                     # self.min_schedule_item.pop()
                     # self.min_schedule_item.append((destination[0].time_advance() + self.global_time, destination[0]))
 
+    def flattening(self, _model):
+        # register model to engine
+        for m in _model.retrieve_models():
+            self.register_entity(m)
+        # handle external output coupling
+
+        # handle external input coupling
+        # handle internal coupling
+        pass
+
     def init_sim(self):
         self.simulation_mode = SimulationMode.SIMULATION_RUNNING
 
+        # Flattening
+        for model_lst in self.waiting_obj_map.values():
+            for model in model_lst:
+                if model.get_type() == ModelType.STRUCTURAL:
+                    self.flattening(_model)
+
+        # setup inital time        
         if self.active_obj_map is None:
             self.global_time = min(self.waiting_obj_map)
 
+        # search min_scedule_item after first init_sim call
         if not self.min_schedule_item:
             for obj in self.active_obj_map.items():
                 if obj[1].time_advance() < 0: # exception handling for parent instance
-                    print("You should override the time_advanced function")
+                    print("You should give positive real number for the deadline")
                     raise AssertionError
 
                 obj[1].set_req_time(self.global_time)
@@ -177,7 +198,7 @@ class SysExecutor(SysObject, BehaviorModel):
 
         tuple_obj = self.min_schedule_item.popleft()
 
-        before = time.perf_counter()
+        before = time.perf_counter() # TODO: consider decorator
         while tuple_obj.get_req_time() <= self.global_time:
             msg = tuple_obj.output()
             if msg is not None:
@@ -243,12 +264,14 @@ class SysExecutor(SysObject, BehaviorModel):
     def insert_external_event(self, _port, _msg, scheduled_time=0):
         sm = SysMessage("SRC", _port)
         sm.insert(_msg)
+
         if _port in self._input_ports:
             heapq.heappush(self.input_event_queue, (scheduled_time + self.global_time, sm))
             if self.simulation_mode != SimulationMode.SIMULATION_IDLE:
                 self.handle_external_input_event()
         else:
             # TODO Exception Handling
+            print("[ERROR][INSERT_EXTERNAL_EVNT] Port Not Found")
             pass
 
     def get_generated_event(self):
@@ -257,7 +280,6 @@ class SysExecutor(SysObject, BehaviorModel):
     def handle_external_input_event(self):
         event_list = [ev for ev in self.input_event_queue if ev[0] <= self.global_time]
         for event in event_list:
-
             self.output_handling(None, event[1])
             heapq.heappop(self.input_event_queue)
 
