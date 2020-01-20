@@ -29,10 +29,17 @@ se = SystemSimulator()
 
 SystemSimulator().register_engine("sname", SIMULATION_MODE)
 
+<<<<<<< HEAD
 c = Clock(0, 26, "clock", "sname")
 SystemSimulator().get_engine("sname").register_entity(c)
 
 g = GarbageCan(0, 26, "gc", 'sname', 10)
+=======
+c = Clock(0, 50, "clock", "sname")
+SystemSimulator().get_engine("sname").register_entity(c)
+
+g = GarbageCan(0, 50, "gc", 'sname', 10)
+>>>>>>> 2ec7064cd5ae8cfb03698678195fe5a41ca727bd
 SystemSimulator().get_engine("sname").register_entity(g)
 
 h_id = 0
@@ -55,9 +62,15 @@ hlist10=[White_collar(get_human_id()),White_collar(get_human_id()),Housewife(get
 
 
 test1=[hlist1,hlist2,hlist3,hlist4,hlist5,hlist6,hlist7,hlist8,hlist9,hlist10]
+<<<<<<< HEAD
 gv = Government(0,26,"government","sname")
 
 gv = Government(0,26,"government","sname")
+=======
+gv = Government(0,50,"government","sname")
+
+gv = Government(0,50,"government","sname")
+>>>>>>> 2ec7064cd5ae8cfb03698678195fe5a41ca727bd
 SystemSimulator().get_engine("sname").register_entity(gv)
 
 i=0
@@ -65,14 +78,23 @@ for family in test1:
     print ("###")
     i+=1
     globals()['ftype{}'.format(i)]= FamilyType(5*len(family))
+<<<<<<< HEAD
     globals()['f{}'.format(i)] = Family(0, 26,"family",'sname', globals()['ftype{}'.format(i)])
+=======
+    globals()['f{}'.format(i)] = Family(0, 50,"family",'sname', globals()['ftype{}'.format(i)])
+>>>>>>> 2ec7064cd5ae8cfb03698678195fe5a41ca727bd
     for htype in family:
         hid = htype.get_id()
         name = "aff[{0}]".format(hid)
         cname = "check[{0}]".format(hid)
 
+<<<<<<< HEAD
         ch = Check(0, 26, cname, "sname", htype.get_satisfaction_func)
         h1 = Human(0, 26, name, "sname", htype)
+=======
+        ch = Check(0, 50, cname, "sname", htype.get_satisfaction_func)
+        h1 = Human(0, 50, name, "sname", htype)
+>>>>>>> 2ec7064cd5ae8cfb03698678195fe5a41ca727bd
         SystemSimulator().get_engine("sname").register_entity(h1)
         SystemSimulator().get_engine("sname").register_entity(ch)
     
@@ -81,7 +103,11 @@ for family in test1:
     
         ports = ch.register_human(hid)
         SystemSimulator().get_engine("sname").coupling_relation(h1, "trash", ch, ports[0])
+<<<<<<< HEAD
         SystemSimulator().get_engine("sname").coupling_relation(ch, ports[1], g,"check_garbage")
+=======
+        SystemSimulator().get_engine("sname").coupling_relation(ch, "check", g,"check_garbage")
+>>>>>>> 2ec7064cd5ae8cfb03698678195fe5a41ca727bd
 
         SystemSimulator().get_engine("sname").coupling_relation(g, "res_check", ch, "checked")
         SystemSimulator().get_engine("sname").coupling_relation(ch, "gov_report", gv, "recv_report")
