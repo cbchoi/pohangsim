@@ -12,42 +12,6 @@ from instance.config import *
 import math
 
 from core_component import FamilyType
-'''
-class Family(BehaviorModelExecutor):
-    def __init__(self, instance_time, destruct_time, name, engine_name, garbage_capacity):
-        BehaviorModelExecutor.__init__(self, instance_time, destruct_time, name, engine_name)
-        self.garbage_capacity=garbage_capacity
-        self.init_state("IDLE")
-        self.insert_state("IDLE", Infinite)
-        self.insert_state("WAIT", 1)
-
-        self.insert_input_port("start")
-        self.insert_input_port("receive")
-
-        self.insert_output_port("retrash")
-
-    def ext_trans(self,port, msg):
-        if port=="receive":
-            self.data=msg.retrieve()
-            self.garbage_capacity=self.garbage_capacity+self.data[0]
-            print(self.garbage_capacity)
-            if self.garbage_capacity>=30:
-                self._cur_state = "WAIT"
-            else:
-                return None
-
-    def output(self):
-        if self._cur_state == "WAIT":
-            if self.garbage_capacity>=30:
-                self.garbage_capacity=self.garbage_capacity-30
-            msg = SysMessage(self.get_name(), "throwaway")
-            msg.insert(30)
-            return msg
-
-    def int_trans(self):
-        if self._cur_state == "WAIT":
-            self._cur_state="IDLE"
-'''
 
 class Family(BehaviorModelExecutor):
     def __init__(self, instance_time, destruct_time, name, engine_name, family_type):
@@ -68,7 +32,8 @@ class Family(BehaviorModelExecutor):
             data = msg.retrieve()
             
             self.family_type.stack_garbage(data[0])
-           # print("!family",self.family_type.get_stack_amount())
+            #print("$")
+            #print("!family",self.family_type.get_stack_amount())
             
             if self.family_type.should_empty():
                 if self.family_type.is_flush(data[1]):

@@ -19,7 +19,7 @@ class AFF(HumanType):
         return TimeStruct(22, 14, Statistic(0, 0, 1))
 
     def get_out(self):
-        return TimeStruct(6, 30, Statistic(0, 0, 1)) #
+        return TimeStruct(6, 30, Statistic(0, 1, 0.2)) #
 
     def get_in(self):
         return TimeStruct(17, 0, Statistic(0, 0, 1))
@@ -28,9 +28,9 @@ class AFF(HumanType):
         return 1
         
     def get_satisfaction_func(self, trash):
-        if trash >= 0.5:
+        if trash >= 0.7:
             return -10
-        elif trash < 0.5:
+        elif trash < 0.7:
             return 10
         elif trash <= 0:
             return 50
@@ -50,7 +50,7 @@ class Housewife(HumanType):
         return TimeStruct(23, 21, Statistic(0, 0, 1))
         
     def get_out(self):
-        return TimeStruct(13, 0, Statistic(0, 0, 1))
+        return TimeStruct(13, 0, Statistic(0, 1, 0.2))
         
     def get_in(self):
         return TimeStruct(15, 0, Statistic(0, 0, 1))
@@ -82,21 +82,21 @@ class Student(HumanType):
         return TimeStruct(24,51, Statistic(0, 0, 1))
   
     def get_out(self):
-        return TimeStruct(8,28, Statistic(0, 0, 1))
+        return TimeStruct(7,58, Statistic(0, 1, 0.2))
 
     def get_in(self):
         return TimeStruct(21,00, Statistic(0, 0, 1))
 
     def get_trash(self):
-        return 1          
+        return 0.3        
 
     def get_satisfaction_func(self, trash):
-        if trash >= 0.5:
+        if trash >= 0.8 :
             return -10
-        elif trash < 0.5:
+        elif trash <= 0:
+            return 20
+        elif trash < 0.8:
             return 10
-        elif trash == 0:
-            return 50
 
 class Self_employment(HumanType):
     def __init__(self,_id):
@@ -113,7 +113,7 @@ class Self_employment(HumanType):
         return TimeStruct(23,54, Statistic(0, 0, 1))
   
     def get_out(self):
-        return TimeStruct(6,43, Statistic(0, 0, 1))
+        return TimeStruct(6,43, Statistic(0, 1, 0.2))
 
     def get_in(self):
         return TimeStruct(20,00, Statistic(0, 0, 1))
@@ -127,7 +127,7 @@ class Self_employment(HumanType):
         elif trash < 0.5:
             return 10
         elif trash == 0:
-            return 50
+            return 30
 
 class Blue_collar(HumanType):
     def __init__(self,_id):
@@ -144,22 +144,21 @@ class Blue_collar(HumanType):
         return TimeStruct(23,35, Statistic(0, 0, 1))
   
     def get_out(self):
-        return TimeStruct(6,22, Statistic(0, 0, 1))
+        return TimeStruct(6,22, Statistic(0, 1, 0.2))
 
     def get_in(self):
         return TimeStruct(17,30, Statistic(0, 0, 1))
 
     def get_trash(self):
-        return 1          
+        return 0.3          
 
     def get_satisfaction_func(self, trash):
-        if trash >= 0.5:
+        if trash >= 0.8:
             return -10
-        elif trash < 0.5:
+        elif trash <= 0:
+            return 20
+        elif trash < 0.8:
             return 10
-        elif trash == 0:
-            return 50
-        return 0.9
 
 class White_collar(HumanType):
     def __init__(self,_id):
@@ -176,7 +175,7 @@ class White_collar(HumanType):
         return TimeStruct(23,53, Statistic(0, 0, 1))
   
     def get_out(self):
-        return TimeStruct(6,36, Statistic(0, 0, 1))
+        return TimeStruct(6,36, Statistic(0, 1, 0.2))
 
     def get_in(self):
         return TimeStruct(17,30, Statistic(0, 0, 1))
@@ -207,7 +206,7 @@ class Inoccupation(HumanType):
         return TimeStruct(23,16, Statistic(0, 0, 1))
   
     def get_out(self):
-        return TimeStruct(6,26, Statistic(0, 0, 1))
+        return TimeStruct(6,26, Statistic(0, 1, 0.3))
 
     def get_in(self):
         return TimeStruct(17,00, Statistic(0, 0, 1))
