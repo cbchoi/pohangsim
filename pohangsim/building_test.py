@@ -28,7 +28,7 @@ from garbagecan import GarbageCan
 from garbage_truck import GarbageTruck
 from family import Family
 
-simulation_time=8760
+simulation_time=30
 
 se = SystemSimulator()
 
