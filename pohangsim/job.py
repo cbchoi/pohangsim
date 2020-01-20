@@ -56,16 +56,16 @@ class Housewife(HumanType):
         return TimeStruct(15, 0, Statistic(0, 0, 1))
         
     def get_trash(self):
-        return 1
+        return 0.6
  
         
     def get_satisfaction_func(self, trash):
-        if trash >= 0.5:
+        if trash >= 0.8 :
             return -10
-        elif trash < 0.5:
+        elif trash <= 0:
+            return 20
+        elif trash < 0.8:
             return 10
-        elif trash <= 0.1:
-            return 50
 
 class Student(HumanType):
     def __init__(self,_id):

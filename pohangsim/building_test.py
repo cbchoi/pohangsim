@@ -57,7 +57,7 @@ def get_garbagecan_id():
 blist=[]
 hlist=[]
 fam=[]
-file = open('only_blue_collar.txt','r')
+file = open('half.txt','r')
 lines = file.readlines()
 file.close()
 for i in range(len(lines)):  

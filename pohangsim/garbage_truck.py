@@ -12,7 +12,7 @@ class GarbageTruck(BehaviorModelExecutor):
 
         self.init_state("IDLE")
         self.insert_state("IDLE", Infinite)
-        self.insert_state("INITAL_APPROACH", 5)
+        self.insert_state("INITAL_APPROACH", 6)
         self.insert_state("REQUEST", 0)
         self.insert_state("APPROACH", 24)
 

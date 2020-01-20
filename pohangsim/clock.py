@@ -31,7 +31,7 @@ class Clock(BehaviorModelExecutor):
                         
     def output(self):
         if self._cur_state == "WAKE":
-            print(self.convert_unit_time())
+            #print(self.convert_unit_time())
             self.sim_time += 1
 
     def int_trans(self):
