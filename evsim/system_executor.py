@@ -61,7 +61,7 @@ class SysExecutor(SysObject, BehaviorModel):
         return self.global_time
 
     def register_entity(self, sim_obj):
-        print((sim_obj,))
+        #print((sim_obj,))
         if not sim_obj.get_create_time() in self.waiting_obj_map:
             self.waiting_obj_map[sim_obj.get_create_time()] = list()
 
@@ -194,7 +194,7 @@ class SysExecutor(SysObject, BehaviorModel):
             if m.get_type() == ModelType.STRUCTURAL:
                 self.flattening(m)
             else:
-                print((m,))
+                #print((m,))
                 self.register_entity(m)
 
         del_lst = []
