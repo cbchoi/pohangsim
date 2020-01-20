@@ -40,9 +40,9 @@ class SysExecutor(SysObject, BehaviorModel):
 
         self.sim_init_time = datetime.datetime.now()
 
-#        self.eval_time = 0
-
-        self.register_entity(DefaultMessageCatcher(0, Infinite, "dc", "default"))
+#       self.eval_time = 0
+        self.dmc = DefaultMessageCatcher(0, Infinite, "dc", "default")
+        self.register_entity(self.dmc)
 
         self.simulation_mode = SimulationMode.SIMULATION_IDLE
 
@@ -61,6 +61,7 @@ class SysExecutor(SysObject, BehaviorModel):
         return self.global_time
 
     def register_entity(self, sim_obj):
+        print((sim_obj,))
         if not sim_obj.get_create_time() in self.waiting_obj_map:
             self.waiting_obj_map[sim_obj.get_create_time()] = list()
 
@@ -73,7 +74,7 @@ class SysExecutor(SysObject, BehaviorModel):
                 lst = self.waiting_obj_map[key]
                 for obj in lst:
                     # print("global:",self.global_time," create agent:", obj.get_obj_name())
-                    self.active_obj_map[obj.get_name()] = obj
+                    self.active_obj_map[obj.get_obj_id()] = obj
                     # self.min_schedule_item.append((obj.time_advance() + self.global_time, obj))
                     obj.set_req_time(self.global_time)
                     self.min_schedule_item.append(obj)
@@ -91,7 +92,7 @@ class SysExecutor(SysObject, BehaviorModel):
 
             for agent in delete_lst:
                 print("global:",self.global_time," del agent:", agent.get_name())
-                del(self.active_obj_map[agent.get_name()])
+                del(self.active_obj_map[agent.get_obj_id()])
                 
                 port_del_lst = []
                 for key, value in self.port_map.items():
@@ -142,7 +143,7 @@ class SysExecutor(SysObject, BehaviorModel):
             pair = (obj, msg.get_dst())
 
             if pair not in self.port_map:
-                self.port_map[pair] = [(self.active_obj_map["dc"], "uncaught")]
+                self.port_map[pair] = [(self.active_obj_map[self.dmc.get_obj_id], "uncaught")]
 
             for port_pair in self.port_map[pair]:
                 destination = port_pair
@@ -171,31 +172,29 @@ class SysExecutor(SysObject, BehaviorModel):
             for coupling in self.port_map[v]:
                 self._coupling_relation(k, coupling)
             del self.port_map[v]
-        '''
+        
         # handle external input coupling
-        for k, v in _model.retrieve_external_input_coupling():
+        for k, v in _model.retrieve_external_input_coupling().items():
             port_key_lst = []
-            for sk, sv in self.port_map:
-                for port_pair in sv:
-                    if port_pair == (_model, k[1]):
-                        port_key_lst.append((sk, sv))
+            for sk, sv in self.port_map.items():
+                if k in sv:
+                    port_key_lst.append(sk)
 
             for key in port_key_lst:
-                self.port_map[key[0]].remove(key[1])
-                self.port_map[key[0]].append(())
-
-                self.coupling_relation(k, coupling)
-            del self.port_map[(self, out_port)]
-        '''        
+                self.port_map[key].remove(k)
+                self.port_map[key].extend(v)
+        
         # handle internal coupling
-        for k, v, in _model.retrieve_internal_coupling():
-            self.coupling_relation(k, v)
+        for k, v, in _model.retrieve_internal_coupling().items():
+            for dst in v:
+                self._coupling_relation(k, dst)
         
         # manage model hierarchical 
         for m in _model.retrieve_models():
             if m.get_type() == ModelType.STRUCTURAL:
                 self.flattening(m)
             else:
+                print((m,))
                 self.register_entity(m)
 
         del_lst = []
@@ -295,8 +294,8 @@ class SysExecutor(SysObject, BehaviorModel):
         self.sim_init_time = datetime.datetime.now()
 
 #        self.eval_time = 0
-
-        self.register_entity(DefaultMessageCatcher(0, Infinite, "dc", "default"))
+        self.dmc = DefaultMessageCatcher(0, Infinite, "dc", "default")
+        self.register_entity(dmc)
 
     # External Event Handling - by cbchoi
     def insert_external_event(self, _port, _msg, scheduled_time=0):
