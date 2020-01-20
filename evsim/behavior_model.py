@@ -1,39 +1,15 @@
-# from system_entity.attribute import *
 from collections import OrderedDict
+from evsim.definition import CoreModel, ModelType
 
-
-class BehaviorModel(object):
+class BehaviorModel(CoreModel):
     def __init__(self, _name=""):
-        # super(ModelBehaviorAttribute, self).__init__("BEHAVIOR")
-        self._name = _name
+        super(BehaviorModel, self).__init__(_name, ModelType.BEHAVIORAL)
         self._states = {}
-        # Input Ports Declaration
-        self._input_ports = []
-        # Output Ports Declaration
-        self._output_ports = []
 
         self.external_transition_map_tuple = {}
         self.external_transition_map_state = {}
         self.internal_transition_map_tuple = {}
         self.internal_transition_map_state = {}
-
-    def set_name(self, _name):
-        self._name = _name
-
-    def get_name(self):
-        return self._name
-
-    def insert_input_port(self, port):
-        self._input_ports.append(port)
-
-    def retrieve_input_ports(self):
-        return self._input_ports
-
-    def insert_output_port(self, port):
-        self._output_ports.append(port)
-
-    def retrieve_output_ports(self):
-        return self._output_ports
 
     def insert_state(self, name, deadline="inf"):
         # TODO: Exception Handling
