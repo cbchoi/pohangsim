@@ -10,15 +10,50 @@ from config import *
 
 from clock import Clock
 
+from evsim.structural_model import StructuralModel
+
+class HT01(StructuralModel):
+    def __init__(self, instance_time, destroy_time, name, engine_name):
+        super(HT01, self).__init__(name)
+        
+        self.set_name(name)
+        self.insert_input_port("start")
+        self.insert_input_port("end")
+
+        self.insert_output_port("out")
+
+        c = Clock(instance_time, destroy_time, "clock", engine_name)
+        self.insert_model(c)
+
+        self.insert_external_output_coupling(c, "out", "out")
+        pass
+
+class HT02(StructuralModel):
+    def __init__(self, instance_time, destroy_time, name, engine_name):
+        super(HT02, self).__init__(name)
+
+        self.set_name(name)
+        self.insert_input_port("start")
+        self.insert_input_port("end")
+
+        self.insert_output_port("out")
+
+        c = HT01(instance_time, destroy_time, "HT01", engine_name)
+        self.insert_model(c)
+
+        self.insert_external_output_coupling(c, "out", "out")
+        pass
+
 se = SystemSimulator()
 
 SystemSimulator().register_engine("sname", SIMULATION_MODE)
 SystemSimulator().get_engine("sname").insert_input_port("start")
 SystemSimulator().get_engine("sname").insert_input_port("end")
-
-c = Clock(0, 26, "clock", "sname")
+SystemSimulator().get_engine("sname").insert_output_port("out")
+c = HT02(0, 26, "ht02", "sname")
 
 SystemSimulator().get_engine("sname").register_entity(c)
 SystemSimulator().get_engine("sname").coupling_relation(None, "start", c, "start")
-SystemSimulator().get_engine("sname").insert_external_event("start", None)
+SystemSimulator().get_engine("sname").coupling_relation(c, "out", None, "out")
+#SystemSimulator().get_engine("sname").insert_external_event("start", None)
 SystemSimulator().get_engine("sname").simulate()

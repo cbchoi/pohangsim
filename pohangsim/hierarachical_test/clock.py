@@ -14,13 +14,15 @@ import math
 class Clock(BehaviorModelExecutor):
     def __init__(self, instance_time, destruct_time, name, engine_name):
         BehaviorModelExecutor.__init__(self, instance_time, destruct_time, name, engine_name)
-        self.init_state("IDLE")
+        self.init_state("WAKE")
         self.insert_state("IDLE", Infinite)
         self.insert_state("WAKE", 1)
   
         self.insert_input_port("start")
         self.insert_input_port("end")
         
+        self.insert_output_port("out")
+
         self.sim_time = 0
 
     def ext_trans(self,port, msg):
@@ -32,8 +34,12 @@ class Clock(BehaviorModelExecutor):
                         
     def output(self):
         if self._cur_state == "WAKE":
+            msg = SysMessage(self.get_name(), "out")
+            msg.insert("hello")
             print(self.convert_unit_time())
             self.sim_time += 1
+
+            return msg
 
     def int_trans(self):
         if self._cur_state == "WAKE":
