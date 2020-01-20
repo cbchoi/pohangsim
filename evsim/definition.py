@@ -40,8 +40,16 @@ class SimulationMode(Enum):
     SIMULATION_PAUSE = 3        # Simulation Engine is instantiated, simulation paused
     SIMULATION_UNKNOWN = -1     # Simulation Engine went to abnormal state
 
+# 2020.01.20 added by cbchoi
+class ModelType(Enum):
+    BEHAVIORAL    = 0
+    STRUCTURAL  = 1
+
 class CoreModel(object):
-    def __init__(self, _name):
+    def __init__(self, _name, _type):
+        # Model Type
+        self._type = _type
+
         self._name = _name
         # Input Ports Declaration
         self._input_ports = []
@@ -65,6 +73,11 @@ class CoreModel(object):
 
     def retrieve_output_ports(self):
         return self._output_ports
+
+    #def resolve_ports(self):
+
+    def get_type(self):
+        return self._type
 
 
 
