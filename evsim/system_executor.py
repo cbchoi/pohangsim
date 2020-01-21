@@ -168,10 +168,17 @@ class SysExecutor(SysObject, BehaviorModel):
 
     def flattening(self, _model):
         # handle external output coupling
+        del_lst = []
         for k, v in _model.retrieve_external_output_coupling().items():
             for coupling in self.port_map[v]:
+                #print (self.port_map[v])
+                #print (k,coupling)
                 self._coupling_relation(k, coupling)
-            del self.port_map[v]
+            del_lst.append(v)
+        
+        for item in del_lst:
+            if item in self.port_map:
+                del self.port_map[item]
         
         # handle external input coupling
         for k, v in _model.retrieve_external_input_coupling().items():
