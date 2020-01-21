@@ -28,7 +28,7 @@ from garbagecan import GarbageCan
 from garbage_truck import GarbageTruck
 from family import Family
 
-simulation_time=30
+simulation_time=8762
 
 se = SystemSimulator()
 
@@ -56,7 +56,7 @@ def get_garbagecan_id():
 blist=[]
 hlist=[]
 fam=[]
-file = open('half.txt','r')
+file = open('population/nof_fam3725_Blue_collar1.txt','r')
 lines = file.readlines()
 file.close()
 for i in range(len(lines)):  
