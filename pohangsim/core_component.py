@@ -1,5 +1,6 @@
 from abc import *
-import numpy as np
+#import numpy as np
+import random
 
 class Statistic(object):
     def __init__(self, seed, mean, stddev):
@@ -17,8 +18,9 @@ class Statistic(object):
         return self.rseed
         
     def get_delta(self):
-        val=np.random.normal(self.mean,self.stddev)
+        #val=np.random.normal(self.mean,self.stddev)
         # calculate delta
+        val = random.normalvariate(self.mean, self.stddev)
         return val
         
 class TimeStruct(object):
