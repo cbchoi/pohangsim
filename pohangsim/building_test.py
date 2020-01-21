@@ -29,30 +29,6 @@ from garbage_truck import GarbageTruck
 from family import Family
 
 simulation_time=8762
-
-se = SystemSimulator()
-
-SystemSimulator().register_engine("sname", SIMULATION_MODE)
-
-c = Clock(0, simulation_time, "clock", "sname")
-SystemSimulator().get_engine("sname").register_entity(c)
-    
-gt = GarbageTruck(0, simulation_time, "garbage_truck", 'sname', 10, [(0, 0.1), (1, 0.1), (2, 0.1), (3, 0.1), (4, 0.1)])
-SystemSimulator().get_engine("sname").register_entity(gt)
-
-gv = Government(0, simulation_time,"government","sname")
-SystemSimulator().get_engine("sname").register_entity(gv)
-
-def get_human_id():
-    global h_id
-    h_id += 1
-    return h_id
-
-def get_garbagecan_id():
-    global garbagecan_id
-    h_id += 1
-    return garbagecan_id
-
 blist=[]
 hlist=[]
 fam=[]
@@ -73,6 +49,30 @@ for i in range(len(lines)):
     else:
         blist.append(hlist)
         hlist = []
+
+
+se = SystemSimulator()
+
+SystemSimulator().register_engine("sname", SIMULATION_MODE)
+
+c = Clock(0, simulation_time, "clock", "sname")
+SystemSimulator().get_engine("sname").register_entity(c)
+gt = GarbageTruck(0, simulation_time, "garbage_truck", 'sname', 0, [e for e in enumerate([0.1 for building in blist])])
+SystemSimulator().get_engine("sname").register_entity(gt)
+
+gv = Government(0, simulation_time,"government","sname")
+SystemSimulator().get_engine("sname").register_entity(gv)
+
+def get_human_id():
+    global h_id
+    h_id += 1
+    return h_id
+
+def get_garbagecan_id():
+    global garbagecan_id
+    h_id += 1
+    return garbagecan_id
+
 
 #Building Register
 
