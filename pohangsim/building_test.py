@@ -28,10 +28,10 @@ from government import Government
 from garbagecan import GarbageCan
 from garbage_truck import GarbageTruck
 from family import Family
-simulation_time=2192 #quarter
+#simulation_time=2192 #quarter
 #simulation_time=8762 # year
 #simulation_time=26282# 3year
-#simulation_time=43802# 5year
+simulation_time=43802# 5year
 #simulation_time=87602# 10year
 
 blist=[]
@@ -39,7 +39,7 @@ hlist=[]
 fam=[]
 
 #file = open('half.txt','r')
-file = open('population/population_bluecollar_N10000_seed0.txt','r')
+file = open('population/population_student_N10000_seed0.txt','r')
 
 lines = file.readlines()
 file.close()

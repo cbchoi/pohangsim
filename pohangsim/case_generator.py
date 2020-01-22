@@ -79,8 +79,8 @@ def inc_mean(list,index):
 
 def testcode(student_rate,b_collar_rate,h_wife_rate,trial,memo):
     for i in range(trial):
-        plist = population_ratio(100,student_rate,b_collar_rate,h_wife_rate)
-        human_generate(38,2.6,i,plist,memo)
+        plist = population_ratio(10000,student_rate,b_collar_rate,h_wife_rate)
+        human_generate(3725,2.6848,i,plist,memo)
         print('*',end="")
     
 
