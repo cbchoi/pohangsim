@@ -42,7 +42,7 @@ class Check(BehaviorModelExecutor):
             if self.satisfaction >= 100:
                 self.satisfaction = 100
             if self.satisfaction < 0:
-                self.satisfaction+=31ß
+                self.satisfaction+=31
                 self._cur_state = "REPORT"
             print("[check] "+self.get_name() + ":" + str(self.satisfaction))
 
