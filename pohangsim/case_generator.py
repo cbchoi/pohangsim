@@ -11,7 +11,7 @@ def population_ratio(N,student_rate,Blue_collar,Housewife):   #학생20% 리스�
         print("input_error")
     else: 
         for i in range(int(N*student_rate)):
-            plist.append("Student")
+            plist.append("StudentWithVacation")
         for i in range(int(N*Blue_collar)):
             plist.append("Blue_collar")
         for i in range(int(N*Housewife)):
@@ -79,16 +79,16 @@ def inc_mean(list,index):
 
 def testcode(student_rate,b_collar_rate,h_wife_rate,trial,memo):
     for i in range(trial):
-        plist = population_ratio(10000,student_rate,b_collar_rate,h_wife_rate)
-        human_generate(3725,2.6848,i,plist,memo)
+        plist = population_ratio(100,student_rate,b_collar_rate,h_wife_rate)
+        human_generate(38,2.6,i,plist,memo)
         print('*',end="")
     
 
 
-testcode(1,0,0,10,'student') #student
-testcode(0,1,0,10,'bluecollar') #bluecollar
-testcode(0,0,1,10,'housewife') #housewife
-testcode(1/5,2/5,2/5,30,'normalcase')
+testcode(1,0,0,1,'student') #student
+testcode(0,1,0,1,'bluecollar') #bluecollar
+testcode(0,0,1,1,'housewife') #housewife
+testcode(1/5,2/5,2/5,1,'normalcase')
 
 #random.choice(list)
 #print(list)
