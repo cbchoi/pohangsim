@@ -16,7 +16,7 @@ class Clock(BehaviorModelExecutor):
         BehaviorModelExecutor.__init__(self, instance_time, destruct_time, name, engine_name)
         self.init_state("IDLE")
         self.insert_state("IDLE", Infinite)
-        self.insert_state("WAKE", 1)
+        self.insert_state("WAKE", 24)
   
         self.insert_input_port("start")
         self.insert_input_port("end")
@@ -33,6 +33,8 @@ class Clock(BehaviorModelExecutor):
         if self._cur_state == "WAKE":
             #print(self.convert_unit_time())
             self.sim_time += 1
+            #return msg
+            print("progress")
 
     def int_trans(self):
         if self._cur_state == "WAKE":
