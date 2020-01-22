@@ -1,0 +1,6 @@
+Blue_collar(1),Blue_collar(2),Blue_collar(3),Blue_collar(4),Blue_collar(5)
+Blue_collar(6)
+Blue_collar(7),Blue_collar(8)
+Blue_collar(9),Blue_collar(10),Blue_collar(11)
+Blue_collar(12),Blue_collar(13)
+

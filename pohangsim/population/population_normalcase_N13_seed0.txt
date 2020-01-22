@@ -1,0 +1,6 @@
+Housewife(1),Blue_collar(2),Blue_collar(3),Housewife(4),Blue_collar(5)
+Blue_collar(6)
+StudentWithVacation(7),Housewife(8)
+StudentWithVacation(9),Housewife(10),Blue_collar(11)
+Housewife(12),Blue_collar(13)
+
