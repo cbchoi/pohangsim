@@ -37,7 +37,7 @@ blist=[]
 hlist=[]
 fam=[]
 #file = open('population/nof_fam10000_1.txt','r')
-file = open('population/population_student_N10000_seed0.txt','r')
+file = open('population/population_student_N10000_seed2.txt','r')
 lines = file.readlines()
 file.close()
 for i in range(len(lines)):  
