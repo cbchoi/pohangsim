@@ -37,8 +37,10 @@ simulation_time=8762 # year
 blist=[]
 hlist=[]
 fam=[]
+
 #file = open('half.txt','r')
 file = open('population/population_bluecollar_N98_seed0.txt','r')
+
 lines = file.readlines()
 file.close()
 for i in range(len(lines)):  
