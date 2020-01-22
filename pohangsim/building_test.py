@@ -27,12 +27,17 @@ from government import Government
 from garbagecan import GarbageCan
 from garbage_truck import GarbageTruck
 from family import Family
+simulation_time=2192 #quarter
+#simulation_time=8762 # year
+#simulation_time=26282# 3year
+#simulation_time=43802# 5year
+#simulation_time=87602# 10year
 
-simulation_time=8762
 blist=[]
 hlist=[]
 fam=[]
-file = open('population/nof_fam3725_Blue_collar1.txt','r')
+#file = open('population/nof_fam10000_0.txt','r')
+file = open('population/population_student_N10000_seed0.txt','r')
 lines = file.readlines()
 file.close()
 for i in range(len(lines)):  
@@ -90,27 +95,73 @@ for building in blist:
             #hid = get_human_id()
             name = htype.get_name()
             cname = "check[{0}]".format(htype.get_name())
-            ch = Check(0, simulation_time, name, "sname", htype.get_satisfaction_func, htype.get_id())
-            h1 = Human(0, simulation_time, cname, "sname", htype)
+            #학생인 경우 방학 패턴 추가
+            if "Student" in name:                
+                semester=int((simulation_time-2)/4380)
+                if semester>=1:
+                    for _interval in range(semester):
+                        ch = Check(4380*_interval, 2920+(4380*_interval), name, "sname", htype.get_satisfaction_func, htype.get_id())
+                        h1 = Human(4380*_interval, 2920+(4380*_interval), cname, "sname", htype)
 
-            SystemSimulator().get_engine("sname").register_entity(h1)
-            SystemSimulator().get_engine("sname").register_entity(ch)
-            #f1.register_member(htype)
-            ftype.register_member(htype)
+                        SystemSimulator().get_engine("sname").register_entity(h1)
+                        SystemSimulator().get_engine("sname").register_entity(ch)
+                        #f1.register_member(htype)
+                        ftype.register_member(htype)
+                        
+                        # Connect Check & Can
+                        ports = g.register_human(htype.get_id())
+                        SystemSimulator().get_engine("sname").coupling_relation(h1, "trash", ch, "request")
+                        SystemSimulator().get_engine("sname").coupling_relation(ch, "check", g, ports[0])
+
+                        SystemSimulator().get_engine("sname").coupling_relation(g, ports[1], ch, "checked")
+                        SystemSimulator().get_engine("sname").coupling_relation(ch, "gov_report", gv, "recv_report")
+                
+                        SystemSimulator().get_engine("sname").coupling_relation(None, "start", h1, "start")
+                        SystemSimulator().get_engine("sname").coupling_relation(None, "end", h1, "end")
+                        SystemSimulator().get_engine("sname").coupling_relation(h1, "trash", f, "receive_membertrash")
+                else:
+                    ch = Check(0, simulation_time, name, "sname", htype.get_satisfaction_func, htype.get_id())
+                    h1 = Human(0, simulation_time, cname, "sname", htype)
+
+                    SystemSimulator().get_engine("sname").register_entity(h1)
+                    SystemSimulator().get_engine("sname").register_entity(ch)
+                    #f1.register_member(htype)
+                    ftype.register_member(htype)
+                    
+                    # Connect Check & Can
+                    ports = g.register_human(htype.get_id())
+                    SystemSimulator().get_engine("sname").coupling_relation(h1, "trash", ch, "request")
+                    SystemSimulator().get_engine("sname").coupling_relation(ch, "check", g, ports[0])
+
+                    SystemSimulator().get_engine("sname").coupling_relation(g, ports[1], ch, "checked")
+                    SystemSimulator().get_engine("sname").coupling_relation(ch, "gov_report", gv, "recv_report")
             
-            # Connect Check & Can
-            ports = g.register_human(htype.get_id())
-            SystemSimulator().get_engine("sname").coupling_relation(h1, "trash", ch, "request")
-            SystemSimulator().get_engine("sname").coupling_relation(ch, "check", g, ports[0])
+                    SystemSimulator().get_engine("sname").coupling_relation(None, "start", h1, "start")
+                    SystemSimulator().get_engine("sname").coupling_relation(None, "end", h1, "end")
+                    SystemSimulator().get_engine("sname").coupling_relation(h1, "trash", f, "receive_membertrash")
+            
+            else: #not student
+                ch = Check(0, simulation_time, name, "sname", htype.get_satisfaction_func, htype.get_id())
+                h1 = Human(0, simulation_time, cname, "sname", htype)
 
-            SystemSimulator().get_engine("sname").coupling_relation(g, ports[1], ch, "checked")
-            SystemSimulator().get_engine("sname").coupling_relation(ch, "gov_report", gv, "recv_report")
-    
-            SystemSimulator().get_engine("sname").coupling_relation(None, "start", h1, "start")
-            SystemSimulator().get_engine("sname").coupling_relation(None, "end", h1, "end")
-            SystemSimulator().get_engine("sname").coupling_relation(h1, "trash", f, "receive_membertrash")
-    
-            #SystemSimulator().get_engine("sname").coupling_relation(h1, "trash", g, "recv")
+                SystemSimulator().get_engine("sname").register_entity(h1)
+                SystemSimulator().get_engine("sname").register_entity(ch)
+                #f1.register_member(htype)
+                ftype.register_member(htype)
+                
+                # Connect Check & Can
+                ports = g.register_human(htype.get_id())
+                SystemSimulator().get_engine("sname").coupling_relation(h1, "trash", ch, "request")
+                SystemSimulator().get_engine("sname").coupling_relation(ch, "check", g, ports[0])
+
+                SystemSimulator().get_engine("sname").coupling_relation(g, ports[1], ch, "checked")
+                SystemSimulator().get_engine("sname").coupling_relation(ch, "gov_report", gv, "recv_report")
+        
+                SystemSimulator().get_engine("sname").coupling_relation(None, "start", h1, "start")
+                SystemSimulator().get_engine("sname").coupling_relation(None, "end", h1, "end")
+                SystemSimulator().get_engine("sname").coupling_relation(h1, "trash", f, "receive_membertrash")
+        
+                #SystemSimulator().get_engine("sname").coupling_relation(h1, "trash", g, "recv")
 
         SystemSimulator().get_engine("sname").register_entity(f)
 
@@ -138,4 +189,5 @@ SystemSimulator().get_engine("sname").coupling_relation(None, "end", gt, "end")
 
 SystemSimulator().get_engine("sname").insert_external_event("start", None)
 SystemSimulator().get_engine("sname").simulate()
+
 

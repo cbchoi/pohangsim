@@ -43,7 +43,7 @@ class Check(BehaviorModelExecutor):
                 self.satisfaction = 100
             if self.satisfaction < 0:
                 self._cur_state = "REPORT"
-            print("[check] " + self.get_name() + ":" + str(self.satisfaction))
+            print("[check] "+self.get_name() + ":" + str(self.satisfaction))
 
     def output(self):
         if self._cur_state=="CHECK":

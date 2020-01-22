@@ -81,14 +81,14 @@ def testcode(student_rate,b_collar_rate,h_wife_rate,trial,memo):
     for i in range(trial):
         plist = population_ratio(10000,student_rate,b_collar_rate,h_wife_rate)
         human_generate(3725,2.6848,i,plist,memo)
-        print('*'*100)
+        print('*',end="")
     
 
 
-testcode(1,0,0,10,student) #student
-#testcode(0,1,0,10,bluecollar) #bluecollar
-#testcode(0,0,1,10,housewife) #housewife
-#testcode(1/5,2/5,2/5,30,normalcase)
+testcode(1,0,0,10,'student') #student
+testcode(0,1,0,10,'bluecollar') #bluecollar
+testcode(0,0,1,10,'housewife') #housewife
+testcode(1/5,2/5,2/5,30,'normalcase')
 
 #random.choice(list)
 #print(list)
