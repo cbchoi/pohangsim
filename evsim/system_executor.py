@@ -166,7 +166,7 @@ class SysExecutor(SysObject, BehaviorModel):
                     # self.min_schedule_item.pop()
                     # self.min_schedule_item.append((destination[0].time_advance() + self.global_time, destination[0]))
 
-    def flattening(self, _model):
+    def flattening(self, _model, _del_lst):
         # handle external output coupling
         del_lst = []
         for k, v in _model.retrieve_external_output_coupling().items():
@@ -199,15 +199,14 @@ class SysExecutor(SysObject, BehaviorModel):
         # manage model hierarchical 
         for m in _model.retrieve_models():
             if m.get_type() == ModelType.STRUCTURAL:
-                self.flattening(m)
+                self.flattening(m, _del_lst)
             else:
                 #print((m,))
                 self.register_entity(m)
 
-        del_lst = []
         for k, model_lst in self.waiting_obj_map.items():
             if _model in model_lst:
-                del_lst.append(k)
+                _del_lst.append((k, _model))
 
         for target in del_lst:
             self.waiting_obj_map[target].remove(_model)
@@ -215,11 +214,15 @@ class SysExecutor(SysObject, BehaviorModel):
     def init_sim(self):
         self.simulation_mode = SimulationMode.SIMULATION_RUNNING
 
-        # Flattening
+        # Flattening\
+        _del_lst = []
         for model_lst in self.waiting_obj_map.values():
             for model in model_lst:
                 if model.get_type() == ModelType.STRUCTURAL:
-                    self.flattening(model)
+                    self.flattening(model, _del_lst)
+
+        for target, _model in _del_lst:
+            self.waiting_obj_map[target].remove(_model)
 
         # setup inital time        
         if self.active_obj_map is None:
