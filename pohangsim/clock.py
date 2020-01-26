@@ -33,8 +33,8 @@ class Clock(BehaviorModelExecutor):
         if self._cur_state == "WAKE":
             
             self.sim_time += 1
-            if self.sim_time%24==0:
-                print('-'*40,self.convert_unit_time(),'-'*40)
+            #if self.sim_time%24==0:
+            #    print('-'*40,self.convert_unit_time(),'-'*40)
                 
 
             #return msg

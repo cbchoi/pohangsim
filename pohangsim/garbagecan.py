@@ -3,6 +3,7 @@ from evsim.behavior_model_executor import BehaviorModelExecutor
 from evsim.system_message import SysMessage
 from evsim.definition import *
 
+import sys
 import os
 import datetime
 
@@ -41,6 +42,37 @@ class GarbageCan(BehaviorModelExecutor):
         self.family_port_map = {} 
 
         self.recv_checker_port = []
+        self.name=name
+        self.dlist={}
+        self.fileout=open("can_output{0}.csv".format(self.name) ,"w")
+    
+    def __del__(self):
+
+        for ag_key, ag_value in self.dlist.items():
+            cur_list = list(ag_value.keys())
+            print(cur_list)
+            length = cur_list[-1]
+            indx = 0
+
+            for i in range(length):
+                if i == cur_list[indx]:
+                    print(ag_value[cur_list[indx]])
+                    indx += 1
+
+                self.fileout.write(str(i))
+                self.fileout.write(",")
+                self.fileout.write(str(ag_key))
+                self.fileout.write(",")
+                
+                for item in ag_value[cur_list[indx]]:
+                    self.fileout.write(str(item))
+                    self.fileout.write(",")
+                
+                self.fileout.write("\n")
+                        
+        self.fileout.close()
+
+
 
     def register_human(self, human_id):
         #checker port
@@ -84,8 +116,27 @@ class GarbageCan(BehaviorModelExecutor):
         if port in self.family_port_map:       #garbage 누적
             #print("fam_port",port)
             data = msg.retrieve()
-            self.cur_amount += data[0]
-            #print("[gabagecan]1", self.get_name(),self.cur_amount, data)
+
+            ev_t = SystemSimulator().get_engine("sname").get_global_time()
+            ag_id = 0
+            ag_name = ""
+            ag_amount = 0
+            ag_satisfaction = 0
+
+            for member, accumulated in data[0].items():
+                self.cur_amount += accumulated
+                ag_id - member.get_id()
+                ag_name = member.get_name()
+                ag_amount = accumulated
+                ag_satisfaction = member.get_satisfaction()
+                #print(SystemSimulator().get_engine("sname").get_global_time())
+                
+                if ag_name not in self.dlist:
+                    self.dlist[ag_name] = {}
+
+                self.dlist[ag_name][ev_t] = (ag_amount, ag_satisfaction) 
+                print(self.dlist[ag_name])
+
             
         if port == "req_empty":  #garbage 양 반환 process
             #print("[truck]1")
