@@ -36,8 +36,8 @@ class Human(BehaviorModelExecutor):
         if self._cur_state == "WAIT":
             #print("[human] " + self.get_name())
             msg = SysMessage(self.get_name(), "trash")
-            msg.insert(self.human.get_trash())
-            msg.insert(self.human.get_id())
+            msg.insert(self.human)
+
             return msg
 
     def int_trans(self):

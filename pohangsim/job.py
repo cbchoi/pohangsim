@@ -3,6 +3,7 @@ import random
 from core_component import Statistic
 from core_component import HumanType
 from core_component import TimeStruct
+from core_component import TimeStructContstraintToDay
 
 class AFF(HumanType):
     def __init__(self, _id):
@@ -82,7 +83,7 @@ class Student(HumanType):
         return TimeStruct(24,51, Statistic(0, 0, 1))
   
     def get_out(self):
-        return TimeStruct(7,58, Statistic(0, 1, 0.2))
+        return TimeStructContstraintToDay(7,58, Statistic(0, 1, 0.2))
 
     def get_in(self):
         return TimeStruct(21,00, Statistic(0, 0, 1))
@@ -121,25 +122,32 @@ class StudentWithVacation(HumanType):
 
         else:
             self.count+=1
-            if self.count>=610:
-                self.approach= False
+            if self.count > 144:
+                self.approach = False
                 self.count=0
-            return TimeStruct(7,58, Statistic(0, 1, 0.2))
+                return TimeStruct(1460,0,Statistic(0, 0, 1))
+            else:
+                return TimeStructContstraintToDay(7,58, Statistic(0, 1, 0.2))
 
 
     def get_in(self):
         return TimeStruct(21,00, Statistic(0, 0, 1))
 
     def get_trash(self):
-        return 0.3        
+        return 3        
 
     def get_satisfaction_func(self, trash):
-        if trash >= 0.8 :
-            return -10
-        elif trash <= 0:
-            return 20
-        elif trash < 0.8:
-            return 10
+        if self.count >= 144:
+            self.approach = False
+            self.count=0
+            return 100
+        else:
+            if trash >= 0.8 :
+                return -10
+            elif trash <= 0:
+                return 20
+            elif trash < 0.8:
+                return 10
 
 class Self_employment(HumanType):
     def __init__(self,_id):

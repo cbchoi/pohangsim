@@ -29,9 +29,9 @@ from garbagecan import GarbageCan
 from garbage_truck import GarbageTruck
 from family import Family
 #simulation_time=2192 #quarter
-#simulation_time=8762 # year
+simulation_time=8762 # year
 #simulation_time=26282# 3year
-simulation_time=43802# 5year
+#simulation_time=43802# 5year
 #simulation_time=87602# 10year
 
 blist=[]
@@ -39,7 +39,7 @@ hlist=[]
 fam=[]
 
 #file = open('half.txt','r')
-file = open('population/population_student_N10000_seed0.txt','r')
+file = open('population/population_student_N13_seed0.txt','r')
 
 lines = file.readlines()
 file.close()
@@ -78,7 +78,7 @@ def get_human_id():
 
 def get_garbagecan_id():
     global garbagecan_id
-    h_id += 1
+    garbagecan_id += 1
     return garbagecan_id
 
 
@@ -88,7 +88,7 @@ i=0
 j=0
 for building in blist:
     #Family Register
-    g = GarbageCan(0, simulation_time, "gc[{0}]".format(i), 'sname', 55)
+    g = GarbageCan(0, simulation_time, "gc[{0}]".format(i), 'sname', 1)
     SystemSimulator().get_engine("sname").register_entity(g)
     
     for flist in building:
@@ -99,7 +99,7 @@ for building in blist:
             name = htype.get_name()
             cname = "check[{0}]".format(htype.get_name())               
             h1 = Human(0, simulation_time, cname, "sname", htype)
-            ch = Check(0, simulation_time, name, "sname", htype.get_satisfaction_func, htype.get_id())
+            ch = Check(0, simulation_time, name, "sname", htype)
 
             SystemSimulator().get_engine("sname").register_entity(h1)
             SystemSimulator().get_engine("sname").register_entity(ch)

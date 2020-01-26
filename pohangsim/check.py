@@ -10,7 +10,7 @@ from config import *
 #from instance.config import *
 
 class Check(BehaviorModelExecutor):
-    def __init__(self, instance_time, destruct_time, name, engine_name, satis_func,hid):
+    def __init__(self, instance_time, destruct_time, name, engine_name, htype):
         BehaviorModelExecutor.__init__(self, instance_time, destruct_time, name, engine_name)
 
         self.init_state("IDLE")
@@ -25,9 +25,10 @@ class Check(BehaviorModelExecutor):
         self.insert_output_port("gov_report")
 
        
-        self.satis_func = satis_func
-        self.satisfaction = 100
-        self.hid = hid
+        self.htype = htype
+#        self.satis_func = satis_func
+#        self.satisfaction = 100
+#        self.hid = hid
 
         
     def ext_trans(self,port, msg):
@@ -38,13 +39,13 @@ class Check(BehaviorModelExecutor):
             #print("[check] " + self.get_name() + " CHECK state")
         if port =="checked":
             #print("[check]%"
-            self.satisfaction += self.satis_func(msg.retrieve()[0])
-            if self.satisfaction >= 100:
-                self.satisfaction = 100
-            if self.satisfaction < 0:
-                self.satisfaction+=31
-                self._cur_state = "REPORT"
-            print("[check] "+self.get_name() + ":" + str(self.satisfaction))
+            self.htype.satisfaction += self.htype.get_satisfaction_func(msg.retrieve()[0])
+            if self.htype.satisfaction >= 100:
+                self.htype.satisfaction = 100
+            if self.htype.satisfaction < 0:
+                self.htype.satisfaction += 31
+                self.htype._cur_state = "REPORT"
+            #print("[check] "+self.get_name() + ":" + str(self.satisfaction))
 
     def output(self):
         if self._cur_state=="CHECK":

@@ -33,10 +33,23 @@ class TimeStruct(object):
         delta = self.stat.get_delta()
         return self.hour + float(self.minute)/60 + delta
         
-        
+class TimeStructContstraintToDay(TimeStruct):
+    def __init__(self, hour, minute, stat):
+        super(TimeStructContstraintToDay, self).__init__(hour, minute, stat)
+        self.prev_time = 0
+
+    def get_unit_time(self):
+        delta = self.stat.get_delta()
+
+        prev_time = self.prev_time
+        cur_time = self.hour + float(self.minute)/60 + delta
+        prev_time = 24 - cur_time
+        return prev_time + cur_time
+
 class HumanType(object):
     def __init__(self, _id):
         self.h_id = _id
+        self.satisfaction = 100
         pass
     
     def get_name(self):
@@ -72,16 +85,24 @@ class HumanType(object):
     @abstractmethod
     def get_satisfaction_func(self, trash):
         pass
+
+    def get_satisfaction(self):
+        return self.satisfaction 
         
-        
+
+import random
+
 class FamilyType(object):
     def __init__(self, garbage_size):
-        self.family_member = []
+        self.family_member = {}
         self.garbage_storage_size = garbage_size
         self.current_storage_size = 0
         
     def register_member(self, htype):
-        self.family_member.append(htype)
+        self.family_member[htype] = 0
+
+    def get_members(self):
+        return self.family_member
     
     def stack_garbage(self, amount):
         self.current_storage_size += amount
@@ -93,7 +114,7 @@ class FamilyType(object):
             return True
 
     def is_flush(self, member):
-        if member == self.select_member().get_id():
+        if member == self.select_member():
             return True
         else:
             return False
@@ -102,10 +123,14 @@ class FamilyType(object):
         # random
         # 지정
         # ... 
-        return self.family_member[0]
+        lst = list(self.family_member.keys())
+        #random.shuffle(lst)
+        return lst[0]
     
     def get_stack_amount(self):
         return self.current_storage_size
         
     def empty_stack(self):
         self.current_storage_size = 0
+        for k in self.family_member.keys():
+            self.family_member[k] = 0

@@ -13,6 +13,8 @@ import math
 
 from core_component import FamilyType
 
+import copy
+
 class Family(BehaviorModelExecutor):
     def __init__(self, instance_time, destruct_time, name, engine_name, family_type):
         BehaviorModelExecutor.__init__(self, instance_time, destruct_time, name, engine_name)
@@ -31,17 +33,18 @@ class Family(BehaviorModelExecutor):
         if port=="receive_membertrash":  #가족으로부터 쓰레기 받아서 누적, 쌓일경우 FLUSH상태로 변환
             data = msg.retrieve()
             
-            self.family_type.stack_garbage(data[0])
+            self.family_type.get_members()[data[0]] += data[0].get_trash()
+            self.family_type.stack_garbage(data[0].get_trash())
             #print("$")
             #print("!family",self.family_type.get_stack_amount())
             
             if self.family_type.should_empty():
-                if self.family_type.is_flush(data[1]):
+                if self.family_type.is_flush(data[0]):
                     self._cur_state = "FLUSH"
 
     def output(self):
         msg = SysMessage(self.get_name(), "takeout_trash")
-        msg.insert(self.family_type.get_stack_amount())
+        msg.insert(copy.deepcopy(self.family_type.get_members()))
         #print(self.family_type.get_stack_amount())
         self.family_type.empty_stack()
         
