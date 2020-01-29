@@ -45,11 +45,13 @@ class Check(BehaviorModelExecutor):
             if self.htype.satisfaction < 0:
                 self.htype.satisfaction += 31
                 self.htype._cur_state = "REPORT"
-            #print("[check] "+self.get_name() + ":" + str(self.satisfaction))
+            #print(SystemSimulator().get_engine("sname").get_global_time())
+            #print("[check] "+self.get_name() + ":" + str(self.htype.satisfaction))
 
     def output(self):
         if self._cur_state=="CHECK":
             msg = SysMessage(self.get_name(), "check")
+            msg.insert(self.htype)
             return msg
             
         if self._cur_state == "REPORT":

@@ -44,9 +44,20 @@ class GarbageCan(BehaviorModelExecutor):
         self.recv_checker_port = []
         self.name=name
         self.dlist={}
+        self.alist={}
+        self.a_fileout=open("can_output{0}_checker.csv".format(self.name) ,"w")
         self.fileout=open("can_output{0}.csv".format(self.name) ,"w")
     
     def __del__(self):
+        headerlist=['time','name','trash','satisfaction']
+        for i in headerlist:
+            self.fileout.write(i)
+            self.fileout.write(",")
+        for i in headerlist[:3]:
+            self.a_fileout.write(i)
+            self.a_fileout.write(",")
+        self.fileout.write("\n")
+        self.a_fileout.write("\n")
 
         for ag_key, ag_value in self.dlist.items():
             cur_list = list(ag_value.keys())
@@ -71,6 +82,36 @@ class GarbageCan(BehaviorModelExecutor):
                 self.fileout.write("\n")
                         
         self.fileout.close()
+
+        print(self.alist.items())
+        print(self.alist.keys())
+        for ag_key, ag_value in self.alist.items():
+            cur_list = list(ag_value.keys())
+            print(cur_list)
+            length = cur_list[-1]
+            indx = 0
+                                       
+            for i in range(length):
+                if i == cur_list[indx]:
+                                                            #print(ag_value[cur_list [indx]])
+                    indx += 1
+                                        
+                self.a_fileout.write(str(i))
+                self.a_fileout.write(",")
+                self.a_fileout.write(str(ag_key))
+                self.a_fileout.write(",")
+                self.a_fileout.write(str(ag_value[cur_list[indx]])) #satis
+                self.a_fileout.write(",")
+                                                           
+                self.a_fileout.write("\n")
+        #print("!!!",ag_value)
+        #for item in ag_value[cur_list[indx]]:
+        #    self.a_fileout.write(str(item))
+        #    self.a_fileout.write(",")
+        
+        #self.a_fileout.write("\n")
+                                                        
+        self.a_fileout.close()
 
 
 
@@ -110,6 +151,26 @@ class GarbageCan(BehaviorModelExecutor):
     def ext_trans(self, port, msg):
         if port in self.human_port_map:     #garbage 비율  Process
             #print('[check]1')
+            data = msg.retrieve()
+            ev_t = SystemSimulator().get_engine("sname").get_global_time()
+            ag_id = 0
+            ag_name = ""
+            
+            ag_satisfaction = 0
+            #print(ev_t,port,"!!")
+            
+            member = data[0]
+            ag_id - member.get_id()
+            ag_name = member.get_name()
+            ag_satisfaction = member.get_satisfaction()
+            #print(SystemSimulator().get_engine("sname").get_global_time())
+            
+            if ag_name not in self.alist:
+                self.alist[ag_name] = {}
+
+            self.alist[ag_name][ev_t] = ag_satisfaction
+            print(self.alist[ag_name])
+
             self._cur_state = "PROCESS"
             self.recv_checker_port.append(port)
 
@@ -117,12 +178,13 @@ class GarbageCan(BehaviorModelExecutor):
             #print("fam_port",port)
             data = msg.retrieve()
 
+
             ev_t = SystemSimulator().get_engine("sname").get_global_time()
             ag_id = 0
             ag_name = ""
             ag_amount = 0
             ag_satisfaction = 0
-
+            print(ev_t,port,"!!")
             for member, accumulated in data[0].items():
                 self.cur_amount += accumulated
                 ag_id - member.get_id()
