@@ -104,6 +104,7 @@ class StudentWithVacation(HumanType):
         HumanType.__init__(self ,_id)
         self.approach = False
         self.count=0
+        self.vacation=True
         pass
     
     def get_type(self):
@@ -117,16 +118,19 @@ class StudentWithVacation(HumanType):
   
     def get_out(self):
         if self.approach == False:
-            self.approach = True
-            return TimeStruct(1460,0,Statistic(0, 0, 1)) # 방학대기 
+            self.approach=True
+            return TimeStruct(1464,0,Statistic(0, 0, 1)) # 방학대기 
 
         else:
             self.count+=1
-            if self.count > 144:
+            
+            if self.count >= 122:
+                self.vacation=True
                 self.approach = False
-                self.count=0
-                return TimeStruct(1460,0,Statistic(0, 0, 1))
+                self.count=0    
+                return TimeStructContstraintToDay(7,58, Statistic(0, 1, 0.2))
             else:
+                self.vacation=False
                 return TimeStructContstraintToDay(7,58, Statistic(0, 1, 0.2))
 
 
@@ -137,9 +141,7 @@ class StudentWithVacation(HumanType):
         return 3        
 
     def get_satisfaction_func(self, trash):
-        if self.count >= 144:
-            self.approach = False
-            self.count=0
+        if self.vacation == True:            
             return 100
         else:
             if trash >= 0.8 :
