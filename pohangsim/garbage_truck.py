@@ -61,7 +61,7 @@ class GarbageTruck(BehaviorModelExecutor):
     def output(self):
         if self._cur_state == "REQUEST":
             msg = SysMessage(self.get_name(), self.garbage_id_map[self.schedule[self.cur_index][0]])
-            msg.insert(-1)
+            msg.insert(self.truck_storage-self.truck_current_storage)
             return msg
         return None
 

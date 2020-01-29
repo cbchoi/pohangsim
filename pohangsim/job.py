@@ -57,7 +57,7 @@ class Housewife(HumanType):
         return TimeStruct(15, 0, Statistic(0, 0, 1))
         
     def get_trash(self):
-        return 1.0
+        return 2
  
         
     def get_satisfaction_func(self, trash):
@@ -141,7 +141,7 @@ class StudentWithVacation(HumanType):
         if self.vacation==True:
             return 0
         else:
-            return 0.9
+            return 2
 
 
     def get_satisfaction_func(self, trash):
@@ -170,7 +170,7 @@ class Self_employment(HumanType):
         return TimeStruct(23,54, Statistic(0, 0, 1))
   
     def get_out(self):
-        return TimeStruct(6,43, Statistic(0, 1, 0.2))
+        return TimeStructContstraintToDay(6,43, Statistic(0, 1, 0.2))
 
     def get_in(self):
         return TimeStruct(20,00, Statistic(0, 0, 1))
@@ -207,7 +207,7 @@ class Blue_collar(HumanType):
         return TimeStruct(17,30, Statistic(0, 0, 1))
 
     def get_trash(self):
-        return 0.9          
+        return 2    
 
     def get_satisfaction_func(self, trash):
         if trash >= 0.8:
