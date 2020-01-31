@@ -43,8 +43,35 @@ class TimeStructContstraintToDay(TimeStruct):
 
         prev_time = self.prev_time
         cur_time = self.hour + float(self.minute)/60 + delta
-        prev_time = 24 - cur_time
-        return prev_time + cur_time
+        self.prev_time = 24 - cur_time
+        return self.prev_time + cur_time
+
+class TimeStructConstraintRandom(TimeStruct):
+    def __init__(self, start_hour, end_hour, stat):
+        super(TimeStructConstraintRandom, self).__init__(0, 0, stat)
+        self.start_hour = start_hour
+        self.end_hour = end_hour
+        self.prev_time = 0
+        self.initial = False
+
+    def get_unit_time(self):
+        # inital: start_hour + random delta; prev_hour = start_hour + random delta
+        # next : prev_hour + random delta < end_hour;  prev_hour = prev_hour + random_delta
+        #      : prev_hour + random delta > end_hour then (24 - end_hour) + start_hour + random delta; prev_hour = start_hour + random delta
+
+        if self.initial == False:
+            self.prev_time = self.start_hour.get_unit_time() + self.stat.get_delta()
+            self.initial=True
+            return self.prev_time
+        else:
+            calc_time = self.prev_time + self.stat.get_delta()
+            if calc_time < self.end_hour.get_unit_time():
+                self.prev_time = calc_time
+                return self.prev_time
+            else:
+                self.prev_time = calc_time
+                return 24 - end_hour.get_unit_time() + self.prev_time
+
 
 class HumanType(object):
     def __init__(self, _id):
@@ -85,9 +112,15 @@ class HumanType(object):
     @abstractmethod
     def get_satisfaction_func(self, trash):
         pass
+    @abstractmethod
+    def is_vacation(self):
+        pass
 
     def get_satisfaction(self):
         return self.satisfaction 
+
+    def set_satisfaction(self,satis):
+        self.satisfaction=satis
         
 
 import random
