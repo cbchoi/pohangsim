@@ -5,7 +5,7 @@ from evsim.definition import *
 
 import os
 import datetime
-
+from core_component import Statistic
 from config import *
 #from instance.config import *
 
@@ -24,7 +24,7 @@ class Check(BehaviorModelExecutor):
         self.insert_output_port("check") # to garbage can
         self.insert_output_port("gov_report")
 
-       
+        self.stat=Statistic(0,20,4)
         self.htype = htype
 #        self.satis_func = satis_func
 #        self.satisfaction = 100
@@ -32,27 +32,40 @@ class Check(BehaviorModelExecutor):
 
         
     def ext_trans(self,port, msg):
-        if port == "request":
-            self._cur_state = "CHECK"
+        if self.htype.is_vacation():
+            self.htype.satisfaction=None
+            pass
+        else:
+            if port == "request":
+                self._cur_state = "CHECK"
             #value = msg.retrieve()[0]
             
             #print("[check] " + self.get_name() + " CHECK state")
-        if port =="checked":
-            #print("[check]%"
-            self.htype.satisfaction += self.htype.get_satisfaction_func(msg.retrieve()[0])
-            if self.htype.satisfaction >= 100:
-                self.htype.satisfaction = 100
-            if self.htype.satisfaction < 0:
-                self.htype.satisfaction += 31
-                self.htype._cur_state = "REPORT"
-            #print(SystemSimulator().get_engine("sname").get_global_time())
-            #print("[check] "+self.get_name() + ":" + str(self.htype.satisfaction))
+            if port == "checked":
+                #print("[check]%"
+                if self.htype.satisfaction==None:
+                    self.htype.satisfaction=100
+                    self.htype.satisfaction += self.htype.get_satisfaction_func(msg.retrieve()[0])
+                else:                            
+                    self.htype.satisfaction += self.htype.get_satisfaction_func(msg.retrieve()[0])
+                if self.htype.satisfaction >= 100:
+                    self.htype.satisfaction = 100
+                if self.htype.satisfaction < 0:
+                    self.htype.satisfaction += self.stat.get_delta()
+#
+                    self.htype._cur_state = "REPORT"
+                #print(SystemSimulator().get_engine("sname").get_global_time())
+                #print("[check] "+self.get_name() + ":" + str(self.htype.satisfaction))
 
     def output(self):
         if self._cur_state=="CHECK":
-            msg = SysMessage(self.get_name(), "check")
-            msg.insert(self.htype)
-            return msg
+            if self.htype.is_vacation():
+                self.htype.satisfaction=None
+                return None
+            else:
+                msg = SysMessage(self.get_name(), "check")
+                msg.insert(self.htype)
+                return msg
             
         if self._cur_state == "REPORT":
             #print('[check]#')

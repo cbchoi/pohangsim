@@ -11,7 +11,7 @@ from config import *
 #from instance.config import *
 
 class GarbageCan(BehaviorModelExecutor):
-    def __init__(self, instance_time, destruct_time, name, engine_name, size):
+    def __init__(self, instance_time, destruct_time, name, engine_name, size, outp):
         BehaviorModelExecutor.__init__(self, instance_time, destruct_time, name, engine_name)
 
         self.init_state("IDLE")
@@ -33,7 +33,7 @@ class GarbageCan(BehaviorModelExecutor):
         self.can_size = size
         self.cur_amount = 0
 
-        self.req_empty_amount = 0
+        self.avaliable_amount = 0
 
         self.human_id_map = {}
         self.human_port_map = {} 
@@ -45,8 +45,8 @@ class GarbageCan(BehaviorModelExecutor):
         self.name=name
         self.dlist={}
         self.alist={}
-        self.a_fileout=open("can_output{0}_checker.csv".format(self.name) ,"w")
-        self.fileout=open("can_output{0}.csv".format(self.name) ,"w")
+        self.a_fileout=open("{0}/can_output{1}_checker.csv".format(outp,self.name) ,"w")
+        self.fileout=open("{0}/can_output{1}.csv".format(outp ,self.name) ,"w")
     
     def __del__(self):
         headerlist=['time','name','trash','satisfaction']
@@ -61,8 +61,9 @@ class GarbageCan(BehaviorModelExecutor):
 
         for ag_key, ag_value in self.dlist.items():
             cur_list = list(ag_value.keys())
-            print(cur_list)
+            #print(cur_list)
             length = cur_list[-1]
+            print(length)
             indx = 0
 
             for i in range(length):
@@ -83,8 +84,8 @@ class GarbageCan(BehaviorModelExecutor):
                         
         self.fileout.close()
 
-        print(self.alist.items())
-        print(self.alist.keys())
+        #print(self.alist.items())
+        #print(self.alist.keys())
         for ag_key, ag_value in self.alist.items():
             cur_list = list(ag_value.keys())
             print(cur_list)
@@ -202,7 +203,7 @@ class GarbageCan(BehaviorModelExecutor):
             
         if port == "req_empty":  #garbage 양 반환 process
             #print("[truck]1")
-            self.req_empty_amount = msg.retrieve()[0]
+            self.avaliable_amount = msg.retrieve()[0]
             self._cur_state = "PROC_TRUCK"
 
     def output(self):
@@ -218,13 +219,19 @@ class GarbageCan(BehaviorModelExecutor):
 
         if self._cur_state == "PROC_TRUCK":
             #print("!@@")
-            if self.req_empty_amount < 0:
-                self.req_empty_amount = self.cur_amount
-            self.cur_amount -= self.req_empty_amount
-            msg = SysMessage(self.get_name(), "res_garbage")
-            msg.insert(self.req_empty_amount)
-            return msg
+#            if self.avaliable_amount < 0:
+#               self.avaliable_amount = 0
             
+            msg = SysMessage(self.get_name(), "res_garbage")
+            if self.cur_amount < self.avaliable_amount:
+                msg.insert(self.cur_amount)
+                self.cur_amount = 0
+            elif self.avaliable_amount == 0:
+                msg.insert(0)
+            elif self.cur_amount >= self.avaliable_amount:
+                self.cur_amount -= self.avaliable_amount
+                msg.insert(self.avaliable_amount)
+            return msg
         return None
 
     def int_trans(self):

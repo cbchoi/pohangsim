@@ -28,8 +28,9 @@ from government import Government
 from garbagecan import GarbageCan
 from garbage_truck import GarbageTruck
 from family import Family
-simulation_time=2192 #quarter
-#simulation_time=8762 # year
+#simulation_time=24
+#simulation_time=2192 #quarter
+simulation_time=8762 # year
 #simulation_time=26282# 3year
 #simulation_time=43802# 5year
 #simulation_time=87602# 10year
@@ -39,24 +40,22 @@ hlist=[]
 fam=[]
 
 #file = open('half.txt','r')
-file = open('population/population_housewife_N13_seed0.txt','r')
-
+file = open('population/population_normalcase_N13_seed0.txt','r')
 lines = file.readlines()
 file.close()
 for i in range(len(lines)):  
     line = lines[i].split('\n')[0]
-    if not line == "":
+    if not line == "": #빈칸이 아닐경우
         elements = (line.split(','))
-        for j in elements:
-            fam.append(eval(j))
-            hlist.append(fam)
-            fam=[]
-        if i == len(lines)-1:
-            blist.append(hlist)
-            hlist = []
+        for j in elements: #패밀리 안의 멤버=j
+            fam.append(eval(j)) #j를 fam추가
+        hlist.append(fam) #fam을 hlist에 추가
+        fam=[]    
     else:
         blist.append(hlist)
         hlist = []
+blist.append(hlist)
+hlist = []
 
 
 se = SystemSimulator()
@@ -65,7 +64,7 @@ SystemSimulator().register_engine("sname", SIMULATION_MODE)
 
 c = Clock(0, simulation_time, "clock", "sname")
 SystemSimulator().get_engine("sname").register_entity(c)
-gt = GarbageTruck(0, simulation_time, "garbage_truck", 'sname', 0, [e for e in enumerate([0.1 for building in blist])])
+gt = GarbageTruck(0, simulation_time, "garbage_truck", 'sname', 4.7*13*3, [e for e in enumerate([0.1 for building in blist])],"test")
 SystemSimulator().get_engine("sname").register_entity(gt)
 
 gv = Government(0, simulation_time,"government","sname")
@@ -88,7 +87,9 @@ i=0
 j=0
 for building in blist:
     #Family Register
-    g = GarbageCan(0, simulation_time, "gc[{0}]".format(i), 'sname', 1)
+
+
+    g = GarbageCan(0, simulation_time, "gc[{0}]".format(i), 'sname', 55,"test")
     SystemSimulator().get_engine("sname").register_entity(g)
     
     for flist in building:

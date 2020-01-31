@@ -4,10 +4,11 @@ from evsim.system_message import SysMessage
 from evsim.definition import *
 
 from config import *
+
 #from instance.config import *
 
 class GarbageTruck(BehaviorModelExecutor):
-    def __init__(self, instance_time, destruct_time, name, engine_name, storage, schedule):
+    def __init__(self, instance_time, destruct_time, name, engine_name, storage, schedule, outp):
         BehaviorModelExecutor.__init__(self, instance_time, destruct_time, name, engine_name)
 
         self.init_state("IDLE")
@@ -24,12 +25,16 @@ class GarbageTruck(BehaviorModelExecutor):
         self.truck_storage = storage
         self.truck_current_storage = 0
         
+        
         # for analysis
         self.accummulated_garbage = 0
         
         self.schedule = schedule
         # schedule = [(current_can_id, next_can_delay)]
         self.cur_index = 0
+        #for file save
+        self.outname=outp
+
 
     def register_garbage_can(self, garbage_can_id):
         in_p = "trash_from_can[{0}]".format(garbage_can_id)
@@ -56,6 +61,8 @@ class GarbageTruck(BehaviorModelExecutor):
         elif port in self.garbage_port_map:
             self.garbage_port_map[port] += msg.retrieve()[0] # 각 건물별 쓰레기 수거량 분석
             self.truck_current_storage += msg.retrieve()[0]
+            self.accummulated_garbage += self.truck_current_storage
+            
             #print("[truck_storage]"+  str(port) + ":" +str(self.garbage_port_map[port]),self.truck_current_storage)
             
     def output(self):
@@ -74,14 +81,24 @@ class GarbageTruck(BehaviorModelExecutor):
                 self._cur_state = "REQUEST"
                 next_can_delay = self.schedule[self.cur_index][1]
                 self.update_state(self._cur_state, next_can_delay)
+                print("TRUCK!!!!!!!!!",self.truck_current_storage)
+                ev_t = SystemSimulator().get_engine("sname").get_global_time()
+                with open("{0}/truck.csv".format(self.outname),'a') as file: 
+                    file.write(str(ev_t))
+                    file.write(",")
+                    file.write(str(self.cur_index))
+                    file.write(",")
+                    file.write(str(self.truck_current_storage))
+                    file.write(",")
+                    file.write(str(self.accummulated_garbage))
+                    file.write("\n")
             else:
                 self._cur_state = "APPROACH"
         elif self._cur_state == "APPROACH":
-            self.cur_index = 0
-            self.accummulated_garbage += self.truck_current_storage
-            #print ('[truck_end]',self.truck_current_storage)
+            self.cur_index = 0            
             self.truck_current_storage = 0
             self._cur_state = "REQUEST"
+
  
 #    def __del__(self):
 #       self.accummulated_garbage += self.truck_current_storage
