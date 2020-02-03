@@ -54,9 +54,6 @@ for i in range(len(lines)):
     else:
         blist.append(hlist)
         hlist = []
-blist.append(hlist)
-hlist = []
-
 
 se = SystemSimulator()
 
@@ -86,7 +83,6 @@ def get_garbagecan_id():
 i=0
 j=0
 for building in blist:
-    #Family Register
 
 
     g = GarbageCan(0, simulation_time, "gc[{0}]".format(i), 'sname', 55,"test")

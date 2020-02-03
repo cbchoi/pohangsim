@@ -62,7 +62,16 @@ class GarbageTruck(BehaviorModelExecutor):
             self.garbage_port_map[port] += msg.retrieve()[0] # 각 건물별 쓰레기 수거량 분석
             self.truck_current_storage += msg.retrieve()[0]
             self.accummulated_garbage += self.truck_current_storage
-            
+            ev_t = SystemSimulator().get_engine("sname").get_global_time()
+            with open("{0}/truck.csv".format(self.outname),'a') as file: 
+                file.write(str(ev_t))
+                file.write(",")
+                file.write(str(self.cur_index))
+                file.write(",")
+                file.write(str(self.truck_current_storage))
+                file.write(",")
+                file.write(str(self.accummulated_garbage))
+                file.write("\n")
             #print("[truck_storage]"+  str(port) + ":" +str(self.garbage_port_map[port]),self.truck_current_storage)
             
     def output(self):
@@ -81,21 +90,10 @@ class GarbageTruck(BehaviorModelExecutor):
                 self._cur_state = "REQUEST"
                 next_can_delay = self.schedule[self.cur_index][1]
                 self.update_state(self._cur_state, next_can_delay)
-                print("TRUCK!!!!!!!!!",self.truck_current_storage)
-                ev_t = SystemSimulator().get_engine("sname").get_global_time()
-                with open("{0}/truck.csv".format(self.outname),'a') as file: 
-                    file.write(str(ev_t))
-                    file.write(",")
-                    file.write(str(self.cur_index))
-                    file.write(",")
-                    file.write(str(self.truck_current_storage))
-                    file.write(",")
-                    file.write(str(self.accummulated_garbage))
-                    file.write("\n")
             else:
                 self._cur_state = "APPROACH"
         elif self._cur_state == "APPROACH":
-            self.cur_index = 0            
+            self.cur_index = 0       
             self.truck_current_storage = 0
             self._cur_state = "REQUEST"
 
