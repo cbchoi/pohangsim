@@ -52,10 +52,8 @@ class Check(BehaviorModelExecutor):
                     self.htype.satisfaction = 100
                 if self.htype.satisfaction < 0:
                     self.htype.satisfaction += self.stat.get_delta()
-#
-                    self.htype._cur_state = "REPORT"
-                #print(SystemSimulator().get_engine("sname").get_global_time())
-                #print("[check] "+self.get_name() + ":" + str(self.htype.satisfaction))
+                    self._cur_state = "REPORT"
+                #print(SystemSimulator().get_engine("sname").get_global_time(),"[check] "+self.get_name() + ":" + str(self.htype.satisfaction))
 
     def output(self):
         if self._cur_state=="CHECK":
