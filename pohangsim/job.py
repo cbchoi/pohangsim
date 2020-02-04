@@ -64,6 +64,7 @@ class Housewife(HumanType):
         
     def get_trash(self):
         ev_t=SystemSimulator().get_engine("sname").get_global_time()
+        ev_t= ev_t-int(ev_t /8762)*8762
         if ev_t>=8304:
             if ev_t <=8784:
                 return 2.4
@@ -161,8 +162,7 @@ class StudentWithVacation(HumanType):
             return 0
         else:
             if self.count>115:
-                if self.count<=121:
-                    return 1.8
+                return 1.8
             return 0.9
 
     def get_satisfaction_func(self, trash):

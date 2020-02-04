@@ -40,7 +40,7 @@ hlist=[]
 fam=[]
 
 #file = open('half.txt','r')
-file = open('population/population_normalcase_N13_seed0.txt','r')
+file = open('population/population_normalcase_N98_seed0.txt','r')
 lines = file.readlines()
 file.close()
 for i in range(len(lines)):  
@@ -61,7 +61,7 @@ SystemSimulator().register_engine("sname", SIMULATION_MODE)
 
 c = Clock(0, simulation_time, "clock", "sname")
 SystemSimulator().get_engine("sname").register_entity(c)
-gt = GarbageTruck(0, simulation_time, "garbage_truck", 'sname', 4.7*13*3, [e for e in enumerate([0.1 for building in blist])],"test")
+gt = GarbageTruck(0, simulation_time, "garbage_truck", 'sname', 4.7*13*3, [e for e in enumerate([0.1 for building in blist])],"normalcase_N98")
 SystemSimulator().get_engine("sname").register_entity(gt)
 
 gv = Government(0, simulation_time,"government","sname")
@@ -85,11 +85,11 @@ j=0
 for building in blist:
 
 
-    g = GarbageCan(0, simulation_time, "gc[{0}]".format(i), 'sname', 55,"test")
+    g = GarbageCan(0, simulation_time, "gc[{0}]".format(i), 'sname', 55,"normalcase_N98")
     SystemSimulator().get_engine("sname").register_entity(g)
     
     for flist in building:
-        ftype = FamilyType(len(flist)*3)
+        ftype =5 #FamilyType(len(flist)*3)
         f = Family(0, simulation_time,"family",'sname', ftype)
         for htype in flist:
             #hid = get_human_id()
