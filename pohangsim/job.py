@@ -163,7 +163,8 @@ class StudentWithVacation(HumanType):
         else:
             if self.count>115:
                 return 1.8
-            return 0.9
+            else:
+                return 0.9
 
     def get_satisfaction_func(self, trash):
         if self.vacation:
