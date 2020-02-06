@@ -232,7 +232,7 @@ class GarbageCan(BehaviorModelExecutor):
                 self.cur_amount -= self.avaliable_amount
                 msg.insert(self.avaliable_amount)
             return msg
-        return None
+        #return None
 
     def int_trans(self):
         if self._cur_state == "PROCESS":
