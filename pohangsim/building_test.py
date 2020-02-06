@@ -56,7 +56,7 @@ for i in range(len(lines)):
         hlist = []
     if i == len(lines)-1:
         blist.append(hlist)
-                
+
 se = SystemSimulator()
 
 SystemSimulator().register_engine("sname", SIMULATION_MODE)
@@ -91,7 +91,7 @@ for building in blist:
     SystemSimulator().get_engine("sname").register_entity(g)
     
     for flist in building:
-        ftype = FamilyType(len(flist)*3)
+        ftype = FamilyType(5)
         f = Family(0, simulation_time,"family",'sname', ftype)
         for htype in flist:
             #hid = get_human_id()

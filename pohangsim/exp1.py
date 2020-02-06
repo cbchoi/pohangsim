@@ -86,8 +86,6 @@ def get_garbagecan_id():
 i=0
 j=0
 for building in blist:
-
-    print(i,end="")
     g = GarbageCan(0, simulation_time, "gc[{0}]".format(i), 'sname', 55,"normalcase_N98")
     SystemSimulator().get_engine("sname").register_entity(g)
     
