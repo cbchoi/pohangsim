@@ -76,6 +76,11 @@ class GarbageTruck(BehaviorModelExecutor):
             #print("[truck_storage]"+  str(port) + ":" +str(self.garbage_port_map[port]),self.truck_current_storage)
             
     def output(self):
+        if ev_t>1465 :
+            self.truck_storage=4.7*13*3*2
+        else:
+            self.truck_storage=4.7*13*3
+
         if self._cur_state == "REQUEST":
             msg = SysMessage(self.get_name(), self.garbage_id_map[self.schedule[self.cur_index][0]])
             msg.insert(self.truck_storage-self.truck_current_storage)
