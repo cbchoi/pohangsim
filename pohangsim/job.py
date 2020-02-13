@@ -65,8 +65,8 @@ class Housewife(HumanType):
     def get_trash(self):
         ev_t=SystemSimulator().get_engine("sname").get_global_time()
         ev_t= ev_t-int(ev_t /8762)*8762
-        if ev_t>=8304:
-            if ev_t <=8784:
+        if ev_t>=8280:
+            if ev_t <=8760:
                 return 2.4
         else:
             return 1.2

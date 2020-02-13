@@ -23,6 +23,8 @@ class GarbageTruck(BehaviorModelExecutor):
         self.garbage_id_map = {}
         self.garbage_port_map = {}
         self.truck_storage = storage
+        self.extended_storage = 2 * storage
+        self.original_storage=storage
         self.truck_current_storage = 0
         
         
@@ -76,10 +78,23 @@ class GarbageTruck(BehaviorModelExecutor):
             #print("[truck_storage]"+  str(port) + ":" +str(self.garbage_port_map[port]),self.truck_current_storage)
             
     def output(self):
-        if ev_t>1465 :
-            self.truck_storage=4.7*13*3*2
+        """
+
+겨울방학 - 1학기 - 여름방학 2학기
+쓰레기차 용량이 증가하는 시점
+1. 1학기 방학 1주전(4152~4392)
+2. 2학기 방학 1주전(8520~8760
+3. 김장시점(8304~8784)  20일간
+
+        """
+        if ev_t>=4152 and ev_t<=4392 :#1차방학
+            self.truck_storage=self.extended_storage
+        elif ev_t >=8520 and ev_t<=8760:#2차방학
+            self.truck_storage=self.extended_storage
+        elif ev_t >=8280 and ev_t<=8760: #김장
+            self.truck_storage=self.extended_storage
         else:
-            self.truck_storage=4.7*13*3
+            self.truck_storage=self.original_storage
 
         if self._cur_state == "REQUEST":
             msg = SysMessage(self.get_name(), self.garbage_id_map[self.schedule[self.cur_index][0]])
