@@ -8,43 +8,11 @@ from core_component import TimeStructConstraintRandom
 
 from evsim.system_simulator import SystemSimulator
 
-class AFF(HumanType):
-    def __init__(self, _id):
-        HumanType.__init__(self, _id)
-        pass
-        
-    def get_type(self):
-        return "AFF"
-
-    def get_wakeup(self):
-         return TimeStruct(5, 22, Statistic(0, 0, 1))
-    
-    def get_sleep(self):
-        return TimeStruct(22, 14, Statistic(0, 0, 1))
-
-    def get_out(self):
-        return TimeStruct(6, 30, Statistic(0, 1, 0.2)) #
-
-    def get_in(self):
-        return TimeStruct(17, 0, Statistic(0, 0, 1))
-    
-    def get_trash(self):
-        return 1
-        
-    def get_satisfaction_func(self, trash):
-        if trash >= 0.7:
-            return -10
-        elif trash < 0.7:
-            return 10
-        elif trash <= 0:
-            return 50
-    def is_vacation(self):
-        return False
-
 class Housewife(HumanType):
     def __init__(self,_id):
         HumanType.__init__(self ,_id)
-        
+        self.out_time = TimeStructContstraintToDay(13,00, Statistic(0, 1, 0.4))
+        self.set_satisfaction(None)
         pass
     
     def get_type(self):
@@ -57,20 +25,23 @@ class Housewife(HumanType):
         return TimeStruct(23, 21, Statistic(0, 0, 1))
         
     def get_out(self):
-        return TimeStructConstraintRandom(self.get_wakeup(), self.get_sleep(), Statistic(0, 10, 6))
+        return self.out_time 
+        #return TimeStructConstraintRandom(self.get_wakeup(), self.get_sleep(), Statistic(0, 10, 6))
         
     def get_in(self):
         return TimeStruct(15, 0, Statistic(0, 0, 1))
-        
+        """
+                            def get_trash(self):
+                                ev_t=SystemSimulator().get_engine("sname").get_global_time()
+                                ev_t= ev_t-int(ev_t /8762)*8762
+                                if ev_t>=8280:
+                                    if ev_t <=8760:
+                                        return 2.4
+                                else:
+                                    return 1.2
+        """
     def get_trash(self):
-        ev_t=SystemSimulator().get_engine("sname").get_global_time()
-        ev_t= ev_t-int(ev_t /8762)*8762
-        if ev_t>=8280:
-            if ev_t <=8760:
-                return 2.4
-        else:
-            return 1.2
- 
+        return 0.9
         
     def get_satisfaction_func(self, trash):
         if trash >= 0.8 :
@@ -86,6 +57,8 @@ class Housewife(HumanType):
 class Student(HumanType):
     def __init__(self,_id):
         HumanType.__init__(self ,_id)
+        self.out_time = TimeStructContstraintToDay(7,58, Statistic(0, 1, 0.4))
+        self.set_satisfaction(None)
         pass
     
     def get_type(self):
@@ -98,7 +71,7 @@ class Student(HumanType):
         return TimeStruct(24,51, Statistic(0, 0, 1))
   
     def get_out(self):
-        return TimeStructContstraintToDay(7,58, Statistic(0, 1, 0.2))
+        return self.out_time
 
     def get_in(self):
         return TimeStruct(21,00, Statistic(0, 0, 1))
@@ -148,10 +121,10 @@ class StudentWithVacation(HumanType):
                 self.vacation=True
                 self.approach = False
                 self.count=0    
-                return TimeStructContstraintToDay(7,58, Statistic(0, 1, 0.2))
+                return TimeStructContstraintToDay(7,58, Statistic(0, 1, 0.4))
             else:
                 
-                return TimeStructContstraintToDay(7,58, Statistic(0, 1, 0.2))
+                return TimeStructContstraintToDay(7,58, Statistic(0, 1, 0.4))
 
 
     def get_in(self):
@@ -182,44 +155,11 @@ class StudentWithVacation(HumanType):
         else:
             return False
 
-
-class Self_employment(HumanType):
-    def __init__(self,_id):
-        HumanType.__init__(self ,_id)
-        pass
-    
-    def get_type(self):
-        return "Self_employment"
-
-    def get_wakeup(self):
-        return TimeStruct(6,43, Statistic(0, 0, 1))
-        
-    def get_sleep(self):
-        return TimeStruct(23,54, Statistic(0, 0, 1))
-  
-    def get_out(self):
-        return TimeStructContstraintToDay(6,43, Statistic(0, 1, 0.2))
-
-    def get_in(self):
-        return TimeStruct(20,00, Statistic(0, 0, 1))
-
-    def get_trash(self):
-        return 1          
-
-    def get_satisfaction_func(self, trash):
-        if trash >= 0.5:
-            return -10
-        elif trash < 0.5:
-            return 10
-        elif trash == 0:
-            return 30
-
-    def is_vacation(self):
-        return False
-
 class Blue_collar(HumanType):
     def __init__(self,_id):
         HumanType.__init__(self ,_id)
+        self.out_time = TimeStructContstraintToDay(6,22, Statistic(0, 1, 0.4))
+        self.set_satisfaction(None)
         pass
     
     def get_type(self):
@@ -232,7 +172,7 @@ class Blue_collar(HumanType):
         return TimeStruct(23,35, Statistic(0, 0, 1))
   
     def get_out(self):
-        return TimeStructContstraintToDay(6,22, Statistic(0, 1, 0.2))
+        return self.out_time
 
     def get_in(self):
         return TimeStruct(17,30, Statistic(0, 0, 1))
@@ -251,6 +191,39 @@ class Blue_collar(HumanType):
     def is_vacation(self):
         return False
 
+class Self_employment(HumanType):
+    def __init__(self,_id):
+        HumanType.__init__(self ,_id)
+        pass
+    
+    def get_type(self):
+        return "Self_employment"
+
+    def get_wakeup(self):
+        return TimeStruct(6,43, Statistic(0, 0, 1))
+        
+    def get_sleep(self):
+        return TimeStruct(23,54, Statistic(0, 0, 1))
+  
+    def get_out(self):
+        return TimeStructContstraintToDay(6,43, Statistic(0, 1, 0.4))
+
+    def get_in(self):
+        return TimeStruct(20,00, Statistic(0, 0, 1))
+
+    def get_trash(self):
+        return 1          
+
+    def get_satisfaction_func(self, trash):
+        if trash >= 0.5:
+            return -10
+        elif trash < 0.5:
+            return 10
+        elif trash == 0:
+            return 30
+
+    def is_vacation(self):
+        return False
 class White_collar(HumanType):
     def __init__(self,_id):
         HumanType.__init__(self ,_id)
@@ -266,7 +239,7 @@ class White_collar(HumanType):
         return TimeStruct(23,53, Statistic(0, 0, 1))
   
     def get_out(self):
-        return TimeStruct(6,36, Statistic(0, 1, 0.2))
+        return TimeStruct(6,36, Statistic(0, 1, 0.4))
 
     def get_in(self):
         return TimeStruct(17,30, Statistic(0, 0, 1))
@@ -300,7 +273,7 @@ class Inoccupation(HumanType):
         return TimeStruct(23,16, Statistic(0, 0, 1))
   
     def get_out(self):
-        return TimeStruct(6,26, Statistic(0, 1, 0.3))
+        return TimeStruct(6,26, Statistic(0, 1, 0.4))
 
     def get_in(self):
         return TimeStruct(17,00, Statistic(0, 0, 1))
@@ -316,5 +289,39 @@ class Inoccupation(HumanType):
         elif trash == 0:
             return 50
 
+    def is_vacation(self):
+        return False
+
+class AFF(HumanType):
+    def __init__(self, _id):
+        HumanType.__init__(self, _id)
+        self.out_time= TimeStructContstraintToDay(6, 30, Statistic(0, 1, 0.4)) #
+        pass
+        
+    def get_type(self):
+        return "AFF"
+
+    def get_wakeup(self):
+         return TimeStruct(5, 22, Statistic(0, 0, 1))
+    
+    def get_sleep(self):
+        return TimeStruct(22, 14, Statistic(0, 0, 1))
+
+    def get_out(self):
+        return self.out_time
+
+    def get_in(self):
+        return TimeStruct(17, 0, Statistic(0, 0, 1))
+    
+    def get_trash(self):
+        return 1
+        
+    def get_satisfaction_func(self, trash):
+        if trash >= 0.7:
+            return -10
+        elif trash < 0.7:
+            return 10
+        elif trash <= 0:
+            return 50
     def is_vacation(self):
         return False

@@ -1,6 +1,7 @@
 from abc import *
 #import numpy as np
 import random
+from ctypes import c_int, addressof
 
 class Statistic(object):
     def __init__(self, seed, mean, stddev):
@@ -34,17 +35,21 @@ class TimeStruct(object):
         return self.hour + float(self.minute)/60 + delta
         
 class TimeStructContstraintToDay(TimeStruct):
+    #ID = 0
     def __init__(self, hour, minute, stat):
         super(TimeStructContstraintToDay, self).__init__(hour, minute, stat)
         self.prev_time = 0
+        #TimeStructContstraintToDay.ID += 1
+        #print(TimeStructContstraintToDay.ID)
 
     def get_unit_time(self):
         delta = self.stat.get_delta()
-
         prev_time = self.prev_time
         cur_time = self.hour + float(self.minute)/60 + delta
         self.prev_time = 24 - cur_time
-        return self.prev_time + cur_time
+
+        #print("prev_time:", prev_time, ", self.prev_time", id(self.prev_time), ", out_time:", prev_time+cur_time, )
+        return prev_time + cur_time
 
 class TimeStructConstraintRandom(TimeStruct):
     def __init__(self, start_hour, end_hour, stat):
