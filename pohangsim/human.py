@@ -17,8 +17,12 @@ class Human(BehaviorModelExecutor):
         BehaviorModelExecutor.__init__(self, instance_time, destruct_time, name, engine_name)
         self.human= human
         self.init_state("IDLE")
+        
         self.insert_state("IDLE", Infinite)
-        self.insert_state("WAIT", self.human.get_out().get_unit_time())
+##
+        unit_t = self.human.get_out().get_unit_time()
+        #print(self.human.get_type(), " out time:", unit_t)
+        self.insert_state("WAIT", unit_t)
         #self.insert_state("WAIT", 1)
   
         self.insert_input_port("start")
@@ -43,5 +47,7 @@ class Human(BehaviorModelExecutor):
     def int_trans(self):
         if self._cur_state == "WAIT":
             self._cur_state = "WAIT"
-            self.update_state("WAIT", self.human.get_out().get_unit_time())
+            unit_t = self.human.get_out().get_unit_time()
+            #print(self.human.get_type(), " out time:", unit_t)
+            self.update_state("WAIT", unit_t)
             #self.update_state("WAIT", 1)

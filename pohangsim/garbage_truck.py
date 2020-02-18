@@ -13,9 +13,9 @@ class GarbageTruck(BehaviorModelExecutor):
 
         self.init_state("IDLE")
         self.insert_state("IDLE", Infinite)
-        self.insert_state("INITAL_APPROACH", 6)
+        self.insert_state("INITAL_APPROACH", 9)
         self.insert_state("REQUEST", 0)
-        self.insert_state("APPROACH", 24)
+        self.insert_state("APPROACH", 48)
 
         self.insert_input_port("start")
         self.insert_input_port("end")
@@ -23,7 +23,7 @@ class GarbageTruck(BehaviorModelExecutor):
         self.garbage_id_map = {}
         self.garbage_port_map = {}
         self.truck_storage = storage
-        self.extended_storage = 2 * storage
+        self.extended_storage = storage#2 * storage
         self.original_storage=storage
         self.truck_current_storage = 0
         
@@ -36,6 +36,7 @@ class GarbageTruck(BehaviorModelExecutor):
         self.cur_index = 0
         #for file save
         self.outname=outp
+        #print(schedule)
 
 
     def register_garbage_can(self, garbage_can_id):
@@ -74,10 +75,11 @@ class GarbageTruck(BehaviorModelExecutor):
                 file.write(",")
                 file.write(str(self.accummulated_garbage))
                 file.write("\n")
-            print(self.cur_index)
+            #print(self.cur_index)
             #print("[truck_storage]"+  str(port) + ":" +str(self.garbage_port_map[port]),self.truck_current_storage)
             
     def output(self):
+        
         """
 
 겨울방학 - 1학기 - 여름방학 2학기
@@ -87,6 +89,8 @@ class GarbageTruck(BehaviorModelExecutor):
 3. 김장시점(8304~8784)  20일간
 
         """
+        ev_t = SystemSimulator().get_engine("sname").get_global_time()
+        #print(ev_t)
         if ev_t>=4152 and ev_t<=4392 :#1차방학
             self.truck_storage=self.extended_storage
         elif ev_t >=8520 and ev_t<=8760:#2차방학

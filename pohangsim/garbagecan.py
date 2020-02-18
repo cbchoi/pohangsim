@@ -63,11 +63,11 @@ class GarbageCan(BehaviorModelExecutor):
             cur_list = list(ag_value.keys())
             #print(cur_list)
             length = cur_list[-1]
-            print(length)
+            #print(length)
             indx = 0
 
-            for i in range(length):
-                if i == cur_list[indx]:
+            for i in range(int(length+0.5)):
+                if i == int(cur_list[indx] +0.5):
                     print(ag_value[cur_list[indx]])
                     indx += 1
 
@@ -88,12 +88,12 @@ class GarbageCan(BehaviorModelExecutor):
         #print(self.alist.keys())
         for ag_key, ag_value in self.alist.items():
             cur_list = list(ag_value.keys())
-            print(cur_list)
+            #print(cur_list)
             length = cur_list[-1]
             indx = 0
                                        
-            for i in range(length):
-                if i == cur_list[indx]:
+            for i in range(int(length+0.5)):
+                if i == int(cur_list[indx] +0.5):
                                                             #print(ag_value[cur_list [indx]])
                     indx += 1
                                         
@@ -170,7 +170,7 @@ class GarbageCan(BehaviorModelExecutor):
                 self.alist[ag_name] = {}
 
             self.alist[ag_name][ev_t] = ag_satisfaction
-            print(self.alist[ag_name])
+            #print(self.alist[ag_name])
 
             self._cur_state = "PROCESS"
             self.recv_checker_port.append(port)
@@ -185,7 +185,7 @@ class GarbageCan(BehaviorModelExecutor):
             ag_name = ""
             ag_amount = 0
             ag_satisfaction = 0
-            print(ev_t,port,"!!")
+            #print(ev_t,port,"!!")
             for member, accumulated in data[0].items():
                 self.cur_amount += accumulated
                 ag_id - member.get_id()
@@ -198,7 +198,7 @@ class GarbageCan(BehaviorModelExecutor):
                     self.dlist[ag_name] = {}
 
                 self.dlist[ag_name][ev_t] = (ag_amount, ag_satisfaction) 
-                print(self.dlist[ag_name])
+                #print(self.dlist[ag_name])
 
             
         if port == "req_empty":  #garbage 양 반환 process
