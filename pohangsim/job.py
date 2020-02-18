@@ -11,7 +11,7 @@ from evsim.system_simulator import SystemSimulator
 class Housewife(HumanType):
     def __init__(self,_id):
         HumanType.__init__(self ,_id)
-        self.out_time = TimeStructContstraintToDay(13,00, Statistic(0, 1, 0.4))
+        self.out_time = TimeStructContstraintToDay(13,00, Statistic(0, 1, 0.2))
         self.set_satisfaction(None)
         pass
     
@@ -57,7 +57,7 @@ class Housewife(HumanType):
 class Student(HumanType):
     def __init__(self,_id):
         HumanType.__init__(self ,_id)
-        self.out_time = TimeStructContstraintToDay(7,58, Statistic(0, 1, 0.4))
+        self.out_time = TimeStructContstraintToDay(7,58, Statistic(0, 1, 0.2))
         self.set_satisfaction(None)
         pass
     
@@ -121,10 +121,10 @@ class StudentWithVacation(HumanType):
                 self.vacation=True
                 self.approach = False
                 self.count=0    
-                return TimeStructContstraintToDay(7,58, Statistic(0, 1, 0.4))
+                return TimeStructContstraintToDay(7,58, Statistic(0, 1, 0.2))
             else:
                 
-                return TimeStructContstraintToDay(7,58, Statistic(0, 1, 0.4))
+                return TimeStructContstraintToDay(7,58, Statistic(0, 1, 0.2))
 
 
     def get_in(self):
@@ -158,7 +158,7 @@ class StudentWithVacation(HumanType):
 class Blue_collar(HumanType):
     def __init__(self,_id):
         HumanType.__init__(self ,_id)
-        self.out_time = TimeStructContstraintToDay(6,22, Statistic(0, 1, 0.4))
+        self.out_time = TimeStructContstraintToDay(6,22, Statistic(0, 1, 0.2))
         self.set_satisfaction(None)
         pass
     
@@ -206,7 +206,7 @@ class Self_employment(HumanType):
         return TimeStruct(23,54, Statistic(0, 0, 1))
   
     def get_out(self):
-        return TimeStructContstraintToDay(6,43, Statistic(0, 1, 0.4))
+        return TimeStructContstraintToDay(6,43, Statistic(0, 1, 0.2))
 
     def get_in(self):
         return TimeStruct(20,00, Statistic(0, 0, 1))
@@ -239,7 +239,7 @@ class White_collar(HumanType):
         return TimeStruct(23,53, Statistic(0, 0, 1))
   
     def get_out(self):
-        return TimeStruct(6,36, Statistic(0, 1, 0.4))
+        return TimeStruct(6,36, Statistic(0, 1, 0.2))
 
     def get_in(self):
         return TimeStruct(17,30, Statistic(0, 0, 1))
@@ -273,7 +273,7 @@ class Inoccupation(HumanType):
         return TimeStruct(23,16, Statistic(0, 0, 1))
   
     def get_out(self):
-        return TimeStruct(6,26, Statistic(0, 1, 0.4))
+        return TimeStruct(6,26, Statistic(0, 1, 0.2))
 
     def get_in(self):
         return TimeStruct(17,00, Statistic(0, 0, 1))
@@ -295,7 +295,7 @@ class Inoccupation(HumanType):
 class AFF(HumanType):
     def __init__(self, _id):
         HumanType.__init__(self, _id)
-        self.out_time= TimeStructContstraintToDay(6, 30, Statistic(0, 1, 0.4)) #
+        self.out_time= TimeStructContstraintToDay(6, 30, Statistic(0, 1, 0.2)) #
         pass
         
     def get_type(self):
