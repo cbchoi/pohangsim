@@ -105,3 +105,6 @@ venv.bak/
 
 # instance
 instance/
+
+#excel data
+*.csv
