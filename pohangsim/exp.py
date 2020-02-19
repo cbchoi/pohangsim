@@ -28,7 +28,7 @@ outputlocation=str(sys.argv[1])+str(TIME_STDDEV)
 if not os.path.exists(outputlocation):
     os.makedirs(outputlocation)
 
-file = open('update/h1.txt','r')
+file = open("update/"+sys.argv[2]+".txt",'r')
 lines = file.readlines()
 file.close()
 for i in range(len(lines)):  
