@@ -24,11 +24,11 @@ from family import Family
 blist=[]
 hlist=[]
 fam=[]
-outputlocation=str(sys.argv[1])+str(TIME_STDDEV)
+outputlocation=str(sys.argv[1])+str(TIME_STDDEV)+"trash"+str(TRASH_STDDEV)+"_"+str(GARBAGECAN_SIZE)+"_"+str(RANDOM_SEED)
 if not os.path.exists(outputlocation):
     os.makedirs(outputlocation)
 
-file = open("update/"+sys.argv[2]+".txt",'r')
+file = open("update/"+sys.argv[1]+".txt",'r')
 lines = file.readlines()
 file.close()
 for i in range(len(lines)):  
