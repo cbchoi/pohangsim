@@ -14,9 +14,10 @@ for i in range(len(lines)):
 	elif line=="reported":
 		report_time+=1
 	else:
+		pass
 		elements=line.split(":")
 		satisfaction+=float(elements[1])
 		count_num+=1
-avg=satisfaction/count_num
-print (avg)
+#avg=satisfaction/count_num
+#print (avg)
 print(report_time)

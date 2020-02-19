@@ -7,15 +7,18 @@ typelist=["Student","Housewife","Blue_collar"]
 
 def population_ratio(N,student_rate,Blue_collar,Housewife):   #학생20% 리스트 
     plist=[]
-    if (student_rate+Blue_collar+Housewife)!=1.0:
+    """
+    if float(student_rate+Blue_collar+Housewife)!=1.0:
+
         print("input_error")
     else: 
-        for i in range(int(N*student_rate)):
-            plist.append("Student")#plist.append("StudentWithVacation")
-        for i in range(int(N*Blue_collar)):
-            plist.append("Blue_collar")
-        for i in range(int(N*Housewife)):
-            plist.append("Housewife")
+    """
+    for i in range(int(N*student_rate)):
+        plist.append("Student")#plist.append("StudentWithVacation")
+    for i in range(int(N*Blue_collar)):
+        plist.append("Blue_collar")
+    for i in range(int(N*Housewife)):
+        plist.append("Housewife")
     return plist
 
 
@@ -80,6 +83,7 @@ def inc_mean(list,index):
 def testcode(student_rate,b_collar_rate,h_wife_rate,trial,memo):
     for i in range(trial):
         plist = population_ratio(100,student_rate,b_collar_rate,h_wife_rate)#plist = population_ratio(10000,student_rate,b_collar_rate,h_wife_rate)
+        
         human_generate(37.25,2.6848,i,plist,memo)#human_generate(3725,2.6848,i,plist,memo)
         print('*',end="")
     
@@ -87,15 +91,34 @@ def testcode(student_rate,b_collar_rate,h_wife_rate,trial,memo):
 
 
 #student, bluecollar , housewife
-testcode(5/10, 3/10, 2/10,1,'sbh')
-testcode(5/10, 2/10, 3/10,1,'shb')
-testcode(2/10, 5/10, 3/10,1,'bhs')
-testcode(3/10, 5/10, 2/10,1,'bsh')
-testcode(2/10, 3/10, 5/10,1,'hbs')
-testcode(3/10, 2/10, 5/10,1,'hsb')
-#testcode(5/10,5/20,5/20,1,'studentmain') #student
-#testcode(5/20,5/10,5/20,1,'bluecollarmain') #bluecollar
-#testcode(5/20,5/20,5/10,1,'housewifemain') #housewife
+#5:3:2
+testcode(0.5, 0.3, 0.2,1,'sbh532')
+testcode(0.5, 0.2, 0.3,1,'shb532')
+testcode(0.2, 0.5, 0.3,1,'bhs532')
+testcode(0.3, 0.5, 0.2,1,'bsh532')
+testcode(0.2, 0.3, 0.5,1,'hbs532')
+testcode(0.3, 0.2, 0.5,1,'hsb532')
+#4:4:2
+testcode(0.4, 0.4, 0.2,1,'sbh442')
+testcode(0.4, 0.2, 0.4,1,'shb442')
+testcode(0.2, 0.4, 0.4,1,'hbs442')
+
+
+#7:2:1
+testcode(0.7, 0.2, 0.1,1,'sbh721')
+testcode(0.7, 0.1, 0.2,1,'shb721')
+testcode(0.1, 0.7, 0.2,1,'bhs721')
+testcode(0.2, 0.7, 0.1,1,'bsh721')
+testcode(0.1, 0.2, 0.7,1,'hbs721')
+testcode(0.2, 0.1, 0.7,1,'hsb721')
+
+
+
+
+
+#testcode(0.5,5/20,5/20,1,'studentmain') #student
+#testcode(5/20,0.5,5/20,1,'bluecollarmain') #bluecollar
+#testcode(5/20,5/20,0.5,1,'housewifemain') #housewife
 
 #random.choice(list)
 #print(list)
