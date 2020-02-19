@@ -9,7 +9,7 @@ count_num=0
 
 for i in range(len(lines)):
 	line = lines[i].split('\n')[0]
-	if line.startswith("global: 2192"):
+	if line.startswith("global:"):
 		break
 	elif line=="reported":
 		report_time+=1
@@ -18,5 +18,5 @@ for i in range(len(lines)):
 		satisfaction+=float(elements[1])
 		count_num+=1
 avg=satisfaction/count_num
-print (avg,report_time)
-
+print (avg)
+print(report_time)
