@@ -14,26 +14,26 @@ from config import *
 class Housewife(HumanType):
     def __init__(self,_id):
         HumanType.__init__(self ,_id)
-        #self.out_time = TimeStructContstraintToDay(13,00, Statistic(0, 1, STDDEV))
+        #self.out_time = TimeStructContstraintToDay(13,00, Statistic(0, 1, TIME_STDDEV))
         self.out_time = TimeStructContstraintToDayDeterministic(13,00)
-        self.trash = Statistic(1,0.9,TRASH_STDDEV)
+        self.trash = Statistic(RANDOM_SEED,0.9,TRASH_STDDEV)
         pass
     
     def get_type(self):
         return "Housewife"
         
     def get_wakeup(self):
-        return TimeStruct(6, 17, Statistic(0, 0, 1))
+        return TimeStruct(6, 17, Statistic(RANDOM_SEED, 0, TIME_STDDEV))
     
     def get_sleep(self):
-        return TimeStruct(23, 21, Statistic(0, 0, 1))
+        return TimeStruct(23, 21, Statistic(RANDOM_SEED, 0, 1))
         
     def get_out(self):
         return self.out_time 
         #return TimeStructConstraintRandom(self.get_wakeup(), self.get_sleep(), Statistic(0, 10, 6))
         
     def get_in(self):
-        return TimeStruct(15, 0, Statistic(0, 0, 1))
+        return TimeStruct(15, 0, Statistic(RANDOM_SEED, 0, 1))
         """
                             def get_trash(self):
                                 ev_t=SystemSimulator().get_engine("sname").get_global_time()
@@ -66,25 +66,25 @@ class Housewife(HumanType):
 class Student(HumanType):
     def __init__(self,_id):
         HumanType.__init__(self ,_id)
-        self.out_time = TimeStructContstraintToDay(8,58, Statistic(0, 1, STDDEV))
+        self.out_time = TimeStructContstraintToDay(8,58, Statistic(0, 1, TIME_STDDEV))
         #self.out_time = TimeStructContstraintToDayDeterministic(9,58)
-        self.trash = Statistic(2,0.9,TRASH_STDDEV)
+        self.trash = Statistic(RANDOM_SEED+1,0.9,TRASH_STDDEV)
         pass
     
     def get_type(self):
         return "Student"
 
     def get_wakeup(self):
-        return TimeStruct(7,58, Statistic(0, 0, 1))
+        return TimeStruct(7,58, Statistic(RANDOM_SEED, 0, 1))
         
     def get_sleep(self):
-        return TimeStruct(24,51, Statistic(0, 0, 1))
+        return TimeStruct(24,51, Statistic(RANDOM_SEED, 0, 1))
   
     def get_out(self):
         return self.out_time
 
     def get_in(self):
-        return TimeStruct(21,00, Statistic(0, 0, 1))
+        return TimeStruct(21,00, Statistic(RANDOM_SEED, 0, 1))
 
     def get_trash(self):
         return self.trash.get_delta()
@@ -113,16 +113,16 @@ class StudentWithVacation(HumanType):
         return "Student"
 
     def get_wakeup(self):
-        return TimeStruct(7,58, Statistic(0, 0, 1))
+        return TimeStruct(7,58, Statistic(RANDOM_SEED, 0, 1))
         
     def get_sleep(self):
-        return TimeStruct(24,51, Statistic(0, 0, 1))
+        return TimeStruct(24,51, Statistic(RANDOM_SEED, 0, 1))
   
     def get_out(self):
         if self.approach == False:
             self.approach=True
             self.vacation=False
-            return TimeStruct(1464,0,Statistic(0, 0, 1)) # 방학대기 
+            return TimeStruct(1464,0,Statistic(RANDOM_SEED, 0, 1)) # 방학대기 
 
         else:
             self.count+=1
@@ -131,14 +131,14 @@ class StudentWithVacation(HumanType):
                 self.vacation=True
                 self.approach = False
                 self.count=0    
-                return TimeStructContstraintToDay(7,58, Statistic(0, 1, STDDEV))
+                return TimeStructContstraintToDay(7,58, Statistic(RANDOM_SEED, 1, TIME_STDDEV))
             else:
                 
-                return TimeStructContstraintToDay(7,58, Statistic(0, 1, STDDEV))
+                return TimeStructContstraintToDay(7,58, Statistic(RANDOM_SEED, 1, TIME_STDDEV))
 
 
     def get_in(self):
-        return TimeStruct(21,00, Statistic(0, 0, 1))
+        return TimeStruct(21,00, Statistic(RANDOM_SEED, 0, 1))
 
     def get_trash(self):
         if self.vacation:
@@ -168,25 +168,25 @@ class StudentWithVacation(HumanType):
 class Blue_collar(HumanType):
     def __init__(self,_id):
         HumanType.__init__(self ,_id)
-        #self.out_time = TimeStructContstraintToDay(6,22, Statistic(0, 1, STDDEV))
+        #self.out_time = TimeStructContstraintToDay(6,22, Statistic(0, 1, TIME_STDDEV))
         self.out_time = TimeStructContstraintToDayDeterministic(6,22)
-        self.trash = Statistic(3,0.9,TRASH_STDDEV)
+        self.trash = Statistic(RANDOM_SEED+2,0.9,TRASH_STDDEV)
         pass
     
     def get_type(self):
         return "Blue_collar"
 
     def get_wakeup(self):
-        return TimeStruct(6,22, Statistic(0, 0, 1))
+        return TimeStruct(6,22, Statistic(RANDOM_SEED, 0, 1))
         
     def get_sleep(self):
-        return TimeStruct(23,35, Statistic(0, 0, 1))
+        return TimeStruct(23,35, Statistic(RANDOM_SEED, 0, 1))
   
     def get_out(self):
         return self.out_time
 
     def get_in(self):
-        return TimeStruct(17,30, Statistic(0, 0, 1))
+        return TimeStruct(17,30, Statistic(RANDOM_SEED, 0, 1))
 
     def get_trash(self):
         return self.trash.get_delta()
@@ -216,16 +216,16 @@ class Self_employment(HumanType):
         return "Self_employment"
 
     def get_wakeup(self):
-        return TimeStruct(6,43, Statistic(0, 0, 1))
+        return TimeStruct(6,43, Statistic(RANDOM_SEED, 0, 1))
         
     def get_sleep(self):
-        return TimeStruct(23,54, Statistic(0, 0, 1))
+        return TimeStruct(23,54, Statistic(RANDOM_SEED, 0, 1))
   
     def get_out(self):
-        return TimeStructContstraintToDay(6,43, Statistic(0, 1, STDDEV))
+        return TimeStructContstraintToDay(RANDOM_SEED,43, Statistic(0, 1, TIME_STDDEV))
 
     def get_in(self):
-        return TimeStruct(20,00, Statistic(0, 0, 1))
+        return TimeStruct(20,00, Statistic(RANDOM_SEED, 0, 1))
 
     def get_trash(self):
         return 1          
@@ -249,16 +249,16 @@ class White_collar(HumanType):
         return "White_collar"
 
     def get_wakeup(self):
-        return TimeStruct(6,36, Statistic(0, 0, 1))
+        return TimeStruct(6,36, Statistic(RANDOM_SEED, 0, 1))
         
     def get_sleep(self):
-        return TimeStruct(23,53, Statistic(0, 0, 1))
+        return TimeStruct(23,53, Statistic(RANDOM_SEED, 0, 1))
   
     def get_out(self):
-        return TimeStruct(6,36, Statistic(0, 1, STDDEV))
+        return TimeStruct(6,36, Statistic(RANDOM_SEED, 1, TIME_STDDEV))
 
     def get_in(self):
-        return TimeStruct(17,30, Statistic(0, 0, 1))
+        return TimeStruct(17,30, Statistic(RANDOM_SEED, 0, 1))
 
     def get_trash(self):
         return 1          
@@ -283,16 +283,16 @@ class Inoccupation(HumanType):
         return "Inoccupation"
 
     def get_wakeup(self):
-        return TimeStruct(6,26, Statistic(0, 0, 1))
+        return TimeStruct(6,26, Statistic(RANDOM_SEED, 0, 1))
         
     def get_sleep(self):
-        return TimeStruct(23,16, Statistic(0, 0, 1))
+        return TimeStruct(23,16, Statistic(RANDOM_SEED, 0, 1))
   
     def get_out(self):
-        return TimeStruct(6,26, Statistic(0, 1, STDDEV))
+        return TimeStruct(6,26, Statistic(RANDOM_SEED, 1, TIME_STDDEV))
 
     def get_in(self):
-        return TimeStruct(17,00, Statistic(0, 0, 1))
+        return TimeStruct(17,00, Statistic(RANDOM_SEED, 0, 1))
 
     def get_trash(self):
         return 1          
@@ -311,23 +311,23 @@ class Inoccupation(HumanType):
 class AFF(HumanType):
     def __init__(self, _id):
         HumanType.__init__(self, _id)
-        self.out_time= TimeStructContstraintToDay(6, 30, Statistic(0, 1, STDDEV)) #
+        self.out_time= TimeStructContstraintToDay(6, 30, Statistic(RANDOM_SEED, 1, STDDEV)) #
         pass
         
     def get_type(self):
         return "AFF"
 
     def get_wakeup(self):
-         return TimeStruct(5, 22, Statistic(0, 0, 1))
+         return TimeStruct(5, 22, Statistic(RANDOM_SEED, 0, 1))
     
     def get_sleep(self):
-        return TimeStruct(22, 14, Statistic(0, 0, 1))
+        return TimeStruct(22, 14, Statistic(RANDOM_SEED, 0, 1))
 
     def get_out(self):
         return self.out_time
 
     def get_in(self):
-        return TimeStruct(17, 0, Statistic(0, 0, 1))
+        return TimeStruct(17, 0, Statistic(RANDOM_SEED, 0, 1))
     
     def get_trash(self):
         return 1
