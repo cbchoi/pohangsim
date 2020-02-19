@@ -22,3 +22,18 @@ SIMULATION_MODE = 'VIRTUAL_TIME'
 #REQUEST_FREQ = 1
 TIME_DENSITY=0.01
 
+TEMP_CAN_SIZE = 0
+GARBAGECAN_SIZE=2
+GARBAGETRUCK_SIZE=3#8*GARBAGECAN_SIZE#25.86530412
+
+STDDEV = 0.2
+TRASH_STDDEV = 0
+RANDOM_SEED = 0
+
+#simulation_time = 72
+#simulation_time=448
+simulation_time=2192 #quarter
+#simulation_time=8762 # year
+#simulation_time=26282# 3year
+#simulation_time=43802# 5year
+#simulation_time=87602# 10year

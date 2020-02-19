@@ -33,6 +33,13 @@ class TimeStruct(object):
     def get_unit_time(self):
         delta = self.stat.get_delta()
         return self.hour + float(self.minute)/60 + delta
+
+class TimeStructDeterministic(TimeStruct):
+    def __init__(self, hour, minute):
+        super(TimeStructDeterministic, self).__init__(hour, minute, None)
+
+    def get_unit_time(self):
+        return self.hour + float(self.minute)/60
         
 class TimeStructContstraintToDay(TimeStruct):
     #ID = 0
@@ -49,6 +56,18 @@ class TimeStructContstraintToDay(TimeStruct):
         self.prev_time = 24 - cur_time
 
         #print("prev_time:", prev_time, ", self.prev_time", id(self.prev_time), ", out_time:", prev_time+cur_time, )
+        return prev_time + cur_time
+
+class TimeStructContstraintToDayDeterministic(TimeStruct):
+    #ID = 0
+    def __init__(self, hour, minute):
+        super(TimeStructContstraintToDayDeterministic, self).__init__(hour, minute, None)
+        self.prev_time = 0
+
+    def get_unit_time(self):
+        prev_time = self.prev_time
+        cur_time = self.hour + float(self.minute)/60 
+        self.prev_time = 24 - cur_time
         return prev_time + cur_time
 
 class TimeStructConstraintRandom(TimeStruct):

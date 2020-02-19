@@ -30,6 +30,12 @@ class Check(BehaviorModelExecutor):
 #        self.satisfaction = 100
 #        self.hid = hid
 
+    def get_satis(self, trash):
+        if trash > 0.5:
+            return -10
+        else:
+            return 10
+        pass
         
     def ext_trans(self,port, msg):
         if self.htype.is_vacation():
@@ -38,16 +44,16 @@ class Check(BehaviorModelExecutor):
         else:
             if port == "request":
                 self._cur_state = "CHECK"
-            #value = msg.retrieve()[0]
             
-            #print("[check] " + self.get_name() + " CHECK state")
             if port == "checked":
-                #print("[check]%"
                 if self.htype.satisfaction==None:
                     self.htype.satisfaction=100
                     self.htype.satisfaction += self.htype.get_satisfaction_func(msg.retrieve()[0])
                 else:                            
-                    self.htype.satisfaction += self.htype.get_satisfaction_func(msg.retrieve()[0])
+                #    self.htype.satisfaction += self.htype.get_satisfaction_func(msg.retrieve()[0])
+                    self.htype.satisfaction += self.get_satis(msg.retrieve()[0])
+
+                
                 if self.htype.satisfaction >= 100:
                     self.htype.satisfaction = 100
                 if self.htype.satisfaction < 0:
