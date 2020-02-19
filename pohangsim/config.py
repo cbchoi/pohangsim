@@ -1,20 +1,3 @@
-# Stores credential information
-GIT_USER_ID='test'
-GIT_USER_PASSWORD='test'
-
-
-# Google Drive API, credentials
-GOOGLE_SERVICE_KEY='Your-Google-service-key'
-GOOGLE_SPREADSHEET_NAME = 'Your-Google-spreadsheet-name'
-GOOGLE_WORKSHEET = 'Active-Worksheet'
-
-# PUBLIC_DATA_SERVICE_KEY
-PUBLIC_DATA_SERVICE_KEY = "Your-Public-Data-Service-Key"
-PUBLIC_DATA_REQUEST_URL = "Your-data-request-url"
-
-# Air Pollution
-STATION = "Station-name"
-
 # SIMULATION_MODE
 SIMULATION_MODE = 'VIRTUAL_TIME'
 
@@ -31,7 +14,7 @@ TRUCK_CYCLE=24*2
 TRUCK_DELAY=0.1 #FIX
 
 TIME_STDDEV = 0.2
-TRASH_STDDEV = 0
+TRASH_STDDEV = 0.3
 RANDOM_SEED = 0
 
 #simulation_time = 72

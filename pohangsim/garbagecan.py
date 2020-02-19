@@ -68,7 +68,7 @@ class GarbageCan(BehaviorModelExecutor):
 
             for i in range(int(length+0.5)):
                 if i == int(cur_list[indx] +0.5):
-                    print(ag_value[cur_list[indx]])
+                    #print(ag_value[cur_list[indx]])
                     indx += 1
 
                 self.fileout.write(str(i))

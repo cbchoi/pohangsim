@@ -1,13 +1,14 @@
 from abc import *
 #import numpy as np
 import random
-from ctypes import c_int, addressof
+from datetime import datetime
 
 class Statistic(object):
     def __init__(self, seed, mean, stddev):
         self.mean = mean
         self.stddev = stddev
         self.rseed = seed
+        random.seed(datetime.now())
 
     def get_mean(self):
         return self.mean

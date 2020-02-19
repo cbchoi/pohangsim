@@ -91,7 +91,7 @@ class SysExecutor(SysObject, BehaviorModel):
                     delete_lst.append(agent)
 
             for agent in delete_lst:
-                print("global:",self.global_time," del agent:", agent.get_name())
+                #print("global:",self.global_time," del agent:", agent.get_name())
                 del(self.active_obj_map[agent.get_obj_id()])
                 
                 port_del_lst = []
