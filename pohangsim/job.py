@@ -5,14 +5,18 @@ from core_component import HumanType
 from core_component import TimeStruct
 from core_component import TimeStructContstraintToDay
 from core_component import TimeStructConstraintRandom
+from core_component import TimeStructDeterministic
+from core_component import TimeStructContstraintToDayDeterministic
 
 from evsim.system_simulator import SystemSimulator
 
+from config import *
 class Housewife(HumanType):
     def __init__(self,_id):
         HumanType.__init__(self ,_id)
-        self.out_time = TimeStructContstraintToDay(13,00, Statistic(0, 1, 0.2))
-        self.set_satisfaction(None)
+        #self.out_time = TimeStructContstraintToDay(13,00, Statistic(0, 1, STDDEV))
+        self.out_time = TimeStructContstraintToDayDeterministic(13,00)
+        self.trash = Statistic(1,0.9,TRASH_STDDEV)
         pass
     
     def get_type(self):
@@ -41,7 +45,7 @@ class Housewife(HumanType):
                                     return 1.2
         """
     def get_trash(self):
-        return 0.9
+        return self.trash.get_delta()
         
     def get_satisfaction_func(self, trash):
         if trash >= 0.8 :
@@ -50,15 +54,21 @@ class Housewife(HumanType):
             return 20
         elif trash < 0.8:
             return 10
- 
+        """
+        if trash >0:
+            return -10
+        else:
+            return 10
+        """
     def is_vacation(self):
         return False
 
 class Student(HumanType):
     def __init__(self,_id):
         HumanType.__init__(self ,_id)
-        self.out_time = TimeStructContstraintToDay(7,58, Statistic(0, 1, 0.2))
-        self.set_satisfaction(None)
+        self.out_time = TimeStructContstraintToDay(8,58, Statistic(0, 1, STDDEV))
+        #self.out_time = TimeStructContstraintToDayDeterministic(9,58)
+        self.trash = Statistic(2,0.9,TRASH_STDDEV)
         pass
     
     def get_type(self):
@@ -77,7 +87,7 @@ class Student(HumanType):
         return TimeStruct(21,00, Statistic(0, 0, 1))
 
     def get_trash(self):
-        return 0.9        
+        return self.trash.get_delta()
 
     def get_satisfaction_func(self, trash):
         if trash >= 0.8 :
@@ -121,10 +131,10 @@ class StudentWithVacation(HumanType):
                 self.vacation=True
                 self.approach = False
                 self.count=0    
-                return TimeStructContstraintToDay(7,58, Statistic(0, 1, 0.2))
+                return TimeStructContstraintToDay(7,58, Statistic(0, 1, STDDEV))
             else:
                 
-                return TimeStructContstraintToDay(7,58, Statistic(0, 1, 0.2))
+                return TimeStructContstraintToDay(7,58, Statistic(0, 1, STDDEV))
 
 
     def get_in(self):
@@ -158,8 +168,9 @@ class StudentWithVacation(HumanType):
 class Blue_collar(HumanType):
     def __init__(self,_id):
         HumanType.__init__(self ,_id)
-        self.out_time = TimeStructContstraintToDay(6,22, Statistic(0, 1, 0.2))
-        self.set_satisfaction(None)
+        #self.out_time = TimeStructContstraintToDay(6,22, Statistic(0, 1, STDDEV))
+        self.out_time = TimeStructContstraintToDayDeterministic(6,22)
+        self.trash = Statistic(3,0.9,TRASH_STDDEV)
         pass
     
     def get_type(self):
@@ -178,16 +189,21 @@ class Blue_collar(HumanType):
         return TimeStruct(17,30, Statistic(0, 0, 1))
 
     def get_trash(self):
-        return 0.9
+        return self.trash.get_delta()
 
     def get_satisfaction_func(self, trash):
+        """if trash >0:
+                                    return -10
+                                else:
+                                    return 10"""
+        
         if trash >= 0.8:
             return -10
         elif trash <= 0:
             return 20
         elif trash < 0.8:
             return 10
-
+        
     def is_vacation(self):
         return False
 
@@ -206,7 +222,7 @@ class Self_employment(HumanType):
         return TimeStruct(23,54, Statistic(0, 0, 1))
   
     def get_out(self):
-        return TimeStructContstraintToDay(6,43, Statistic(0, 1, 0.2))
+        return TimeStructContstraintToDay(6,43, Statistic(0, 1, STDDEV))
 
     def get_in(self):
         return TimeStruct(20,00, Statistic(0, 0, 1))
@@ -239,7 +255,7 @@ class White_collar(HumanType):
         return TimeStruct(23,53, Statistic(0, 0, 1))
   
     def get_out(self):
-        return TimeStruct(6,36, Statistic(0, 1, 0.2))
+        return TimeStruct(6,36, Statistic(0, 1, STDDEV))
 
     def get_in(self):
         return TimeStruct(17,30, Statistic(0, 0, 1))
@@ -273,7 +289,7 @@ class Inoccupation(HumanType):
         return TimeStruct(23,16, Statistic(0, 0, 1))
   
     def get_out(self):
-        return TimeStruct(6,26, Statistic(0, 1, 0.2))
+        return TimeStruct(6,26, Statistic(0, 1, STDDEV))
 
     def get_in(self):
         return TimeStruct(17,00, Statistic(0, 0, 1))
@@ -295,7 +311,7 @@ class Inoccupation(HumanType):
 class AFF(HumanType):
     def __init__(self, _id):
         HumanType.__init__(self, _id)
-        self.out_time= TimeStructContstraintToDay(6, 30, Statistic(0, 1, 0.2)) #
+        self.out_time= TimeStructContstraintToDay(6, 30, Statistic(0, 1, STDDEV)) #
         pass
         
     def get_type(self):

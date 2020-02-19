@@ -59,7 +59,7 @@ for i in range(len(lines)):
 
 se = SystemSimulator()
 
-SystemSimulator().register_engine("sname", SIMULATION_MODE)
+SystemSimulator().register_engine("sname", SIMULATION_MODE, TIME_DENSITY)
 
 c = Clock(0, simulation_time, "clock", "sname")
 SystemSimulator().get_engine("sname").register_entity(c)
