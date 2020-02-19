@@ -25,7 +25,7 @@ def human_generate(N,gausmean,seed,plist,memo):
     random.seed(seed) 
     standard=int(gausmean*N)
     #랜덤리스트 생성
-    for _ in range(N):
+    for _ in range(int(N)):
         val = random.gauss(gausmean,1)
         if val <= 0.5:
             val = 1
@@ -41,7 +41,7 @@ def human_generate(N,gausmean,seed,plist,memo):
             inc_mean(hlist,i)
 
     #파일로 저장
-    with open("population/population_{0}_N{1}_seed{2}.txt".format(memo,standard,seed), 'w') as f:  
+    with open("update/{0}_N{1}_seed{2}.txt".format(memo,standard,seed), 'w') as f:  
         family=0
         buildingcount=0
         #fam_per_building=b_percent(random.random())
@@ -80,13 +80,19 @@ def inc_mean(list,index):
 def testcode(student_rate,b_collar_rate,h_wife_rate,trial,memo):
     for i in range(trial):
         plist = population_ratio(100,student_rate,b_collar_rate,h_wife_rate)#plist = population_ratio(10000,student_rate,b_collar_rate,h_wife_rate)
-        human_generate(37,2.6848,i,plist,memo)#human_generate(3725,2.6848,i,plist,memo)
+        human_generate(37.25,2.6848,i,plist,memo)#human_generate(3725,2.6848,i,plist,memo)
         print('*',end="")
     
 
-testcode(1,0,0,1,'s100') #student
-testcode(0,1,0,1,'b100') #blue
-testcode(0,0,1,1,'h100') #house
+
+
+#student, bluecollar , housewife
+testcode(5/10, 3/10, 2/10,1,'sbh')
+testcode(5/10, 2/10, 3/10,1,'shb')
+testcode(2/10, 5/10, 3/10,1,'bhs')
+testcode(3/10, 5/10, 2/10,1,'bsh')
+testcode(2/10, 3/10, 5/10,1,'hbs')
+testcode(3/10, 2/10, 5/10,1,'hsb')
 #testcode(5/10,5/20,5/20,1,'studentmain') #student
 #testcode(5/20,5/10,5/20,1,'bluecollarmain') #bluecollar
 #testcode(5/20,5/20,5/10,1,'housewifemain') #housewife
