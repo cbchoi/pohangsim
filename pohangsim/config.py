@@ -23,7 +23,7 @@ SIMULATION_MODE = 'VIRTUAL_TIME'
 TIME_DENSITY=0.01
 
 TEMP_CAN_SIZE = 0
-GARBAGECAN_SIZE=15
+GARBAGECAN_SIZE=30
 GARBAGETRUCK_SIZE=GARBAGECAN_SIZE*4#8*GARBAGECAN_SIZE#25.86530412
 
 TRUCK_INITIAL=33 #FIX
@@ -31,12 +31,12 @@ TRUCK_CYCLE=24*2
 TRUCK_DELAY=0.1 #FIX
 
 TIME_STDDEV = 0.2
-TRASH_STDDEV = 0
+TRASH_STDDEV = 0.4
 RANDOM_SEED = 0
 
 #simulation_time = 72
-#simulation_time=448
-simulation_time=2192 #quarter
+simulation_time=448
+#simulation_time=2192 #quarter
 #simulation_time=8762 # year
 #simulation_time=26282# 3year
 #simulation_time=43802# 5year
