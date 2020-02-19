@@ -19,17 +19,18 @@ def execute_fn(executable):
 	os.system(ex)
 
 #532
-exp1 = "python3 exp.py housewife bhs532_N100_seed0  > 532blue_hs_"+str(TIME_STDDEV)+"trash"+str(TRASH_STDDEV)+str(GARBAGECAN_SIZE)+".log"
-exp2 = "python3 exp.py housewife bsh532_N100_seed0  > 532blue_sh_"+str(TIME_STDDEV)+"trash"+str(TRASH_STDDEV)+str(GARBAGECAN_SIZE)+".log"
-exp3 = "python3 exp.py housewife sbh532_N100_seed0  > 532stud_bh_"+str(TIME_STDDEV)+"trash"+str(TRASH_STDDEV)+str(GARBAGECAN_SIZE)+".log"
-exp4 = "python3 exp.py housewife shb532_N100_seed0  > 532stud_hb_"+str(TIME_STDDEV)+"trash"+str(TRASH_STDDEV)+str(GARBAGECAN_SIZE)+".log"
-exp5 = "python3 exp.py housewife hsb532_N100_seed0  > 532house_sb_"+str(TIME_STDDEV)+"trash"+str(TRASH_STDDEV)+str(GARBAGECAN_SIZE)+".log"
-exp6 = "python3 exp.py housewife hbs532_N100_seed0  > 532house_bs_"+str(TIME_STDDEV)+"trash"+str(TRASH_STDDEV)+str(GARBAGECAN_SIZE)+".log"
+exp1 = "python3 exp.py bhs532_N100_seed0  > 532blue_hs_"+str(TIME_STDDEV)+"trash"+str(TRASH_STDDEV)+"_"+str(GARBAGECAN_SIZE)+"_"+str(RANDOM_SEED)+".log"
+exp2 = "python3 exp.py bsh532_N100_seed0  > 532blue_sh_"+str(TIME_STDDEV)+"trash"+str(TRASH_STDDEV)+"_"+str(GARBAGECAN_SIZE)+"_"+str(RANDOM_SEED)+".log"
+exp3 = "python3 exp.py sbh532_N100_seed0  > 532stud_bh_"+str(TIME_STDDEV)+"trash"+str(TRASH_STDDEV)+"_"+str(GARBAGECAN_SIZE)+"_"+str(RANDOM_SEED)+".log"
+exp4 = "python3 exp.py shb532_N100_seed0  > 532stud_hb_"+str(TIME_STDDEV)+"trash"+str(TRASH_STDDEV)+"_"+str(GARBAGECAN_SIZE)+"_"+str(RANDOM_SEED)+".log"
+exp5 = "python3 exp.py hsb532_N100_seed0  > 532house_sb_"+str(TIME_STDDEV)+"trash"+str(TRASH_STDDEV)+"_"+str(GARBAGECAN_SIZE)+"_"+str(RANDOM_SEED)+".log"
+exp6 = "python3 exp.py hbs532_N100_seed0  > 532house_bs_"+str(TIME_STDDEV)+"trash"+str(TRASH_STDDEV)+"_"+str(GARBAGECAN_SIZE)+"_"+str(RANDOM_SEED)+".log"
 #442
-exp7 = "python3 exp.py housewife bhs532_N100_seed0  > 442blue_hs_"+str(TIME_STDDEV)+"trash"+str(TRASH_STDDEV)+str(GARBAGECAN_SIZE)+".log"
-exp8 = "python3 exp.py housewife bsh532_N100_seed0  > 442blue_sh_"+str(TIME_STDDEV)+"trash"+str(TRASH_STDDEV)+str(GARBAGECAN_SIZE)+".log"
-exp9 = "python3 exp.py housewife sbh532_N100_seed0  > 442stud_bh_"+str(TIME_STDDEV)+"trash"+str(TRASH_STDDEV)+str(GARBAGECAN_SIZE)+".log"
+exp7 = "python3 exp.py hbs442_N100_seed0  > 442house_bs_"+str(TIME_STDDEV)+"trash"+str(TRASH_STDDEV)+"_"+str(GARBAGECAN_SIZE)+"_"+str(RANDOM_SEED)+".log"
+exp8 = "python3 exp.py shb442_N100_seed0  > 442stud_hb_"+str(TIME_STDDEV)+"trash"+str(TRASH_STDDEV)+"_"+str(GARBAGECAN_SIZE)+"_"+str(RANDOM_SEED)+".log"
+exp9 = "python3 exp.py sbh442_N100_seed0  > 442stud_bh_"+str(TIME_STDDEV)+"trash"+str(TRASH_STDDEV)+"_"+str(GARBAGECAN_SIZE)+"_"+str(RANDOM_SEED)+".log"
 #721
+
 exp10 = "python3 exp.py housewife bhs721_N100_seed0  > 721blue_hs_"+str(TIME_STDDEV)+"trash"+str(TRASH_STDDEV)+str(GARBAGECAN_SIZE)+".log"
 exp11 = "python3 exp.py housewife bsh721_N100_seed0  > 721blue_sh_"+str(TIME_STDDEV)+"trash"+str(TRASH_STDDEV)+str(GARBAGECAN_SIZE)+".log"
 exp12 = "python3 exp.py housewife sbh721_N100_seed0  > 721stud_bh_"+str(TIME_STDDEV)+"trash"+str(TRASH_STDDEV)+str(GARBAGECAN_SIZE)+".log"
@@ -43,3 +44,4 @@ total = len(ex_list)
 for idx, ex in enumerate(ex_list):
 	print(f"Processing {idx+1}/{total}:", ex)
 	execute_fn(ex)
+
