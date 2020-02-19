@@ -1,6 +1,5 @@
 import contexts
 import sys,os
-#import numpy as np
 
 from evsim.system_simulator import SystemSimulator
 from evsim.behavior_model_executor import BehaviorModelExecutor

@@ -4,7 +4,7 @@ from evsim.system_message import SysMessage
 from evsim.definition import *
 
 from config import *
-
+import os, sys
 #from instance.config import *
 
 class GarbageTruck(BehaviorModelExecutor):
@@ -13,9 +13,9 @@ class GarbageTruck(BehaviorModelExecutor):
 
         self.init_state("IDLE")
         self.insert_state("IDLE", Infinite)
-        self.insert_state("INITAL_APPROACH", 33)
+        self.insert_state("INITAL_APPROACH", TRUCK_INITIAL)
         self.insert_state("REQUEST", 0)
-        self.insert_state("APPROACH", 48)
+        self.insert_state("APPROACH", TRUCK_CYCLE)
 
         self.insert_input_port("start")
         self.insert_input_port("end")
@@ -81,27 +81,6 @@ class GarbageTruck(BehaviorModelExecutor):
             #print("[truck_storage]"+  str(port) + ":" +str(self.garbage_port_map[port]),self.truck_current_storage)
             
     def output(self):
-        
-        """
-
-겨울방학 - 1학기 - 여름방학 2학기
-쓰레기차 용량이 증가하는 시점
-1. 1학기 방학 1주전(4152~4392)
-2. 2학기 방학 1주전(8520~8760
-3. 김장시점(8304~8784)  20일간
-
-        
-        ev_t = SystemSimulator().get_engine("sname").get_global_time()
-        #print(ev_t)
-        if ev_t>=4152 and ev_t<=4392 :#1차방학
-            self.truck_storage=self.extended_storage
-        elif ev_t >=8520 and ev_t<=8760:#2차방학
-            self.truck_storage=self.extended_storage
-        elif ev_t >=8280 and ev_t<=8760: #김장
-            self.truck_storage=self.extended_storage
-        else:
-            self.truck_storage=self.original_storage
-        """
         if self._cur_state == "REQUEST":
             msg = SysMessage(self.get_name(), self.garbage_id_map[self.schedule[self.cur_index][0]])
             msg.insert(self.truck_storage-self.truck_current_storage)
@@ -124,8 +103,3 @@ class GarbageTruck(BehaviorModelExecutor):
             self.cur_index = 0       
             self.truck_current_storage = 0
             self._cur_state = "REQUEST"
-
- 
-#    def __del__(self):
-#       self.accummulated_garbage += self.truck_current_storage
-#        print(self.accummulated_garbage)

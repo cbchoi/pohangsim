@@ -1,6 +1,5 @@
 import contexts
-import sys, os
-#import numpy as np
+import sys,os
 
 from evsim.system_simulator import SystemSimulator
 from evsim.behavior_model_executor import BehaviorModelExecutor
@@ -8,19 +7,12 @@ from evsim.system_message import SysMessage
 from evsim.definition import *
 
 from config import *
-#from instance.config import *
+
 from clock import Clock
 from core_component import HumanType
 from core_component import FamilyType
 
-from job import AFF
-from job import Student
-from job import Housewife
-from job import Blue_collar
-from job import White_collar
-from job import Inoccupation
-from job import Self_employment
-from job import StudentWithVacation
+from job import *
 
 from human import Human
 from check import Check
@@ -32,12 +24,10 @@ from family import Family
 blist=[]
 hlist=[]
 fam=[]
-memo=str(sys.argv[1])
+outputlocation=str(sys.argv[1])+str(TIME_STDDEV)
+if not os.path.exists(outputlocation):
+    os.makedirs(outputlocation)
 
-if not os.path.exists(memo+str(STDDEV)):
-        os.makedirs(memo+str(STDDEV))
-    
-#file = open('half.txt','r')
 file = open('update/h1.txt','r')
 lines = file.readlines()
 file.close()
@@ -57,26 +47,15 @@ for i in range(len(lines)):
 
 se = SystemSimulator()
 
-SystemSimulator().register_engine("sname", SIMULATION_MODE, TIME_DENSITY)
+se.register_engine("sname", SIMULATION_MODE, TIME_DENSITY)
 
 c = Clock(0, simulation_time, "clock", "sname")
-SystemSimulator().get_engine("sname").register_entity(c)
-gt = GarbageTruck(0, simulation_time, "garbage_truck", 'sname', GARBAGETRUCK_SIZE, [e for e in enumerate([0.1 for building in blist])],memo+str(STDDEV))#4.7*13*3
-SystemSimulator().get_engine("sname").register_entity(gt)
+se.get_engine("sname").register_entity(c)
+gt = GarbageTruck(0, simulation_time, "garbage_truck", 'sname', GARBAGETRUCK_SIZE, [e for e in enumerate([TRUCK_DELAY for building in blist])],outputlocation)#4.7*13*3
+se.get_engine("sname").register_entity(gt)
 
 gv = Government(0, simulation_time,"government","sname")
-SystemSimulator().get_engine("sname").register_entity(gv)
-
-def get_human_id():
-    global h_id
-    h_id += 1
-    return h_id
-
-def get_garbagecan_id():
-    global garbagecan_id
-    garbagecan_id += 1
-    return garbagecan_id
-
+se.get_engine("sname").register_entity(gv)
 
 #Building Register
 
@@ -85,8 +64,8 @@ j=0
 for building in blist:
 
 
-    g = GarbageCan(0, simulation_time, "gc[{0}]".format(i), 'sname', GARBAGECAN_SIZE,memo+str(STDDEV))
-    SystemSimulator().get_engine("sname").register_entity(g)
+    g = GarbageCan(0, simulation_time, "gc[{0}]".format(i), 'sname', GARBAGECAN_SIZE,outputlocation)
+    se.get_engine("sname").register_entity(g)
     
     for flist in building:
         ftype = FamilyType(TEMP_CAN_SIZE)
@@ -98,49 +77,49 @@ for building in blist:
             h1 = Human(0, simulation_time, cname, "sname", htype)
             ch = Check(0, simulation_time, name, "sname", htype)
 
-            SystemSimulator().get_engine("sname").register_entity(h1)
-            SystemSimulator().get_engine("sname").register_entity(ch)
+            se.get_engine("sname").register_entity(h1)
+            se.get_engine("sname").register_entity(ch)
             #f1.register_member(htype)
             ftype.register_member(htype)
             
             # Connect Check & Can
             ports = g.register_human(htype.get_id())
-            SystemSimulator().get_engine("sname").coupling_relation(h1, "trash", ch, "request")
-            SystemSimulator().get_engine("sname").coupling_relation(ch, "check", g, ports[0])
+            se.get_engine("sname").coupling_relation(h1, "trash", ch, "request")
+            se.get_engine("sname").coupling_relation(ch, "check", g, ports[0])
 
-            SystemSimulator().get_engine("sname").coupling_relation(g, ports[1], ch, "checked")
-            SystemSimulator().get_engine("sname").coupling_relation(ch, "gov_report", gv, "recv_report")
+            se.get_engine("sname").coupling_relation(g, ports[1], ch, "checked")
+            se.get_engine("sname").coupling_relation(ch, "gov_report", gv, "recv_report")
     
-            SystemSimulator().get_engine("sname").coupling_relation(None, "start", h1, "start")
-            SystemSimulator().get_engine("sname").coupling_relation(None, "end", h1, "end")
-            SystemSimulator().get_engine("sname").coupling_relation(h1, "trash", f, "receive_membertrash")
+            se.get_engine("sname").coupling_relation(None, "start", h1, "start")
+            se.get_engine("sname").coupling_relation(None, "end", h1, "end")
+            se.get_engine("sname").coupling_relation(h1, "trash", f, "receive_membertrash")
        
 
-        SystemSimulator().get_engine("sname").register_entity(f)
+        se.get_engine("sname").register_entity(f)
 
         ports = g.register_family(j)
-        SystemSimulator().get_engine("sname").coupling_relation(f, "takeout_trash", g, ports[0])
+        se.get_engine("sname").coupling_relation(f, "takeout_trash", g, ports[0])
         j+=1
 
     # Connect Truck & Can
     ports = gt.register_garbage_can(i)
-    SystemSimulator().get_engine("sname").coupling_relation(g, "res_garbage", gt, ports[0])
-    SystemSimulator().get_engine("sname").coupling_relation(gt, ports[1], g, "req_empty")
+    se.get_engine("sname").coupling_relation(g, "res_garbage", gt, ports[0])
+    se.get_engine("sname").coupling_relation(gt, ports[1], g, "req_empty")
     i+=1
 
-SystemSimulator().get_engine("sname").insert_input_port("start")
+se.get_engine("sname").insert_input_port("start")
 
 
-SystemSimulator().get_engine("sname").coupling_relation(None, "start", c, "start")
-SystemSimulator().get_engine("sname").coupling_relation(None, "end", c, "end")
+se.get_engine("sname").coupling_relation(None, "start", c, "start")
+se.get_engine("sname").coupling_relation(None, "end", c, "end")
 
-#SystemSimulator().get_engine("sname").insert_external_event("report", None)
-SystemSimulator().get_engine("sname").coupling_relation(None, "start", gt, "start")
-SystemSimulator().get_engine("sname").coupling_relation(None, "end", gt, "end")
+#se.get_engine("sname").insert_external_event("report", None)
+se.get_engine("sname").coupling_relation(None, "start", gt, "start")
+se.get_engine("sname").coupling_relation(None, "end", gt, "end")
 
 # Connect Truck & Can
 
-SystemSimulator().get_engine("sname").insert_external_event("start", None)
-SystemSimulator().get_engine("sname").simulate()
+se.get_engine("sname").insert_external_event("start", None)
+se.get_engine("sname").simulate()
 
 
