@@ -8,28 +8,32 @@ from evsim.definition import *
 
 from config import *
 
-from clock import Clock
-from core_component import HumanType
-from core_component import FamilyType
+from pohangsim.clock import Clock
+from pohangsim.core_component import HumanType
+from pohangsim.core_component import FamilyType
 
-from job import *
+from pohangsim.job import *
 
-from human import Human
-from check import Check
-from government import Government
-from garbagecan import GarbageCan
-from garbage_truck import GarbageTruck
-from family import Family
+from pohangsim.human import Human
+from pohangsim.check import Check
+from pohangsim.government import Government
+from pohangsim.garbagecan import GarbageCan
+from pohangsim.garbage_truck import GarbageTruck
+from pohangsim.family import Family
 
 for kndx in range(30):
     blist=[]
     hlist=[]
     fam=[]
-    outputlocation=str(sys.argv[1])+str(TIME_STDDEV)
-    if not os.path.exists(outputlocation):
-        os.makedirs(outputlocation)
 
-    file = open("update/"+sys.argv[2]+".txt",'r')
+    if VERBOSE is True:
+        outputlocation=str(sys.argv[1])+str(TIME_STDDEV)+"trash"+str(TRASH_STDDEV)+"_"+str(GARBAGECAN_SIZE)+"_"+str(kndx)
+        if not os.path.exists(outputlocation):
+            os.makedirs(outputlocation)
+    else:
+        outputlocation = None
+
+    file = open("sceanrio/"+sys.argv[1]+".txt",'r')
     lines = file.readlines()
     file.close()
     for i in range(len(lines)):  
@@ -65,7 +69,7 @@ for kndx in range(30):
     for building in blist:
 
 
-        g = GarbageCan(0, simulation_time, "gc[{0}]".format(i), 'sname', GARBAGECAN_SIZE,outputlocation)
+        g = GarbageCan(0, simulation_time, "gc[{0}]".format(i), 'sname', GARBAGECAN_SIZE, outputlocation)
         se.get_engine("sname").register_entity(g)
         
         for flist in building:

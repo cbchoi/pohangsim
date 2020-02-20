@@ -1,5 +1,6 @@
 from abc import *
 #import numpy as np
+import copy
 import random
 from datetime import datetime
 
@@ -7,8 +8,9 @@ class Statistic(object):
     def __init__(self, seed, mean, stddev):
         self.mean = mean
         self.stddev = stddev
-        self.rseed = seed
-        random.seed(datetime.now())
+        self.rseed = datetime.now()
+        self.random = random.Random(self.rseed)
+        #self.random.seed(datetime.now())
 
     def get_mean(self):
         return self.mean
@@ -22,7 +24,7 @@ class Statistic(object):
     def get_delta(self):
         #val=np.random.normal(self.mean,self.stddev)
         # calculate delta
-        val = random.normalvariate(self.mean, self.stddev)
+        val = self.random.normalvariate(self.mean, self.stddev)
         return val
         
 class TimeStruct(object):

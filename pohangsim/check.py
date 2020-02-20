@@ -5,7 +5,7 @@ from evsim.definition import *
 
 import os
 import datetime
-from core_component import Statistic
+from pohangsim.core_component import Statistic
 from config import *
 #from instance.config import *
 
