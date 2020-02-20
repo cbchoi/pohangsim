@@ -14,8 +14,8 @@ from config import *
 class Housewife(HumanType):
     def __init__(self,_id):
         HumanType.__init__(self ,_id)
-        self.out_time = TimeStructContstraintToDay(13,00, Statistic(0, AVG_TIME, TIME_STDDEV))
-        #self.out_time = TimeStructContstraintToDayDeterministic(13,00)
+        #self.out_time = TimeStructContstraintToDay(13,00, Statistic(0, AVG_TIME, TIME_STDDEV))
+        self.out_time = TimeStructContstraintToDayDeterministic(13,00)
         self.trash = Statistic(RANDOM_SEED,0.9,TRASH_STDDEV)
         pass
     
@@ -168,8 +168,8 @@ class StudentWithVacation(HumanType):
 class Blue_collar(HumanType):
     def __init__(self,_id):
         HumanType.__init__(self ,_id)
-        self.out_time = TimeStructContstraintToDay(6,22, Statistic(0, AVG_TIME, TIME_STDDEV))
-        #self.out_time = TimeStructContstraintToDayDeterministic(6,22)
+        #self.out_time = TimeStructContstraintToDay(6,22, Statistic(0, AVG_TIME, TIME_STDDEV))
+        self.out_time = TimeStructContstraintToDayDeterministic(6,22)
         self.trash = Statistic(RANDOM_SEED+2,0.9,TRASH_STDDEV)
         pass
     
