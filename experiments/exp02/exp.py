@@ -33,7 +33,7 @@ for kndx in range(30):
     else:
         outputlocation = None
 
-    file = open("sceanrio/"+sys.argv[1]+".txt",'r')
+    file = open("../scenario/"+sys.argv[1]+".txt",'r')
     lines = file.readlines()
     file.close()
     for i in range(len(lines)):  
