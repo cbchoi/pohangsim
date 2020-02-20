@@ -75,6 +75,7 @@ class Check(BehaviorModelExecutor):
         if self._cur_state == "REPORT":
             #print('[check]#')
             msg = SysMessage(self.get_name(), "gov_report")
+            msg.insert(self.htype)
             return msg
             
         return None

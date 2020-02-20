@@ -1,4 +1,4 @@
-import random,math
+import random,math,os
 from statistics import mean
 typelist=["Student","Housewife","Blue_collar"]
 #"AFF","White_collar","Inoccupation","Self_employment"
@@ -44,6 +44,8 @@ def human_generate(N,gausmean,seed,plist,memo):
             inc_mean(hlist,i)
 
     #파일로 저장
+    if not os.path.exists("scenario"):
+        os.makedirs("scenario")
     with open("scenario/{0}_N{1}_seed{2}.txt".format(memo,standard,seed), 'w') as f:  
         family=0
         buildingcount=0
@@ -88,40 +90,40 @@ def testcode(student_rate,b_collar_rate,h_wife_rate,trial,memo):
         print('*',end="")
     
 
-"""
+
 
 #student, bluecollar , housewife
 #5:3:2
-testcode(0.5, 0.3, 0.2,1,'sbh532')
-testcode(0.5, 0.2, 0.3,1,'shb532')
-testcode(0.2, 0.5, 0.3,1,'bhs532')
-testcode(0.3, 0.5, 0.2,1,'bsh532')
-testcode(0.2, 0.3, 0.5,1,'hbs532')
-testcode(0.3, 0.2, 0.5,1,'hsb532')
+testcode(0.5, 0.3, 0.2,1,'532sbh')
+testcode(0.5, 0.2, 0.3,1,'532shb')
+testcode(0.2, 0.5, 0.3,1,'532bhs')
+testcode(0.3, 0.5, 0.2,1,'532bsh')
+testcode(0.2, 0.3, 0.5,1,'532hbs')
+testcode(0.3, 0.2, 0.5,1,'532hsb')
 #4:4:2
-testcode(0.4, 0.4, 0.2,1,'sbh442')
-testcode(0.4, 0.2, 0.4,1,'shb442')
-testcode(0.2, 0.4, 0.4,1,'hbs442')
-"""
+testcode(0.4, 0.4, 0.2,1,'442sbh')
+testcode(0.4, 0.2, 0.4,1,'442shb')
+testcode(0.2, 0.4, 0.4,1,'442hbs')
+
 #4:3:3
-testcode(0.3, 0.3, 0.4,1,'hbs433')
-testcode(0.3, 0.4, 0.3,1,'bhs433')
-testcode(0.4, 0.3, 0.3,1,'sbh433')
+testcode(0.3, 0.3, 0.4,1,'433hbs')
+testcode(0.3, 0.4, 0.3,1,'433bhs')
+testcode(0.4, 0.3, 0.3,1,'433sbh')
 #8:1:1
-testcode(0.1, 0.1, 0.8,1,'hbs811')
-testcode(0.1, 0.8, 0.1,1,'bhs811')
-testcode(0.8, 0.1, 0.1,1,'sbh811')
+testcode(0.1, 0.1, 0.8,1,'811hbs')
+testcode(0.1, 0.8, 0.1,1,'811bhs')
+testcode(0.8, 0.1, 0.1,1,'811sbh')
 #9:1:0
-testcode(0.9, 0.1, 0  , 1,'sbh910')
-testcode(0.9, 0  , 0.1, 1,'shb910')
-testcode(0.1, 0.9, 0  , 1,'bsh910')
-testcode(0.1, 0  , 0.9, 1,'hsb910')
-testcode(0  , 0.9, 0.1, 1,'bhs910')
-testcode(0  , 0.1, 0.9, 1,'hbs910')
+testcode(0.9, 0.1, 0  , 1,'910sbh')
+testcode(0.9, 0  , 0.1, 1,'910shb')
+testcode(0.1, 0.9, 0  , 1,'910bsh')
+testcode(0.1, 0  , 0.9, 1,'910hsb')
+testcode(0  , 0.9, 0.1, 1,'910bhs')
+testcode(0  , 0.1, 0.9, 1,'910hbs')
 #6:2:2
-testcode(0.2, 0.2, 0.6,1,'hbs622')
-testcode(0.2, 0.6, 0.2,1,'bhs622')
-testcode(0.6, 0.2, 0.2,1,'sbh622')
+testcode(0.2, 0.2, 0.6,1,'622hbs')
+testcode(0.2, 0.6, 0.2,1,'622bhs')
+testcode(0.6, 0.2, 0.2,1,'622sbh')
 
 
 
