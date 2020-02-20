@@ -9,8 +9,8 @@ import datetime
 from config import *
 #from instance.config import *
 
-from job import TimeStruct
-from job import HumanType
+from pohangsim.job import TimeStruct
+from pohangsim.job import HumanType
 
 class Human(BehaviorModelExecutor):
     def __init__(self, instance_time, destruct_time, name, engine_name, human):

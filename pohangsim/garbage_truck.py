@@ -68,15 +68,17 @@ class GarbageTruck(BehaviorModelExecutor):
             self.accummulated_garbage += self.truck_current_storage
 
             ev_t = SystemSimulator().get_engine("sname").get_global_time()
-            with open("{0}/truck.csv".format(self.outname),'a') as file: 
-                file.write(str(ev_t))
-                file.write(",")
-                file.write(str(self.cur_index))
-                file.write(",")
-                file.write(str(self.truck_current_storage))
-                file.write(",")
-                file.write(str(self.accummulated_garbage))
-                file.write("\n")
+
+            if self.outname is not None:
+                with open("{0}/truck.csv".format(self.outname),'a') as file: 
+                    file.write(str(ev_t))
+                    file.write(",")
+                    file.write(str(self.cur_index))
+                    file.write(",")
+                    file.write(str(self.truck_current_storage))
+                    file.write(",")
+                    file.write(str(self.accummulated_garbage))
+                    file.write("\n")
             #print(self.cur_index)
             #print("[truck_storage]"+  str(port) + ":" +str(self.garbage_port_map[port]),self.truck_current_storage)
             

@@ -42,77 +42,75 @@ class GarbageCan(BehaviorModelExecutor):
         self.family_port_map = {} 
 
         self.recv_checker_port = []
-        self.name=name
-        self.dlist={}
-        self.alist={}
-        self.a_fileout=open("{0}/can_output{1}_checker.csv".format(outp,self.name) ,"w")
-        self.fileout=open("{0}/can_output{1}.csv".format(outp ,self.name) ,"w")
+        self.name = name
+        self.outp = outp
+
+        if self.outp is not None:
+            """ To implement verbose mode """
+            self.dlist={}
+            self.alist={}
+            self.a_fileout=open("{0}/can_output{1}_checker.csv".format(outp,self.name) ,"w")
+            self.fileout=open("{0}/can_output{1}.csv".format(outp ,self.name) ,"w")
     
     def __del__(self):
-        headerlist=['time','name','trash','satisfaction']
-        for i in headerlist:
-            self.fileout.write(i)
-            self.fileout.write(",")
-        for i in headerlist[:3]:
-            self.a_fileout.write(i)
-            self.a_fileout.write(",")
-        self.fileout.write("\n")
-        self.a_fileout.write("\n")
-
-        for ag_key, ag_value in self.dlist.items():
-            cur_list = list(ag_value.keys())
-            #print(cur_list)
-            length = cur_list[-1]
-            #print(length)
-            indx = 0
-
-            for i in range(int(length+0.5)):
-                if i == int(cur_list[indx] +0.5):
-                    #print(ag_value[cur_list[indx]])
-                    indx += 1
-
-                self.fileout.write(str(i))
+        if self.outp is not None:
+            """ To implement verbose mode """
+            headerlist=['time','name','trash','satisfaction']
+            for i in headerlist:
+                self.fileout.write(i)
                 self.fileout.write(",")
-                self.fileout.write(str(ag_key))
-                self.fileout.write(",")
-                
-                for item in ag_value[cur_list[indx]]:
-                    self.fileout.write(str(item))
+            for i in headerlist[:3]:
+                self.a_fileout.write(i)
+                self.a_fileout.write(",")
+            self.fileout.write("\n")
+            self.a_fileout.write("\n")
+
+            for ag_key, ag_value in self.dlist.items():
+                cur_list = list(ag_value.keys())
+                #print(cur_list)
+                length = cur_list[-1]
+                #print(length)
+                indx = 0
+
+                for i in range(int(length+0.5)):
+                    if i == int(cur_list[indx] +0.5):
+                        #print(ag_value[cur_list[indx]])
+                        indx += 1
+
+                    self.fileout.write(str(i))
                     self.fileout.write(",")
-                
-                self.fileout.write("\n")
-                        
-        self.fileout.close()
+                    self.fileout.write(str(ag_key))
+                    self.fileout.write(",")
+                    
+                    for item in ag_value[cur_list[indx]]:
+                        self.fileout.write(str(item))
+                        self.fileout.write(",")
+                    
+                    self.fileout.write("\n")
+                            
+            self.fileout.close()
 
-        #print(self.alist.items())
-        #print(self.alist.keys())
-        for ag_key, ag_value in self.alist.items():
-            cur_list = list(ag_value.keys())
-            #print(cur_list)
-            length = cur_list[-1]
-            indx = 0
-                                       
-            for i in range(int(length+0.5)):
-                if i == int(cur_list[indx] +0.5):
-                                                            #print(ag_value[cur_list [indx]])
-                    indx += 1
-                                        
-                self.a_fileout.write(str(i))
-                self.a_fileout.write(",")
-                self.a_fileout.write(str(ag_key))
-                self.a_fileout.write(",")
-                self.a_fileout.write(str(ag_value[cur_list[indx]])) #satis
-                self.a_fileout.write(",")
-                                                           
-                self.a_fileout.write("\n")
-        #print("!!!",ag_value)
-        #for item in ag_value[cur_list[indx]]:
-        #    self.a_fileout.write(str(item))
-        #    self.a_fileout.write(",")
-        
-        #self.a_fileout.write("\n")
-                                                        
-        self.a_fileout.close()
+            for ag_key, ag_value in self.alist.items():
+                cur_list = list(ag_value.keys())
+                #print(cur_list)
+                length = cur_list[-1]
+                indx = 0
+                                           
+                for i in range(int(length+0.5)):
+                    if i == int(cur_list[indx] +0.5):
+                                                                #print(ag_value[cur_list [indx]])
+                        indx += 1
+                                            
+                    self.a_fileout.write(str(i))
+                    self.a_fileout.write(",")
+                    self.a_fileout.write(str(ag_key))
+                    self.a_fileout.write(",")
+                    self.a_fileout.write(str(ag_value[cur_list[indx]])) #satis
+                    self.a_fileout.write(",")
+                                                               
+                    self.a_fileout.write("\n")
+                                                            
+            self.a_fileout.close()
 
 
 
@@ -166,11 +164,13 @@ class GarbageCan(BehaviorModelExecutor):
             ag_satisfaction = member.get_satisfaction()
             #print(SystemSimulator().get_engine("sname").get_global_time())
             
-            if ag_name not in self.alist:
-                self.alist[ag_name] = {}
+            if self.outp is not None:
+                """ To implement verbose mode """
+                if ag_name not in self.alist:
+                    self.alist[ag_name] = {}
 
-            self.alist[ag_name][ev_t] = ag_satisfaction
-            #print(self.alist[ag_name])
+                self.alist[ag_name][ev_t] = ag_satisfaction
+                #print(self.alist[ag_name])
 
             self._cur_state = "PROCESS"
             self.recv_checker_port.append(port)
@@ -178,8 +178,6 @@ class GarbageCan(BehaviorModelExecutor):
         if port in self.family_port_map:       #garbage 누적
             #print("fam_port",port)
             data = msg.retrieve()
-
-
             ev_t = SystemSimulator().get_engine("sname").get_global_time()
             ag_id = 0
             ag_name = ""
@@ -194,11 +192,13 @@ class GarbageCan(BehaviorModelExecutor):
                 ag_satisfaction = member.get_satisfaction()
                 #print(SystemSimulator().get_engine("sname").get_global_time())
                 
-                if ag_name not in self.dlist:
-                    self.dlist[ag_name] = {}
+                if self.outp is not None:
+                    """ To implement verbose mode """
+                    if ag_name not in self.dlist:
+                        self.dlist[ag_name] = {}
 
-                self.dlist[ag_name][ev_t] = (ag_amount, ag_satisfaction) 
-                #print(self.dlist[ag_name])
+                    self.dlist[ag_name][ev_t] = (ag_amount, ag_satisfaction) 
+                    #print(self.dlist[ag_name])
 
             
         if port == "req_empty":  #garbage 양 반환 process

@@ -11,7 +11,7 @@ from config import *
 
 import math
 
-from core_component import FamilyType
+from pohangsim.core_component import FamilyType
 
 import copy
 
