@@ -23,7 +23,7 @@ if not os.path.exists("output"):
 
 ex_list = []
 
-for item in os.listdir("../scenario"):
+for item in os.listdir("scenario"):
     filename = item.split('.')[0]
     command = "python3 exp.py {0}  > ./output/{1}".format(filename, filename.split("_")[0])
     command += str(TIME_STDDEV)+"trash"+str(TRASH_STDDEV)+"_"+str(GARBAGECAN_SIZE)+"_"+str(RANDOM_SEED)+".log"
