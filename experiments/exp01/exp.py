@@ -21,7 +21,7 @@ from pohangsim.garbagecan import GarbageCan
 from pohangsim.garbage_truck import GarbageTruck
 from pohangsim.family import Family
 
-for kndx in range(30):
+for kndx in range(1):
     blist=[]
     hlist=[]
     fam=[]
