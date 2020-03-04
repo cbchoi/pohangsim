@@ -48,6 +48,7 @@ class Human(BehaviorModelExecutor):
         if self._cur_state == "WAIT":
             self._cur_state = "WAIT"
             unit_t = self.human.get_out().get_unit_time()
-            #print(self.human.get_type(), " out time:", unit_t)
+            #if self.human.get_type() == "Student":
+            #    print(unit_t)
             self.update_state("WAIT", unit_t)
             #self.update_state("WAIT", 1)
