@@ -32,11 +32,8 @@ class Government(BehaviorModelExecutor):
     def __del__(self):
         output_str = ""
         for k, v in self.reported.items():
-<<<<<<< HEAD
-            output_str += f"{k},{v},"
-=======
             output_str += f"{k},{v},"#f"{k}:{v},"
->>>>>>> 22bf6ffd6faef1b0408e15b4b71d93569c6c808b
+
         print(output_str)
         #print(self.report)
 

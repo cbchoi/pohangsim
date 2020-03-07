@@ -68,11 +68,6 @@ class Student(HumanType):
     def __init__(self,_id):
         HumanType.__init__(self ,_id)
         self.out_time = TimeStructContstraintToDay(7,58, Statistic(0, AVG_TIME, TIME_STDDEV))
-<<<<<<< HEAD
-        #self.out_time = TimeStructContstraintToDayDeterministic(9,58)
-=======
-        #self.out_time = TimeStructContstraintToDayDeterministic(8,58)
->>>>>>> 22bf6ffd6faef1b0408e15b4b71d93569c6c808b
         self.trash = Statistic(RANDOM_SEED+1,0.9,TRASH_STDDEV)
         pass
     
