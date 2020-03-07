@@ -66,7 +66,7 @@ class Housewife(HumanType):
 class Student(HumanType):
     def __init__(self,_id):
         HumanType.__init__(self ,_id)
-        self.out_time = TimeStructContstraintToDay(8,58, Statistic(0, AVG_TIME, TIME_STDDEV))
+        self.out_time = TimeStructContstraintToDay(7,58, Statistic(0, AVG_TIME, TIME_STDDEV))
         #self.out_time = TimeStructContstraintToDayDeterministic(9,58)
         self.trash = Statistic(RANDOM_SEED+1,0.9,TRASH_STDDEV)
         pass
