@@ -90,8 +90,9 @@ def testcode(student_rate,b_collar_rate,h_wife_rate,trial,memo):
         print('*',end="")
     
 
-
-
+testcode(0.5, 0.5, 0,1,'55sb') 
+testcode(0.5, 0, 0.5,1,'55sh')
+"""
 #student, bluecollar , housewife
 #5:3:2
 testcode(0.5, 0.3, 0.2,1,'532sbh')
@@ -124,10 +125,11 @@ testcode(0  , 0.1, 0.9, 1,'910hbs')
 testcode(0.2, 0.2, 0.6,1,'622hbs')
 testcode(0.2, 0.6, 0.2,1,'622bhs')
 testcode(0.6, 0.2, 0.2,1,'622sbh')
+#2:1:1
 
-
-
-"""
+testcode(0.25, 0.25, 0.5,1,'5211hbs')
+testcode(0.25, 0.5, 0.25,1,'5211bhs')
+testcode(0.5, 0.25, 0.25,1,'5211sbh')
 #7:2:1
 testcode(0.7, 0.2, 0.1,1,'sbh721')
 testcode(0.7, 0.1, 0.2,1,'shb721')
