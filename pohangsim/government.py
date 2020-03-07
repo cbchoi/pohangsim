@@ -20,7 +20,6 @@ class Government(BehaviorModelExecutor):
         self.insert_input_port("recv_report")  #민원 발생시 받는 포트
         self.reported = {}
 
-
     def ext_trans(self,port, msg):
         if port == "recv_report":
             #self._cur_state = "PROCESS"
@@ -33,10 +32,12 @@ class Government(BehaviorModelExecutor):
     def __del__(self):
         output_str = ""
         for k, v in self.reported.items():
-            output_str += f"{k}:{v},"
+            output_str += f"{k},{v},"
         print(output_str)
+        #print(self.report)
 
     def output(self):
+        self.report += 1
             
         return None
 
