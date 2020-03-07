@@ -97,7 +97,7 @@ class TimeStructConstraintRandom(TimeStruct):
                 return self.prev_time
             else:
                 self.prev_time = calc_time
-                return 24 - end_hour.get_unit_time() + self.prev_time
+                return 24 - self.end_hour.get_unit_time() + self.prev_time
 
 
 class HumanType(object):

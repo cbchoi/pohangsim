@@ -5,6 +5,7 @@ from evsim.definition import *
 
 import os
 import datetime
+import random
 
 from config import *
 #from instance.config import *
@@ -38,7 +39,12 @@ class Human(BehaviorModelExecutor):
                         
     def output(self):
         if self._cur_state == "WAIT":
-            #print("[human] " + self.get_name())
+            msg = None
+
+            if self.human.get_type() == "Student":
+                if random.randint(0, 100) < 25:
+                    return None
+
             msg = SysMessage(self.get_name(), "trash")
             msg.insert(self.human)
 
@@ -48,7 +54,6 @@ class Human(BehaviorModelExecutor):
         if self._cur_state == "WAIT":
             self._cur_state = "WAIT"
             unit_t = self.human.get_out().get_unit_time()
-            #if self.human.get_type() == "Student":
-            #    print(unit_t)
+            #print(self.human.get_type(), " out time:", unit_t)
             self.update_state("WAIT", unit_t)
             #self.update_state("WAIT", 1)
