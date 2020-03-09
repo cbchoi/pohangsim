@@ -84,14 +84,14 @@ def inc_mean(list,index):
 
 def testcode(student_rate,b_collar_rate,h_wife_rate,trial,memo):
     for i in range(trial):
-        plist = population_ratio(100,student_rate,b_collar_rate,h_wife_rate)#plist = population_ratio(10000,student_rate,b_collar_rate,h_wife_rate)
-        
-        human_generate(37.25,2.6848,i,plist,memo)#human_generate(3725,2.6848,i,plist,memo)
+        plist = population_ratio(99,student_rate,b_collar_rate,h_wife_rate)#plist = population_ratio(10000,student_rate,b_collar_rate,h_wife_rate)
+        human_generate(37,2.6848,i,plist,memo)#human_generate(3725,2.6848,i,plist,memo)
         print('*',end="")
     
 
-testcode(0.5, 0.5, 0,1,'55sb') 
-testcode(0.5, 0, 0.5,1,'55sh')
+
+testcode(1/3, 1/3, 1/3,1,'sameratio') 
+#testcode(0.5, 0, 0.5,1,'55sh')
 """
 #student, bluecollar , housewife
 #5:3:2
