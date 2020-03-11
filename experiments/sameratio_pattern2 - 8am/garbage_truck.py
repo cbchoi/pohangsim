@@ -65,7 +65,7 @@ class GarbageTruck(BehaviorModelExecutor):
             self.garbage_port_map[port] += msg.retrieve()[0] # 각 건물별 쓰레기 수거량 분석
             self.truck_current_storage += msg.retrieve()[0]
             #print("self.truck_current_storage", self.truck_current_storage)
-            self.accummulated_garbage += self.truck_current_storage
+            self.accummulated_garbage += msg.retrieve()[0]
 
             ev_t = SystemSimulator().get_engine("sname").get_global_time()
 
@@ -74,6 +74,8 @@ class GarbageTruck(BehaviorModelExecutor):
                     file.write(str(ev_t))
                     file.write(",")
                     file.write(str(self.cur_index))
+                    file.write(",")
+                    file.write(str(self.schedule[self.cur_index-1][0]))
                     file.write(",")
                     file.write(str(self.truck_current_storage))
                     file.write(",")
@@ -104,6 +106,7 @@ class GarbageTruck(BehaviorModelExecutor):
         elif self._cur_state == "APPROACH":
             self.cur_index = 0       
             self.truck_current_storage = 0
-            self._cur_state = "REQUEST"
             self.schedule=self.schedule[::-1] # 역전패턴
+            self._cur_state = "REQUEST"
+            
 

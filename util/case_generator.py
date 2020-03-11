@@ -90,7 +90,7 @@ def testcode(student_rate,b_collar_rate,h_wife_rate,trial,memo):
     
 
 
-testcode(1/3, 1/3, 1/3,1,'sameratio') 
+testcode(1, 0, 0,1,'S') 
 #testcode(0.5, 0, 0.5,1,'55sh')
 """
 #student, bluecollar , housewife

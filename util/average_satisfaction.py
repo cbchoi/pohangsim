@@ -12,7 +12,6 @@ for i in range(len(lines)):
 	item =line.split(',')
 	item.split(':')
 
-		break
 	elif line=="reported":
 		report_time+=1
 	else:

@@ -18,6 +18,7 @@ TIME_STDDEV = 0.2
 TRASH_STDDEV = 0.3
 RANDOM_SEED = 0
 
+VERBOSE = False
 #simulation_time = 72
 #simulation_time=448
 simulation_time=2192 #quarter
