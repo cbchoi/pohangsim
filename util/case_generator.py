@@ -1,11 +1,11 @@
 import random,math,os
 from statistics import mean
-typelist=["Student","Housewife","Blue_collar"]
+typelist=["Student","Homemaker","Blue_collar"]
 #"AFF","White_collar","Inoccupation","Self_employment"
 
 #학생이 20%인 리스트를 만들어서 하나씩 pop 한다
 
-def population_ratio(N,student_rate,Blue_collar,Housewife):   #학생20% 리스트 
+def population_ratio(N,student_rate,Blue_collar,Homemaker):   #학생20% 리스트 
     plist=[]
     """
     if float(student_rate+Blue_collar+Housewife)!=1.0:
@@ -17,8 +17,8 @@ def population_ratio(N,student_rate,Blue_collar,Housewife):   #학생20% 리스�
         plist.append("Student")#plist.append("StudentWithVacation")
     for i in range(int(N*Blue_collar)):
         plist.append("Blue_collar")
-    for i in range(int(N*Housewife)):
-        plist.append("Housewife")
+    for i in range(int(N*Homemaker)):
+        plist.append("Homemaker")
     return plist
 
 
@@ -86,11 +86,11 @@ def testcode(student_rate,b_collar_rate,h_wife_rate,trial,memo):
     for i in range(trial):
         plist = population_ratio(99,student_rate,b_collar_rate,h_wife_rate)#plist = population_ratio(10000,student_rate,b_collar_rate,h_wife_rate)
         human_generate(37,2.6848,i,plist,memo)#human_generate(3725,2.6848,i,plist,memo)
-        print('*',end="")
+        print("test scenario generated")
     
 
 
-testcode(1, 0, 0,1,'S') 
+#testcode(0.5, 0.3,0.21,'S') 
 #testcode(0.5, 0, 0.5,1,'55sh')
 """
 #student, bluecollar , housewife

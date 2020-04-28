@@ -9,20 +9,20 @@ TEMP_CAN_SIZE = 0
 GARBAGECAN_SIZE=30
 GARBAGETRUCK_SIZE=GARBAGECAN_SIZE*4#8*GARBAGECAN_SIZE#25.86530412
 
-TRUCK_INITIAL=15 #FIX
-TRUCK_CYCLE=15*4
+TRUCK_INITIAL=31 #FIX
+TRUCK_CYCLE=24*2 
 TRUCK_DELAY=0.1 #FIX
 
-AVG_TIME = 1
-TIME_STDDEV = 0.2
+AVG_TIME = 2
+TIME_STDDEV = 1
 AVG_TRASH=0.9
 TRASH_STDDEV = 0.3
 RANDOM_SEED = 0
 
-VERBOSE = False
-#simulation_time = 72
+VERBOSE = True
+simulation_time = 72
 #simulation_time=448
-simulation_time=2192 #quarter
+#simulation_time=2192 #quarter
 #simulation_time=8762 # year
 #simulation_time=26282# 3year
 #simulation_time=43802# 5year

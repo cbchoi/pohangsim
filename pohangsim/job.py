@@ -11,17 +11,17 @@ from pohangsim.core_component import TimeStructContstraintToDayDeterministic
 from evsim.system_simulator import SystemSimulator
 
 from config import *
-class Housewife(HumanType):
+class Homemaker(HumanType):
     def __init__(self,_id):
         HumanType.__init__(self ,_id)
         self.out_time = TimeStructContstraintToDay(13,00, Statistic(0, AVG_TIME, TIME_STDDEV))
         #self.out_time = TimeStructContstraintToDayDeterministic(13,00)
         #self.out_time= TimeStructConstraintRandom(self.get_wakeup(), self.get_sleep(), Statistic(0, 10, 6))
-        self.trash = Statistic(RANDOM_SEED,0.9,TRASH_STDDEV)
+        self.trash = Statistic(RANDOM_SEED,AVG_TRASH,TRASH_STDDEV)
         pass
     
     def get_type(self):
-        return "Housewife"
+        return "Homemaker"
         
     def get_wakeup(self):
         return TimeStruct(6, 17, Statistic(RANDOM_SEED, 0, TIME_STDDEV))
@@ -68,7 +68,7 @@ class Student(HumanType):
     def __init__(self,_id):
         HumanType.__init__(self ,_id)
         self.out_time = TimeStructContstraintToDay(7,58, Statistic(0, AVG_TIME, TIME_STDDEV))
-        self.trash = Statistic(RANDOM_SEED+1,0.9,TRASH_STDDEV)
+        self.trash = Statistic(RANDOM_SEED+1,AVG_TRASH,TRASH_STDDEV)
         pass
     
     def get_type(self):
@@ -145,9 +145,9 @@ class StudentWithVacation(HumanType):
             return 0
         else:
             if self.count>115:
-                return 1.8
+                return AVG_TRASH*2
             else:
-                return 0.9
+                return AVG_TRASH
 
     def get_satisfaction_func(self, trash):
         if self.vacation:
@@ -170,7 +170,7 @@ class Blue_collar(HumanType):
         HumanType.__init__(self ,_id)
         self.out_time = TimeStructContstraintToDay(6,22, Statistic(0, AVG_TIME, TIME_STDDEV))
         #self.out_time = TimeStructContstraintToDayDeterministic(6,22)
-        self.trash = Statistic(RANDOM_SEED+2,0.9,TRASH_STDDEV)
+        self.trash = Statistic(RANDOM_SEED+2,AVG_TRASH,TRASH_STDDEV)
         pass
     
     def get_type(self):
