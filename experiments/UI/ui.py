@@ -48,7 +48,7 @@ class Parameter:
         pass
         self.SIMULATION_MODE='VIRTUAL_TIME'
         self.RANDOM_SEED=0
-        self.VERBOSE=FALSE
+        self.VERBOSE=False
     
     def update_config(self):
         self.text=  "TIME_DENSITY="+str(self.TIME_DENSITY)+"\nAVG_TIME="+str(self.AVG_TIME)+"\nAVG_TRASH="+str(self.AVG_TRASH)+"\nGARBAGECAN_SIZE="+str(self.GARBAGECAN_SIZE)+"\nTEMP_CAN_SIZE="+str(self.TEMP_CAN_SIZE)+"\nGARBAGETRUCK_SIZE="+str(self.GARBAGETRUCK_SIZE)+"\nTIME_STDDEV="+str(self.TIME_STDDEV)+"\nTRASH_STDDEV="+str(self.TRASH_STDDEV)+"\nTRUCK_INITIAL="+str(self.TRUCK_INITIAL)+"\nTRUCK_CYCLE="+str(self.TRUCK_CYCLE)+"\nTRUCK_DELAY="+str(self.TRUCK_DELAY)+"\nsimulation_time="+str(self.simulation_time)
@@ -60,18 +60,30 @@ class MSWSsimulator(QWidget):
         super(MSWSsimulator, self).__init__(_parent)
         self.obj= _parent
         self.simul_time=SimulTime(self.obj)
-        self.controlBox=controlBox(self.obj)
+        self.controlbox=controlBox(self.obj)
+        self.output=OutputManager(self.obj)
         #controlbox
-        self.SimulateButton.clicked.connect(self.controlBox.simulate)
+        self.SimulateButton.clicked.connect(self.controlbox.simulate)
         #slider
         self.simulationtimeinput.valueChanged.connect(self.simul_time.synchro_slider)
         self.simulationtimeslider.valueChanged.connect(self.simul_time.synchro_spin)
         
+        self.controlbox.SIMULATE_SIGNAL.connect(self.controlbox.run_simulation)
+        self.controlbox.SIMULATE_COMPLETE.connect(self.output.show_result)
     def __getattr__(self, attr):
         return getattr(self.obj, attr)
-    
     def show(self):
         self.obj.show()
+
+class OutputManager(QObject):
+    def __init__(self, _parent=None):
+        super(OutputManager,self).__init__(_parent)
+        self.obj=_parent
+
+    @Slot()
+    def show_result(self):
+        print("result is here")
+        pass
 
 class SimulTime(QObject):
     def __init__(self, _parent=None):
@@ -88,11 +100,14 @@ class SimulTime(QObject):
         return getattr(self.obj, attr)
 
 class controlBox(QObject):
+    #signal part
+    SIMULATE_SIGNAL=Signal(Parameter)
+    SIMULATE_COMPLETE=Signal()
+
     def __init__(self, _parent=None):
         super(controlBox, self).__init__(_parent)
         self.obj=_parent
-        
-    
+    @Slot()
     def simulate(self):
         parameter=Parameter()
         parameter.TIME_DENSITY=self.TimeDensity.value()                             
@@ -115,139 +130,141 @@ class controlBox(QObject):
         #parameter).RANDOM_SEED=   #새로 UI에 추가
         #parameter).VERBOSE=    #verbose가 체크됬을때 TRUE    
         parameter.update_config()
-
-
-    def __getattr__(self, attr):
-        return getattr(self.obj, attr)
+        self.SIMULATE_SIGNAL.emit(parameter)
+    
+    @Slot()
+    def run_simulation(self,parameter):
+        print(parameter.__dict__.items())
+        pass
 """
+        for kndx in range(30):
+            hlist=[]
+            blist=[]
+            fam=[]
 
-
-    for kndx in range(30):
-        hlist=[]
-        blist=[]
-        fam=[]
-
-        if VERBOSE is True:
-            outputlocation=str(sys.argv[1])+str(TIME_STDDEV)+"trash"+str(TRASH_STDDEV)+"_"+str(GARBAGECAN_SIZE)+"_"+str(kndx)
-            if not os.path.exists(outputlocation):
-                os.makedirs(outputlocation)
-        else:
-            outputlocation = None
-
-        file = open("./scenario/"+sys.argv[1]+".txt",'r')
-        lines = file.readlines()
-        file.close()
-        for i in range(len(lines)):  
-            line = lines[i].split('\n')[0]
-            if not line == "": #빈칸이 아닐경우
-                elements = (line.split(','))
-                for j in elements: #패밀리 안의 멤버=j
-                    fam.append(eval(j)) #j를 fam추가
-                hlist.append(fam) #fam을 hlist에 추가
-                fam=[]    
+            if parameter.VERBOSE is True:
+                outputlocation=str(sys.argv[1])+str(parameter.TIME_STDDEV)+"trash"+str(parameter.TRASH_STDDEV)+"_"+str(parameter.GARBAGECAN_SIZE)+"_"+str(kndx)
+                if not os.path.exists(outputlocation):
+                    os.makedirs(outputlocation)
             else:
-                blist.append(hlist)
-                hlist = []
-            if i == len(lines)-1:
-                blist.append(hlist)
+                outputlocation = None
 
-        se = SystemSimulator()
+            #scenario input방식을 바꾸어야함
+            file = open("./scenario/"+sys.argv[1]+".txt",'r')
+            lines = file.readlines()
+            file.close()
+            for i in range(len(lines)):  
+                line = lines[i].split('\n')[0]
+                if not line == "": #빈칸이 아닐경우
+                    elements = (line.split(','))
+                    for j in elements: #패밀리 안의 멤버=j
+                        fam.append(eval(j)) #j를 fam추가
+                    hlist.append(fam) #fam을 hlist에 추가
+                    fam=[]    
+                else:
+                    blist.append(hlist)
+                    hlist = []
+                if i == len(lines)-1:
+                    blist.append(hlist)
 
-        se.register_engine("sname", SIMULATION_MODE, TIME_DENSITY)
+            se = SystemSimulator()
 
-        c = Clock(0, simulation_time, "clock", "sname")
-        se.get_engine("sname").register_entity(c)
-        gt = GarbageTruck(0, simulation_time, "garbage_truck", 'sname', GARBAGETRUCK_SIZE, [e for e in enumerate([TRUCK_DELAY for building in blist])],outputlocation)#4.7*13*3
-        se.get_engine("sname").register_entity(gt)
+            se.register_engine("sname", parameter.SIMULATION_MODE, parameter.TIME_DENSITY)
 
-        gv = Government(0, simulation_time,"government","sname")
-        se.get_engine("sname").register_entity(gv)
+            c = Clock(0, parameter.simulation_time, "clock", "sname")
+            se.get_engine("sname").register_entity(c)
+            gt = GarbageTruck(0, parameter.simulation_time, "garbage_truck", 'sname', parameter.GARBAGETRUCK_SIZE, [e for e in enumerate([parameter.TRUCK_DELAY for building in blist])],outputlocation)#4.7*13*3
+            se.get_engine("sname").register_entity(gt)
 
-        #Building Register
+            gv = Government(0, parameter.simulation_time,"government","sname")
+            se.get_engine("sname").register_entity(gv)
 
-        i=0
-        j=0
-        for building in blist:
+            #Building Register
+
+            i=0
+            j=0
+            for building in blist:
+                g = GarbageCan(0, parameter.simulation_time, "gc[{0}]".format(i), 'sname', parameter.GARBAGECAN_SIZE, outputlocation)
+                se.get_engine("sname").register_entity(g)
+                
+                for flist in building:
+                    ftype = FamilyType(parameter.TEMP_CAN_SIZE)
+                    f = Family(0, parameter.simulation_time,"family",'sname', ftype)
+                    for htype in flist:
+                        #hid = get_human_id()
+                        name = htype.get_name()
+                        cname = "check[{0}]".format(htype.get_name())               
+                        h1 = Human(0, parameter.simulation_time, cname, "sname", htype)
+                        ch = Check(0, parameter.simulation_time, name, "sname", htype)
+
+                        se.get_engine("sname").register_entity(h1)
+                        se.get_engine("sname").register_entity(ch)
+                        #f1.register_member(htype)
+                        ftype.register_member(htype)
+                        
+                        # Connect Check & Can
+                        ports = g.register_human(htype.get_id())
+                        se.get_engine("sname").coupling_relation(h1, "trash", ch, "request")
+                        se.get_engine("sname").coupling_relation(ch, "check", g, ports[0])
+
+                        se.get_engine("sname").coupling_relation(g, ports[1], ch, "checked")
+                        se.get_engine("sname").coupling_relation(ch, "gov_report", gv, "recv_report")
+                
+                        se.get_engine("sname").coupling_relation(None, "start", h1, "start")
+                        se.get_engine("sname").coupling_relation(None, "end", h1, "end")
+                        se.get_engine("sname").coupling_relation(h1, "trash", f, "receive_membertrash")
+                   
+
+                    se.get_engine("sname").register_entity(f)
+
+                    ports = g.register_family(j)
+                    se.get_engine("sname").coupling_relation(f, "takeout_trash", g, ports[0])
+                    j+=1
+
+                # Connect Truck & Can
+                ports = gt.register_garbage_can(i)
+                se.get_engine("sname").coupling_relation(g, "res_garbage", gt, ports[0])
+                se.get_engine("sname").coupling_relation(gt, ports[1], g, "req_empty")
+                i+=1
+
+            se.get_engine("sname").insert_input_port("start")
 
 
-            g = GarbageCan(0, simulation_time, "gc[{0}]".format(i), 'sname', GARBAGECAN_SIZE, outputlocation)
-            se.get_engine("sname").register_entity(g)
-            
-            for flist in building:
-                ftype = FamilyType(TEMP_CAN_SIZE)
-                f = Family(0, simulation_time,"family",'sname', ftype)
-                for htype in flist:
-                    #hid = get_human_id()
-                    name = htype.get_name()
-                    cname = "check[{0}]".format(htype.get_name())               
-                    h1 = Human(0, simulation_time, cname, "sname", htype)
-                    ch = Check(0, simulation_time, name, "sname", htype)
+            se.get_engine("sname").coupling_relation(None, "start", c, "start")
+            se.get_engine("sname").coupling_relation(None, "end", c, "end")
 
-                    se.get_engine("sname").register_entity(h1)
-                    se.get_engine("sname").register_entity(ch)
-                    #f1.register_member(htype)
-                    ftype.register_member(htype)
-                    
-                    # Connect Check & Can
-                    ports = g.register_human(htype.get_id())
-                    se.get_engine("sname").coupling_relation(h1, "trash", ch, "request")
-                    se.get_engine("sname").coupling_relation(ch, "check", g, ports[0])
+            #se.get_engine("sname").insert_external_event("report", None)
+            se.get_engine("sname").coupling_relation(None, "start", gt, "start")
+            se.get_engine("sname").coupling_relation(None, "end", gt, "end")
 
-                    se.get_engine("sname").coupling_relation(g, ports[1], ch, "checked")
-                    se.get_engine("sname").coupling_relation(ch, "gov_report", gv, "recv_report")
-            
-                    se.get_engine("sname").coupling_relation(None, "start", h1, "start")
-                    se.get_engine("sname").coupling_relation(None, "end", h1, "end")
-                    se.get_engine("sname").coupling_relation(h1, "trash", f, "receive_membertrash")
-               
-
-                se.get_engine("sname").register_entity(f)
-
-                ports = g.register_family(j)
-                se.get_engine("sname").coupling_relation(f, "takeout_trash", g, ports[0])
-                j+=1
 
             # Connect Truck & Can
-            ports = gt.register_garbage_can(i)
-            se.get_engine("sname").coupling_relation(g, "res_garbage", gt, ports[0])
-            se.get_engine("sname").coupling_relation(gt, ports[1], g, "req_empty")
-            i+=1
 
-        se.get_engine("sname").insert_input_port("start")
+            se.get_engine("sname").insert_external_event("start", None)
+            se.get_engine("sname").simulate()
+"""
 
-
-        se.get_engine("sname").coupling_relation(None, "start", c, "start")
-        se.get_engine("sname").coupling_relation(None, "end", c, "end")
-
-        #se.get_engine("sname").insert_external_event("report", None)
-        se.get_engine("sname").coupling_relation(None, "start", gt, "start")
-        se.get_engine("sname").coupling_relation(None, "end", gt, "end")
-
-
-        # Connect Truck & Can
-
-        se.get_engine("sname").insert_external_event("start", None)
-        se.get_engine("sname").simulate()
+        self.SIMULATE_COMPLETE.emit() #시뮬레이션 완료 신호
+    
+    def __getattr__(self, attr):
+        return getattr(self.obj, attr)
 
 
 
-"""      
 
+class ScenarioManager(QDialog):
+     def __init__(self, _parent =None):
+        super(ScenarioManager, self).__init__(_parent)
 
+    def generate_scenario(ratio_a,ratio_b,ratio_c,trial,s):
+        memo=str(s)
+        testcode(ratio_a,ratio_b,ratio_c,trial,memo) 
+        # 케이스가 생성된다 text파일로 scenario에 저장된다.
 
-#class ScenarioManager(self):
-#    def __init__(self):
-#        pass
-
-def generate_scenario(ratio_a,ratio_b,ratio_c,trial,s):
-    memo=str(s)
-    testcode(ratio_a,ratio_b,ratio_c,trial,memo) 
-    # 케이스가 생성된다 text파일로 scenario에 저장된다.
-
-def load_scenario():
-    pass
-def save_scenario():
-    pass
+    def load_scenario():
+        pass
+    def save_scenario():
+        pass
 
 
 #UI Loading Code
