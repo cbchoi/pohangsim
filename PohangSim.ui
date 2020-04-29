@@ -256,6 +256,9 @@
        <property name="pageStep">
         <number>24</number>
        </property>
+       <property name="tracking">
+        <bool>false</bool>
+       </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -266,7 +269,7 @@
         <bool>false</bool>
        </property>
        <property name="tickPosition">
-        <enum>QSlider::TicksBelow</enum>
+        <enum>QSlider::NoTicks</enum>
        </property>
        <property name="tickInterval">
         <number>24</number>

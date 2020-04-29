@@ -5,8 +5,10 @@ from PySide2.QtCore import *
 from PySide2.QtGui import *
 #GUI lib import
 
-import contexts
+
 import sys,os
+import contexts
+
 
 from evsim.system_simulator import SystemSimulator
 from evsim.behavior_model_executor import BehaviorModelExecutor
@@ -136,7 +138,7 @@ class controlBox(QObject):
     def run_simulation(self,parameter):
         print(parameter.__dict__.items())
         pass
-"""
+        """
         for kndx in range(30):
             hlist=[]
             blist=[]
@@ -242,7 +244,7 @@ class controlBox(QObject):
 
             se.get_engine("sname").insert_external_event("start", None)
             se.get_engine("sname").simulate()
-"""
+            """
 
         self.SIMULATE_COMPLETE.emit() #시뮬레이션 완료 신호
     
@@ -253,7 +255,7 @@ class controlBox(QObject):
 
 
 class ScenarioManager(QDialog):
-     def __init__(self, _parent =None):
+    def __init__(self, _parent =None):
         super(ScenarioManager, self).__init__(_parent)
 
     def generate_scenario(ratio_a,ratio_b,ratio_c,trial,s):
@@ -271,7 +273,7 @@ class ScenarioManager(QDialog):
 
 app = QApplication(sys.argv)
 
-ui_file = QFile("PohangSim.ui")
+ui_file = QFile("../../PohangSim.ui")
 loader = QUiLoader()
 window = loader.load(ui_file)
 ui_file.close()
