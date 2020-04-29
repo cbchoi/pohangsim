@@ -5,7 +5,6 @@ from PySide2.QtCore import *
 from PySide2.QtGui import *
 #GUI lib import
 
-
 import sys,os
 import contexts
 
