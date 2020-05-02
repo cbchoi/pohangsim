@@ -82,10 +82,10 @@ def inc_mean(list,index):
         list[index]+=1
    
 
-def testcode(student_rate,b_collar_rate,h_wife_rate,trial,memo):
+def testcode(student_rate,b_collar_rate,h_wife_rate,N,trial,memo):
     for i in range(trial):
-        plist = population_ratio(99,student_rate,b_collar_rate,h_wife_rate)#plist = population_ratio(10000,student_rate,b_collar_rate,h_wife_rate)
-        human_generate(37,2.6848,i,plist,memo)#human_generate(3725,2.6848,i,plist,memo)
+        plist = population_ratio(N,student_rate,b_collar_rate,h_wife_rate)#plist = population_ratio(10000,student_rate,b_collar_rate,h_wife_rate)
+        human_generate(N/2.6848,2.6848,i,plist,memo)#human_generate(3725,2.6848,i,plist,memo)
         print("test scenario generated")
     
 
