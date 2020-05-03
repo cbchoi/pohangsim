@@ -1,0 +1,13 @@
+Blue_collar(1),Homemaker(2),Student(3),Blue_collar(4),Homemaker(5)
+Homemaker(6),Student(7)
+Blue_collar(8),Student(9)
+Student(10),Blue_collar(11),Homemaker(12)
+
+Blue_collar(13),Blue_collar(14)
+Homemaker(15),Blue_collar(16),Homemaker(17)
+Blue_collar(18),Student(19),Student(20)
+Homemaker(21),Student(22)
+Student(23)
+
+Homemaker(24),Homemaker(25),Student(26)
+Homemaker(27),Blue_collar(28),Student(29),Blue_collar(30)

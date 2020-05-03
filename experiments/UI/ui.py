@@ -66,7 +66,7 @@ class ScenarioListManager(QDialog):
         super(ScenarioListManager, self).__init__(_parent)
         self.obj= _parent
         self.dialog=None
-        self.scenario=Scenario()
+        self.group=[]
 
     def new_scenario(self):
         ui_file = QFile("../../Dialog.ui")
@@ -78,40 +78,50 @@ class ScenarioListManager(QDialog):
         self.dialog.buttonBox.accepted.connect(self.generate_scenario)
     
     def generate_scenario(self):
-        """a=self.dialog.StudentRatio.value()
-                                b=self.dialog.ConstructionWorkerRatio.value()
-                                c=self.dialog.HomemakerRatio.value()
-                                ratio_a=a/(a+b+c)
-                                ratio_b=b/(a+b+c)
-                                ratio_c=c/(a+b+c)
-                                N=int(self.dialog.N.toPlainText())
-                                if (ratio_a * N).is_integer() and (ratio_c * N).is_integer() and (ratio_c * N).is_integer():
-                                    testcode(ratio_a,ratio_b,ratio_c,N,int(self.dialog.trials.toPlainText()),self.dialog.memo.toPlainText()) 
-                                #testcode(ra,rb,rc,N,trial,memo)
-                        
-                                else:
-                                    print("wrong ratio and Number of residents")    
-                        
-                                
-                                print("generate scenario")"""
-        self.scenario.load_from_file("./scenario/{0}_N{1}_seed{2}.txt".format(self.dialog.memo.toPlainText(),N,1))
-        self.listWidget.addItem(self.scenario.memo)
+        a=self.dialog.StudentRatio.value()
+        b=self.dialog.ConstructionWorkerRatio.value()
+        c=self.dialog.HomemakerRatio.value()
+        ratio_a=a/(a+b+c)
+        ratio_b=b/(a+b+c)
+        ratio_c=c/(a+b+c)
+        N=int(self.dialog.N.toPlainText())
+        if (ratio_a * N).is_integer() and (ratio_c * N).is_integer() and (ratio_c * N).is_integer():
+            testcode(ratio_a,ratio_b,ratio_c,N,int(self.dialog.trials.toPlainText()),self.dialog.memo.toPlainText()) 
+                                #testcode(ra,rb,rc,N,trial,memo)               
+        else:
+            print("wrong ratio and Number of residents")                            
+            return False
+        print("generate scenario")
+        scenario=Scenario()
+        scenario.load_from_file("./scenario/{0}_N{1}_seed{2}.txt".format(self.dialog.memo.toPlainText(),N,0))
+        self.listWidget.addItem(scenario.memo)
+        self.group.append(scenario)
         # 케이스가 생성된다 text파일로 scenario에 저장된다.
-        self.SCENARIO_SIGNAL.emit(self.scenario)
+        self.SCENARIO_SIGNAL.emit(scenario)
     def load_scenario(self):
         filename = QFileDialog.getOpenFileName()
-        self.scenario.load_from_file(filename[0])
-        self.listWidget.addItem(self.scenario.memo)
+        scenario=Scenario()
+        scenario.load_from_file(filename[0])
+        self.listWidget.addItem(scenario.memo)
 #시나리오 제대로 읽히는지 테스트
         #print(filename[0])
         #print(len(self.scenario.blist))
         #print(self.scenario.hlist)
-        self.SCENARIO_SIGNAL.emit(self.scenario)
+        self.group.append(scenario)
+        self.SCENARIO_SIGNAL.emit(scenario)
     def save_scenario(self):
         filename = QFileDialog.getSaveFileName()
+        output=file(filename,"w")
+        for item in hlist:
+            output.write(item)
         #case generator 수정해야함 
+    
     def delete_scenario(self):
-        pass
+        listItems=self.listWidget.selectedItems()
+        if not listItems: return        
+        for item in listItems:
+           self.listWidget.takeItem(self.listWidget.row(item))
+
     def __getattr__(self, attr):
         return getattr(self.obj, attr)
 
@@ -245,6 +255,7 @@ class controlBox(QObject):
         #print(parameter.__dict__.items())  #parameter 가제대로 왔는지 체크
         hlist=scenario.hlist
         blist=scenario.blist
+        print(scenario.group)
         #print(blist)                       #scenario가 제대로 왔는지 체크
         pass
         """
