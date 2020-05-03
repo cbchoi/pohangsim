@@ -29,14 +29,18 @@ from pohangsim.garbagecan import GarbageCan
 from garbage_truck import GarbageTruck
 from pohangsim.family import Family 
 from util.case_generator import * #scenario generator
+
 class Scenario:
     def __init__(self):
         self.hlist=[]
         self.blist=[]
+        self.memo=""
         #scenario input방식을 바꾸어야함
     def load_from_file(self, filename):
         fam=[]
+        #self.memo=filename.split()
         file = open(filename,'r')
+        self.memo= filename.split('/')[-1]
         lines = file.readlines()
         file.close()
         for i in range(len(lines)):  
@@ -56,11 +60,13 @@ class Scenario:
     def debug(self):
         print("debugiging scenario class")
 
-class ScenarioManager(QDialog):
+class ScenarioListManager(QDialog):
+    SCENARIO_SIGNAL=Signal(Scenario)
     def __init__(self, _parent =None):
-        super(ScenarioManager, self).__init__(_parent)
+        super(ScenarioListManager, self).__init__(_parent)
         self.obj= _parent
-        self.dialog=0
+        self.dialog=None
+        self.scenario=Scenario()
 
     def new_scenario(self):
         ui_file = QFile("../../Dialog.ui")
@@ -70,7 +76,7 @@ class ScenarioManager(QDialog):
         self.dialog.setModal(True)
         self.dialog.show()
         self.dialog.buttonBox.accepted.connect(self.generate_scenario)
-        self.scenario=None
+    
     def generate_scenario(self):
         """a=self.dialog.StudentRatio.value()
                                 b=self.dialog.ConstructionWorkerRatio.value()
@@ -88,22 +94,24 @@ class ScenarioManager(QDialog):
                         
                                 
                                 print("generate scenario")"""
-        self.scenario=Scenario()
         self.scenario.load_from_file("./scenario/{0}_N{1}_seed{2}.txt".format(self.dialog.memo.toPlainText(),N,1))
+        self.listWidget.addItem(self.scenario.memo)
         # 케이스가 생성된다 text파일로 scenario에 저장된다.
-
+        self.SCENARIO_SIGNAL.emit(self.scenario)
     def load_scenario(self):
         filename = QFileDialog.getOpenFileName()
-        self.scenario=Scenario()
         self.scenario.load_from_file(filename[0])
+        self.listWidget.addItem(self.scenario.memo)
 #시나리오 제대로 읽히는지 테스트
         #print(filename[0])
-        print(len(self.scenario.blist))
-        print(self.scenario.hlist)
-        
+        #print(len(self.scenario.blist))
+        #print(self.scenario.hlist)
+        self.SCENARIO_SIGNAL.emit(self.scenario)
     def save_scenario(self):
         filename = QFileDialog.getSaveFileName()
         #case generator 수정해야함 
+    def delete_scenario(self):
+        pass
     def __getattr__(self, attr):
         return getattr(self.obj, attr)
 
@@ -143,7 +151,9 @@ class MSWSsimulator(QWidget):
         self.simul_time=SimulTime(self.obj)
         self.controlbox=controlBox(self.obj)
         self.output=OutputManager(self.obj)
-        self.ScenarioControl=ScenarioManager(self.obj)
+        self.ScenarioListControl=ScenarioListManager(self.obj)
+        
+        self.ScenarioListControl.SCENARIO_SIGNAL.connect(self.controlbox.prepare_data)
         #controlbox
         self.SimulateButton.clicked.connect(self.controlbox.prepare_data)
         
@@ -152,9 +162,10 @@ class MSWSsimulator(QWidget):
         self.simulationtimeslider.valueChanged.connect(self.simul_time.synchro_spin)
         #scenario_control
         
-        self.new_button.clicked.connect(self.ScenarioControl.new_scenario) 
-        self.load_button.clicked.connect(self.ScenarioControl.load_scenario)
-        self.save_button.clicked.connect(self.ScenarioControl.save_scenario)
+        self.new_button.clicked.connect(self.ScenarioListControl.new_scenario) 
+        self.load_button.clicked.connect(self.ScenarioListControl.load_scenario)
+        self.save_button.clicked.connect(self.ScenarioListControl.save_scenario)
+        self.delete_button.clicked.connect(self.ScenarioListControl.delete_scenario)
         
 
 
@@ -165,7 +176,6 @@ class MSWSsimulator(QWidget):
         return getattr(self.obj, attr)
     def show(self):
         self.obj.show()
-
 class OutputManager(QObject):
     def __init__(self, _parent=None):
         super(OutputManager,self).__init__(_parent)
@@ -192,41 +202,50 @@ class SimulTime(QObject):
 
 class controlBox(QObject):
     #signal part
-    SIMULATE_SIGNAL=Signal(Parameter)
+    SIMULATE_SIGNAL=Signal(Parameter,Scenario)
     SIMULATE_COMPLETE=Signal()
 
     def __init__(self, _parent=None):
         super(controlBox, self).__init__(_parent)
         self.obj=_parent
+        self.scenario=None
+        self.parameter=Parameter()
+    
     @Slot()
-    def prepare_data(self):
-        parameter=Parameter()
-        parameter.TIME_DENSITY=self.TimeDensity.value()                             
+    def prepare_data(self,scenario_signal=False):
+        if scenario_signal:
+            self.scenario=scenario_signal
+            print(scenario_signal.debug())
+        
+        self.parameter.TIME_DENSITY=self.TimeDensity.value()                             
         ###################################################
-        parameter.AVG_TIME= self.AverageTime.value()
-        parameter.AVG_TRASH = self.AverageTrash.value()
-        parameter.GARBAGECAN_SIZE=    self.GarbageCanSize.value()
-        parameter.TEMP_CAN_SIZE=     familyCanSize.value()
-        parameter.GARBAGETRUCK_SIZE=   self.GarbageTruckSize.value()
+        self.parameter.AVG_TIME= self.AverageTime.value()
+        self.parameter.AVG_TRASH = self.AverageTrash.value()
+        self.parameter.GARBAGECAN_SIZE=    self.GarbageCanSize.value()
+        self.parameter.TEMP_CAN_SIZE=     self.FamilyCanSize.value()
+        self.parameter.GARBAGETRUCK_SIZE=   self.GarbageTruckSize.value()
         ###################################################
-        parameter.TIME_STDDEV=   self.TimeStandardDeviation.value()
-        parameter.TRASH_STDDEV= self.TrashStandardDeviation.value()      
-        parameter.TRUCK_INITIAL=    self.CollectionTime.value()
-        parameter.TRUCK_CYCLE=    self.CollectionCycle.value()
-        parameter.TRUCK_DELAY=    self.CollectionDelay.value()
+        self.parameter.TIME_STDDEV=   self.TimeStandardDeviation.value()
+        self.parameter.TRASH_STDDEV= self.TrashStandardDeviation.value()      
+        self.parameter.TRUCK_INITIAL=    self.CollectionTime.value()
+        self.parameter.TRUCK_CYCLE=    self.CollectionCycle.value()
+        self.parameter.TRUCK_DELAY=    self.CollectionDelay.value()
         ###################################################
 
-        parameter.simulation_time= self.simulationtimeslider.value()
+        self.parameter.simulation_time= self.simulationtimeslider.value()
         #parameter).SIMULATION_MODE=    
         #parameter).RANDOM_SEED=   #새로 UI에 추가
         #parameter).VERBOSE=    #verbose가 체크됬을때 TRUE    
-        parameter.update_config()
-        secnario=Scenario()
-        self.SIMULATE_SIGNAL.emit(parameter)
+        self.parameter.update_config()
+        if scenario_signal is False:
+            self.SIMULATE_SIGNAL.emit(self.parameter,self.scenario)
     
     @Slot()
-    def run_simulation(self,parameter):
-        print(parameter.__dict__.items())
+    def run_simulation(self,parameter,scenario):
+        #print(parameter.__dict__.items())  #parameter 가제대로 왔는지 체크
+        hlist=scenario.hlist
+        blist=scenario.blist
+        #print(blist)                       #scenario가 제대로 왔는지 체크
         pass
         """
         for kndx in range(30):
@@ -258,7 +277,7 @@ class controlBox(QObject):
                     hlist = []
                 if i == len(lines)-1:
                     blist.append(hlist)
-
+            
             se = SystemSimulator()
 
             se.register_engine("sname", parameter.SIMULATION_MODE, parameter.TIME_DENSITY)
