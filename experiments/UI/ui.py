@@ -30,7 +30,7 @@ from garbage_truck import GarbageTruck
 from pohangsim.family import Family 
 from util.case_generator import * #scenario generator
 
-class Scenario:
+class Scenario:        #scenario를 확장가능하게 
     def __init__(self):
         self.hlist=[]
         self.blist=[]
@@ -48,7 +48,7 @@ class Scenario:
             if not line == "": #빈칸이 아닐경우
                 elements = (line.split(','))
                 for j in elements: #패밀리 안의 멤버=j
-                    fam.append(eval(j)) #j를 fam추가
+                    fam.append(eval(j)) #j를 fam추가   #eval 안쓰는 방식으로 
                 self.hlist.append(fam) #fam을 hlist에 추가
                 fam=[]    
             else:
