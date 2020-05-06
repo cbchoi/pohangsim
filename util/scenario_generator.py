@@ -55,7 +55,8 @@ class FamilyType(Student,Homemaker,Blue_collar):
 		return repr
 	def __len__(self):
 		return len(self.memberlist)
-
+	def __getitem__(self, key):
+		return self.memberlist[key]
 
 	def __iter__(self):
 		self.index = 0
@@ -96,7 +97,8 @@ class BuildingType(object):
 		return repr
 	def __len__(self):
 		return len(self.familylist)
-
+	def __getitem__(self, key):
+		return self.familylist[key]
 
 	def __iter__(self):
 		self.index = 0
@@ -138,7 +140,9 @@ class ScenarioType(object):
 					repr+=str(i.get_type())+" "
 				repr+="\n"
 			repr+="\n"
-		return repr#str(self.buildinglist)
+		#return repr
+		return str(self.buildinglist)
+
 	def __len__(self):
 		return len(self.buildinglist)
 
@@ -153,6 +157,9 @@ class ScenarioType(object):
 		n = self.buildinglist[self.index]
 		self.index += 1
 		return n
+	def __getitem__(self, key):
+		return self.buildinglist[key]
+
 #builindg2= BuildingType(2000) # 아파트
 building1= BuildingType(50) # 공동주택
 building1.add(FamilyType(1,0,0,5))
@@ -166,13 +173,25 @@ building1.add(FamilyType(2,1,1,5))
 scenario=ScenarioType()
 scenario.add(building1)
 scenario.add(building1)
-#print(scenario)
 #print(scenario.buildinglist)
 
 
 for building in scenario:
 	for family in building:
 		for member in family:
-			print(member)
+			pass
+			#print(member)
 		#print(family)
 	#print(building)
+
+def scenario_generator(BuildingN,FamilyN,StudentN,HomemakerN,WorkerN,cansize=[],memo="a"):
+	familyperbuilding=BuildingN/FamilyN
+	student_in_family=StudentN/FamilyN
+	Homemaker_in_family=HomemakerN/FamilyN
+	Worker_in_family=WorkerN/FamilyN
+	Scenario=ScenarioType()
+
+	for budiling in range(BuildingN):
+		building=BuildingType(cansize[building])
+	#BuildingNumber is given
+	#Family per Building can be derived from FamilyNumber
