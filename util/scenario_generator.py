@@ -184,7 +184,11 @@ for building in scenario:
 		#print(family)
 	#print(building)
 
-def scenario_generator(BuildingN,FamilyN,StudentN,HomemakerN,WorkerN,cansize=[],memo="a"):
+def scenario_generator(BuildingN,FamilyN,StudentN,HomemakerN,WorkerN,cansize=[50],memo="a"):
+	initial_family=FamilyType(StudentN,HomemakerN,WorkerN,0)
+	print(initial_family)
+	a=ScenarioType()
+	"""
 	familyperbuilding=BuildingN/FamilyN
 	student_in_family=StudentN/FamilyN
 	Homemaker_in_family=HomemakerN/FamilyN
@@ -195,3 +199,5 @@ def scenario_generator(BuildingN,FamilyN,StudentN,HomemakerN,WorkerN,cansize=[],
 		building=BuildingType(cansize[building])
 	#BuildingNumber is given
 	#Family per Building can be derived from FamilyNumber
+	"""
+scenario_generator(3,30,30,30,30,[50,50,40,50,50],"scenarioa")
