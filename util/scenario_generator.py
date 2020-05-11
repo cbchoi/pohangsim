@@ -158,6 +158,7 @@ class ScenarioClass(object):
 	def __getitem__(self, key):
 		return self.buildinglist[key]
 
+<<<<<<< HEAD
 	def remove(self,obj):
 		self.buildinglist.remove(obj)
 		self.N_building-=1
@@ -242,3 +243,46 @@ building1.add(FamilyClass(2,1,1,5))
 
 
 
+=======
+#builindg2= BuildingType(2000) # 아파트
+building1= BuildingType(50) # 공동주택
+building1.add(FamilyType(1,0,0,5))
+building1.add(FamilyType(0,1,0,5))
+building1.add(FamilyType(0,0,1,5))
+building1.add(FamilyType(1,1,1,5))
+building1.add(FamilyType(2,1,1,5))
+
+#print("building repr\n",building1)
+#print("building member list\n",building1.familylist)
+scenario=ScenarioType()
+scenario.add(building1)
+scenario.add(building1)
+#print(scenario.buildinglist)
+
+
+for building in scenario:
+	for family in building:
+		for member in family:
+			pass
+			#print(member)
+		#print(family)
+	#print(building)
+
+def scenario_generator(BuildingN,FamilyN,StudentN,HomemakerN,WorkerN,cansize=[50],memo="a"):
+	initial_family=FamilyType(StudentN,HomemakerN,WorkerN,0)
+	print(initial_family)
+	a=ScenarioType()
+	"""
+	familyperbuilding=BuildingN/FamilyN
+	student_in_family=StudentN/FamilyN
+	Homemaker_in_family=HomemakerN/FamilyN
+	Worker_in_family=WorkerN/FamilyN
+	Scenario=ScenarioType()
+
+	for budiling in range(BuildingN):
+		building=BuildingType(cansize[building])
+	#BuildingNumber is given
+	#Family per Building can be derived from FamilyNumber
+	"""
+scenario_generator(3,30,30,30,30,[50,50,40,50,50],"scenarioa")
+>>>>>>> e2fe6601468b3ccdad5731f8949f209a01a534d7
