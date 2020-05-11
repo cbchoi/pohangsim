@@ -28,7 +28,7 @@ from pohangsim.government import Government
 from pohangsim.garbagecan import GarbageCan
 from garbage_truck import GarbageTruck
 from pohangsim.family import Family 
-from util.case_generator import * #scenario generator
+from util.scenario_editor import * #scenario generator
 
 class Scenario:        #scenario를 확장가능하게 
     def __init__(self):

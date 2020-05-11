@@ -1,13 +1,13 @@
+import sys
 import contexts
 
 #FamilyType and humantype
 from pohangsim.core_component import HumanType
 #from pohangsim.core_component import FamilyType
-
 #job class load
 from pohangsim.job import *
 
-class FamilyType(Student,Homemaker,Blue_collar):
+class FamilyClass(Student,Homemaker,Blue_collar):
 	family_id=0
 	N_member=0
 	memberlist=[]
@@ -70,12 +70,13 @@ class FamilyType(Student,Homemaker,Blue_collar):
 		self.index += 1
 		return n
 
-class BuildingType(object):
+class BuildingClass(object):
 	building_id=0
 	N_family=0
 	familylist=[]
 	def __new__(self,cansize):
 		self.building_id+=1
+		
 		return object.__new__(self)
 		pass
 	def __init__(self,cansize):
@@ -88,6 +89,10 @@ class BuildingType(object):
 	def add(self,obj):
 		self.familylist.append(obj)
 		self.N_family+=1
+
+	def remove(self,obj):
+		self.familylist.remove(obj)
+		self.N_family-=1
 
 	def __del__(self):
 		self.building_id-=1
@@ -111,7 +116,8 @@ class BuildingType(object):
 		n = self.familylist[self.index]
 		self.index += 1
 		return n
-class ScenarioType(object):
+
+class ScenarioClass(object):
 	scenario_id=0
 	N_building=0
 	buildinglist=[]
@@ -133,14 +139,6 @@ class ScenarioType(object):
 		self.scenario_id-=1
 
 	def __repr__(self):
-		repr=""
-		for k in self.buildinglist:
-			for j in k:
-				for i in j:
-					repr+=str(i.get_type())+" "
-				repr+="\n"
-			repr+="\n"
-		#return repr
 		return str(self.buildinglist)
 
 	def __len__(self):
@@ -160,38 +158,87 @@ class ScenarioType(object):
 	def __getitem__(self, key):
 		return self.buildinglist[key]
 
-#builindg2= BuildingType(2000) # 아파트
-building1= BuildingType(50) # 공동주택
-building1.add(FamilyType(1,0,0,5))
-building1.add(FamilyType(0,1,0,5))
-building1.add(FamilyType(0,0,1,5))
-building1.add(FamilyType(1,1,1,5))
-building1.add(FamilyType(2,1,1,5))
-
-#print("building repr\n",building1)
-#print("building member list\n",building1.familylist)
-scenario=ScenarioType()
-scenario.add(building1)
-scenario.add(building1)
-#print(scenario.buildinglist)
+	def remove(self,obj):
+		self.buildinglist.remove(obj)
+		self.N_building-=1
 
 
-for building in scenario:
-	for family in building:
-		for member in family:
-			pass
-			#print(member)
-		#print(family)
-	#print(building)
+#N개의 빌딩을 가진  시나리오 class를 생성
+def new_scenario_GUI(N,cansize=[50]):
+	scenario=ScenarioClass()
+	if len(cansize)==1:
+		for idx in range(N):
+			scenario.add(BuildingClass(cansize[0]))
+	else:
+		if len(cansize)!=N:
+			raise ValueError
+		else:
+			for idx in range(N):
+				scenario.add(BuildingClass(cansize[idx])) 
+	return scenario
+def load_scenario_GUI(filename):
+	file=open(filename,"r")
+	file=file.read()
+	return file
 
-def scenario_generator(BuildingN,FamilyN,StudentN,HomemakerN,WorkerN,cansize=[],memo="a"):
-	familyperbuilding=BuildingN/FamilyN
-	student_in_family=StudentN/FamilyN
-	Homemaker_in_family=HomemakerN/FamilyN
-	Worker_in_family=WorkerN/FamilyN
-	Scenario=ScenarioType()
+def save_scenario_GUI(scenario,s_id,output):
+	file=open(output+"scenario.txt","w")
+	file.write(str(scenario[s_id]))
 
-	for budiling in range(BuildingN):
-		building=BuildingType(cansize[building])
-	#BuildingNumber is given
-	#Family per Building can be derived from FamilyNumber
+#편집할 빌딩 선택 input=scenario
+def select_building_GUI(scenario):
+	id=int(input("select id {0}\n".format(list(range(len(scenario))))))
+	
+	edit_building_GUI(scenario,id)
+	
+def edit_building_GUI(scenario,id):
+	S=int(input("Input S"))#ui
+	H=int(input("Input H"))#ui
+	B=int(input("Input B"))#ui
+	Tempcansize=input("tem can size")
+	add_family_GUI(scenario,id,S,H,B,Tempcansize)
+	pass
+	#S,H,B,tempcan=value from ui
+	#addbutton.clicked.connect(add_family)
+
+#building 에 family추가
+def add_family_GUI(scenario,id,S,H,B,tempcan):
+	scenario[id].add(FamilyClass(S,H,B,tempcan))
+	print(scenario[id])
+	print(scenario[id][0].cansize)
+def remove_family_GUI(scenario,id,familyid):
+	scenario[id].remove(scenario[id].familylist[familyid])
+
+
+
+#select_building_GUI(scenariolist[0])
+#print(scenariolist[0])
+#print(scenariolist[0][0])
+scenariolist=[] #scenariolist[scenariosclass[buildingclass[familyclass[]]]]
+scenariolist.append(new_scenario_GUI(0)) #빌딩이 0개인 시나리오를 시나리오 리스트에 추가
+building1= BuildingClass(50) # 공동주택
+building1.add(FamilyClass(1,0,0,5))
+building1.add(FamilyClass(0,1,0,5))
+building1.add(FamilyClass(0,0,1,5))
+building1.add(FamilyClass(1,1,1,5))
+building1.add(FamilyClass(2,1,1,5))
+#print(scenariolist)
+#print(scenariolist[0])
+scenariolist[0].add(building1)
+#save_scenario_GUI(scenariolist,0,"")
+scenariolist.append(load_scenario_GUI("C:/research/web/pohangsim/util/scenario.txt"))
+print(scenariolist)
+
+#builindg2= BuildingClass(2000) # 아파트
+#building1=BuildingClass(100)
+building1= BuildingClass(50) # 공동주택
+building1.add(FamilyClass(1,0,0,5))
+building1.add(FamilyClass(0,1,0,5))
+building1.add(FamilyClass(0,0,1,5))
+building1.add(FamilyClass(1,1,1,5))
+building1.add(FamilyClass(2,1,1,5))
+
+
+
+
+
