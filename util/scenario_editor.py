@@ -1,5 +1,6 @@
 import sys
 import contexts
+import pickle
 
 #FamilyType and humantype
 from pohangsim.core_component import HumanType
@@ -8,11 +9,11 @@ from pohangsim.core_component import HumanType
 from pohangsim.job import *
 
 class FamilyClass(Student,Homemaker,Blue_collar):
-	family_id=0
+	id=0
 	N_member=0
 	memberlist=[]
 	def __new__(self, S,H,B,cansize) :
-		self.family_id+=1
+		self.id+=1
 		fam=[]
 		for i in range(S):
 			self.N_member+=1
@@ -29,7 +30,7 @@ class FamilyClass(Student,Homemaker,Blue_collar):
 	def __init__(self,S,H,B,cansize):
 		self.cansize=cansize
 		self.memberlist=[]
-		self.family_id=self.family_id
+		self.id=self.id
 		self.N_member=0
 		if S>0:
 			for i in range(S):
@@ -48,7 +49,7 @@ class FamilyClass(Student,Homemaker,Blue_collar):
 		self.memberlist.append(member)
 		self.N_member+=1
 	def __del__(self):
-		self.family_id-=1
+		self.id-=1
 
 	def __repr__(self):
 		repr =str(self.memberlist)
@@ -71,16 +72,16 @@ class FamilyClass(Student,Homemaker,Blue_collar):
 		return n
 
 class BuildingClass(object):
-	building_id=0
+	id=0
 	N_family=0
 	familylist=[]
-	def __new__(self,cansize):
-		self.building_id+=1
+	def __new__(self,cansize=50):
+		self.id+=1
 		
 		return object.__new__(self)
 		pass
-	def __init__(self,cansize):
-		self.building_id=self.building_id
+	def __init__(self,cansize=50):
+		self.id=self.id
 		self.garbagecan_size=cansize
 		self.familylist=[]
 		self.N_family=0
@@ -95,7 +96,7 @@ class BuildingClass(object):
 		self.N_family-=1
 
 	def __del__(self):
-		self.building_id-=1
+		self.id-=1
 
 	def __repr__(self):
 		repr=str(self.familylist)
@@ -118,17 +119,19 @@ class BuildingClass(object):
 		return n
 
 class ScenarioClass(object):
-	scenario_id=0
+	id=0
 	N_building=0
 	buildinglist=[]
+	memo=""
 	def __new__(self):
-		self.scenario_id+=1
+		self.id+=1
 		return object.__new__(self)
 		pass
 	def __init__(self):
-		self.scenario_id=self.scenario_id
+		self.id=self.id
 		self.N_building=0
 		self.buildinglist=[]
+		self.memo=""
 		pass
 
 	def add(self,obj):
@@ -136,7 +139,7 @@ class ScenarioClass(object):
 		self.N_building+=1
 
 	def __del__(self):
-		self.scenario_id-=1
+		self.id-=1
 
 	def __repr__(self):
 		return str(self.buildinglist)
@@ -164,8 +167,11 @@ class ScenarioClass(object):
 
 
 #N개의 빌딩을 가진  시나리오 class를 생성
-def new_scenario_GUI(N,cansize=[50]):
+def new_scenario_GUI(N):
 	scenario=ScenarioClass()
+	for idx in range(N):
+		scenario.add(BuildingClass())
+	"""
 	if len(cansize)==1:
 		for idx in range(N):
 			scenario.add(BuildingClass(cansize[0]))
@@ -174,16 +180,25 @@ def new_scenario_GUI(N,cansize=[50]):
 			raise ValueError
 		else:
 			for idx in range(N):
-				scenario.add(BuildingClass(cansize[idx])) 
+				scenario.add(BuildingClass(cansize[idx]))
+	"""
 	return scenario
 def load_scenario_GUI(filename):
-	file=open(filename,"r")
-	file=file.read()
-	return file
+	file=open(filename,"rb")
+	scenario=pickle.load(file)
 
-def save_scenario_GUI(scenario,s_id,output):
-	file=open(output+"scenario.txt","w")
-	file.write(str(scenario[s_id]))
+	return scenario
+
+def save_scenario_from_list_GUI(scenario,s_id,output):
+	scenario.memo=output
+	file=open(output+"scenario.txt","wb")
+	pickle.dump(scenario[s_id],file)
+
+def save_scenario_GUI(scenario,output,filename):
+	scenario.memo=filename
+	file=open(output+filename+".txt","wb")
+	pickle.dump(scenario,file)
+
 
 #편집할 빌딩 선택 input=scenario
 def select_building_GUI(scenario):
@@ -210,7 +225,19 @@ def remove_family_GUI(scenario,id,familyid):
 	scenario[id].remove(scenario[id].familylist[familyid])
 
 
-
+scenario=new_scenario_GUI(0)
+building1= BuildingClass(50) # 공동주택
+building1.add(FamilyClass(1,0,0,5))
+building1.add(FamilyClass(0,1,0,5))
+building1.add(FamilyClass(0,0,1,5))
+building1.add(FamilyClass(1,1,1,5))
+building1.add(FamilyClass(2,1,1,5))
+scenario.add(building1)
+save_scenario_GUI(scenario,"","savetest")
+a=load_scenario_GUI("savetest.txt")
+print(a)
+print(a.memo)
+"""
 #select_building_GUI(scenariolist[0])
 #print(scenariolist[0])
 #print(scenariolist[0][0])
@@ -227,7 +254,7 @@ building1.add(FamilyClass(2,1,1,5))
 scenariolist[0].add(building1)
 #save_scenario_GUI(scenariolist,0,"")
 scenariolist.append(load_scenario_GUI("C:/research/web/pohangsim/util/scenario.txt"))
-print(scenariolist)
+pprint(scenariolist)
 
 #builindg2= BuildingClass(2000) # 아파트
 #building1=BuildingClass(100)
@@ -239,6 +266,6 @@ building1.add(FamilyClass(1,1,1,5))
 building1.add(FamilyClass(2,1,1,5))
 
 
-
+"""
 
 
