@@ -1,6 +1,6 @@
 import sys
 import contexts
-import pickle
+import dill
 
 #FamilyType and humantype
 from pohangsim.core_component import HumanType
@@ -12,6 +12,9 @@ class FamilyClass(Student,Homemaker,Blue_collar):
 	id=0
 	N_member=0
 	memberlist=[]
+
+	def __getnewargs__(self):
+		return self.S, self.H, self.B, self.cansize
 	def __new__(self, S,H,B,cansize) :
 		self.id+=1
 		fam=[]
@@ -28,6 +31,9 @@ class FamilyClass(Student,Homemaker,Blue_collar):
 		return object.__new__(self)
 
 	def __init__(self,S,H,B,cansize):
+		self.S=S
+		self.H=H
+		self.B=B
 		self.cansize=cansize
 		self.memberlist=[]
 		self.id=self.id
@@ -185,19 +191,15 @@ def new_scenario_GUI(N):
 	return scenario
 def load_scenario_GUI(filename):
 	file=open(filename,"rb")
-	scenario=pickle.load(file)
-
+	scenario=dill.load(file)
+	file.close()
 	return scenario
-
-def save_scenario_from_list_GUI(scenario,s_id,output):
-	scenario.memo=output
-	file=open(output+"scenario.txt","wb")
-	pickle.dump(scenario[s_id],file)
 
 def save_scenario_GUI(scenario,output,filename):
 	scenario.memo=filename
 	file=open(output+filename+".txt","wb")
-	pickle.dump(scenario,file)
+	dill.dump(scenario,file)
+	file.close()
 
 
 #편집할 빌딩 선택 input=scenario
@@ -227,16 +229,17 @@ def remove_family_GUI(scenario,id,familyid):
 
 scenario=new_scenario_GUI(0)
 building1= BuildingClass(50) # 공동주택
+
 building1.add(FamilyClass(1,0,0,5))
 building1.add(FamilyClass(0,1,0,5))
 building1.add(FamilyClass(0,0,1,5))
-building1.add(FamilyClass(1,1,1,5))
-building1.add(FamilyClass(2,1,1,5))
+
 scenario.add(building1)
+
 save_scenario_GUI(scenario,"","savetest")
 a=load_scenario_GUI("savetest.txt")
-print(a)
-print(a.memo)
+#print(a.__dict__.items())
+#print(a.memo)
 """
 #select_building_GUI(scenariolist[0])
 #print(scenariolist[0])
