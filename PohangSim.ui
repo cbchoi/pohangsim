@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>864</width>
-    <height>593</height>
+    <width>888</width>
+    <height>597</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -69,12 +69,12 @@
      <item>
       <widget class="QRadioButton" name="radioButton_5">
        <property name="text">
-        <string>Realtime</string>
+        <string>RealTime</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QRadioButton" name="radioButton_4">
+      <widget class="QRadioButton" name="VirtualTime">
        <property name="text">
         <string>VirtualTime</string>
        </property>
@@ -219,11 +219,11 @@
      </rect>
     </property>
    </widget>
-   <widget class="QCheckBox" name="checkBox">
+   <widget class="QCheckBox" name="Verbosebox">
     <property name="geometry">
      <rect>
       <x>350</x>
-      <y>470</y>
+      <y>450</y>
       <width>77</width>
       <height>16</height>
      </rect>
@@ -244,6 +244,9 @@
     <layout class="QHBoxLayout" name="simulTime">
      <item>
       <widget class="QSlider" name="simulationtimeslider">
+       <property name="acceptDrops">
+        <bool>true</bool>
+       </property>
        <property name="minimum">
         <number>48</number>
        </property>
@@ -309,56 +312,6 @@
     <property name="title">
      <string/>
     </property>
-    <widget class="QWidget" name="verticalLayoutWidget_5">
-     <property name="geometry">
-      <rect>
-       <x>7</x>
-       <y>20</y>
-       <width>319</width>
-       <height>48</height>
-      </rect>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_4">
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_3">
-        <item>
-         <widget class="QLabel" name="label_10">
-          <property name="text">
-           <string>Student</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_9">
-          <property name="text">
-           <string>Homemaker</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_7">
-          <property name="text">
-           <string>Blue-collar</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
-        <item>
-         <widget class="QTimeEdit" name="blue_out_time"/>
-        </item>
-        <item>
-         <widget class="QTimeEdit" name="stu_out_time"/>
-        </item>
-        <item>
-         <widget class="QTimeEdit" name="house_out_time"/>
-        </item>
-       </layout>
-      </item>
-     </layout>
-    </widget>
     <widget class="QLabel" name="label">
      <property name="geometry">
       <rect>
@@ -372,17 +325,27 @@
       <string>GetoutTime</string>
      </property>
     </widget>
-    <widget class="QLabel" name="label_16">
+    <widget class="QDoubleSpinBox" name="AverageTime">
      <property name="geometry">
       <rect>
-       <x>90</x>
-       <y>150</y>
-       <width>91</width>
+       <x>20</x>
+       <y>60</y>
+       <width>51</width>
+       <height>22</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_15">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>20</y>
+       <width>51</width>
        <height>31</height>
       </rect>
      </property>
      <property name="text">
-      <string>Trash standard deviation</string>
+      <string>Average Time</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -391,21 +354,11 @@
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QDoubleSpinBox" name="TrashStandardDeviation">
-     <property name="geometry">
-      <rect>
-       <x>110</x>
-       <y>190</y>
-       <width>51</width>
-       <height>22</height>
-      </rect>
-     </property>
-    </widget>
     <widget class="QDoubleSpinBox" name="AverageTrash">
      <property name="geometry">
       <rect>
-       <x>110</x>
-       <y>120</y>
+       <x>120</x>
+       <y>60</y>
        <width>51</width>
        <height>22</height>
       </rect>
@@ -414,8 +367,8 @@
     <widget class="QLabel" name="label_18">
      <property name="geometry">
       <rect>
-       <x>100</x>
-       <y>80</y>
+       <x>110</x>
+       <y>20</y>
        <width>61</width>
        <height>31</height>
       </rect>
@@ -430,11 +383,21 @@
       <bool>true</bool>
      </property>
     </widget>
+    <widget class="QDoubleSpinBox" name="TimeStandardDeviation">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>130</y>
+       <width>51</width>
+       <height>22</height>
+      </rect>
+     </property>
+    </widget>
     <widget class="QLabel" name="label_17">
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>150</y>
+       <y>90</y>
        <width>91</width>
        <height>31</height>
       </rect>
@@ -458,17 +421,27 @@
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QLabel" name="label_15">
+    <widget class="QDoubleSpinBox" name="TrashStandardDeviation">
      <property name="geometry">
       <rect>
-       <x>20</x>
-       <y>80</y>
+       <x>120</x>
+       <y>130</y>
        <width>51</width>
+       <height>22</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_16">
+     <property name="geometry">
+      <rect>
+       <x>100</x>
+       <y>90</y>
+       <width>91</width>
        <height>31</height>
       </rect>
      </property>
      <property name="text">
-      <string>Average Time</string>
+      <string>Trash standard deviation</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -477,22 +450,12 @@
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QDoubleSpinBox" name="TimeStandardDeviation">
+    <widget class="QSpinBox" name="GarbageCanSize">
      <property name="geometry">
       <rect>
-       <x>20</x>
-       <y>190</y>
-       <width>51</width>
-       <height>22</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QDoubleSpinBox" name="AverageTime">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>120</y>
-       <width>51</width>
+       <x>270</x>
+       <y>60</y>
+       <width>41</width>
        <height>22</height>
       </rect>
      </property>
@@ -500,8 +463,8 @@
     <widget class="QLabel" name="label_3">
      <property name="geometry">
       <rect>
-       <x>190</x>
-       <y>80</y>
+       <x>260</x>
+       <y>20</y>
        <width>71</width>
        <height>31</height>
       </rect>
@@ -516,11 +479,50 @@
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QLabel" name="label_8">
+    <widget class="QSpinBox" name="FamilyCanSize">
+     <property name="geometry">
+      <rect>
+       <x>200</x>
+       <y>60</y>
+       <width>41</width>
+       <height>22</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_13">
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>20</y>
+       <width>61</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Family Can Size</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignBottom|Qt::AlignHCenter</set>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="CollectionCycle">
      <property name="geometry">
       <rect>
        <x>270</x>
-       <y>150</y>
+       <y>130</y>
+       <width>42</width>
+       <height>22</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_8">
+     <property name="geometry">
+      <rect>
+       <x>260</x>
+       <y>90</y>
        <width>61</width>
        <height>31</height>
       </rect>
@@ -538,68 +540,9 @@
     <widget class="QSpinBox" name="GarbageTruckSize">
      <property name="geometry">
       <rect>
-       <x>360</x>
-       <y>120</y>
+       <x>340</x>
+       <y>60</y>
        <width>51</width>
-       <height>22</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QSpinBox" name="CollectionCycle">
-     <property name="geometry">
-      <rect>
-       <x>280</x>
-       <y>190</y>
-       <width>42</width>
-       <height>22</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QSpinBox" name="FamilyCanSize">
-     <property name="geometry">
-      <rect>
-       <x>280</x>
-       <y>120</y>
-       <width>41</width>
-       <height>22</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label_2">
-     <property name="geometry">
-      <rect>
-       <x>190</x>
-       <y>150</y>
-       <width>61</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Collection Time</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignBottom|Qt::AlignHCenter</set>
-     </property>
-     <property name="wordWrap">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QDoubleSpinBox" name="CollectionDelay">
-     <property name="geometry">
-      <rect>
-       <x>360</x>
-       <y>190</y>
-       <width>51</width>
-       <height>22</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="QSpinBox" name="GarbageCanSize">
-     <property name="geometry">
-      <rect>
-       <x>200</x>
-       <y>120</y>
-       <width>41</width>
        <height>22</height>
       </rect>
      </property>
@@ -607,8 +550,8 @@
     <widget class="QLabel" name="label_4">
      <property name="geometry">
       <rect>
-       <x>360</x>
-       <y>80</y>
+       <x>340</x>
+       <y>20</y>
        <width>61</width>
        <height>31</height>
       </rect>
@@ -623,30 +566,21 @@
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QLabel" name="label_13">
+    <widget class="QDoubleSpinBox" name="CollectionDelay">
      <property name="geometry">
       <rect>
-       <x>280</x>
-       <y>80</y>
-       <width>61</width>
-       <height>31</height>
+       <x>340</x>
+       <y>130</y>
+       <width>51</width>
+       <height>22</height>
       </rect>
-     </property>
-     <property name="text">
-      <string>Family Can Size</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignBottom|Qt::AlignHCenter</set>
-     </property>
-     <property name="wordWrap">
-      <bool>true</bool>
      </property>
     </widget>
     <widget class="QLabel" name="label_14">
      <property name="geometry">
       <rect>
-       <x>340</x>
-       <y>150</y>
+       <x>320</x>
+       <y>90</y>
        <width>91</width>
        <height>31</height>
       </rect>
@@ -665,39 +599,29 @@
      <property name="geometry">
       <rect>
        <x>200</x>
-       <y>190</y>
+       <y>130</y>
        <width>42</width>
        <height>22</height>
       </rect>
      </property>
     </widget>
-    <widget class="QLabel" name="label_19">
+    <widget class="QLabel" name="label_2">
      <property name="geometry">
       <rect>
-       <x>360</x>
-       <y>10</y>
-       <width>51</width>
+       <x>190</x>
+       <y>90</y>
+       <width>61</width>
        <height>31</height>
       </rect>
      </property>
      <property name="text">
-      <string>Time Density</string>
+      <string>Collection Time</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignBottom|Qt::AlignHCenter</set>
      </property>
      <property name="wordWrap">
       <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="QDoubleSpinBox" name="TimeDensity">
-     <property name="geometry">
-      <rect>
-       <x>360</x>
-       <y>50</y>
-       <width>51</width>
-       <height>22</height>
-      </rect>
      </property>
     </widget>
    </widget>
@@ -711,14 +635,43 @@
      </rect>
     </property>
    </widget>
+   <widget class="QDoubleSpinBox" name="TimeDensity">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>510</y>
+      <width>51</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_19">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>470</y>
+      <width>51</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Time Density</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignBottom|Qt::AlignHCenter</set>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>864</width>
-     <height>26</height>
+     <width>888</width>
+     <height>22</height>
     </rect>
    </property>
   </widget>

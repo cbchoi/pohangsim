@@ -159,7 +159,7 @@ class GarbageCan(BehaviorModelExecutor):
             #print(ev_t,port,"!!")
             
             member = data[0]
-            ag_id - member.get_id()
+            ag_id = member.get_id()
             ag_name = member.get_name()
             ag_satisfaction = member.get_satisfaction()
             #print(SystemSimulator().get_engine("sname").get_global_time())
@@ -186,7 +186,7 @@ class GarbageCan(BehaviorModelExecutor):
             #print(ev_t,port,"!!")
             for member, accumulated in data[0].items():
                 self.cur_amount += accumulated
-                ag_id - member.get_id()
+                ag_id = member.get_id()
                 ag_name = member.get_name()
                 ag_amount = accumulated
                 ag_satisfaction = member.get_satisfaction()

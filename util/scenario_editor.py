@@ -177,6 +177,7 @@ def new_scenario_GUI(N):
 	scenario=ScenarioClass()
 	for idx in range(N):
 		scenario.add(BuildingClass())
+	#print(scenario.id)
 	"""
 	if len(cansize)==1:
 		for idx in range(N):
@@ -195,9 +196,8 @@ def load_scenario_GUI(filename):
 	file.close()
 	return scenario
 
-def save_scenario_GUI(scenario,output,filename):
-	scenario.memo=filename
-	file=open(output+filename+".txt","wb")
+def save_scenario_GUI(scenario,output):
+	file=open(output[0]+".scn","wb")
 	dill.dump(scenario,file)
 	file.close()
 
@@ -221,12 +221,12 @@ def edit_building_GUI(scenario,id):
 #building 에 family추가
 def add_family_GUI(scenario,id,S,H,B,tempcan):
 	scenario[id].add(FamilyClass(S,H,B,tempcan))
-	print(scenario[id])
-	print(scenario[id][0].cansize)
+	#print(scenario[id])
+	#print(scenario[id][0].cansize)
 def remove_family_GUI(scenario,id,familyid):
 	scenario[id].remove(scenario[id].familylist[familyid])
 
-
+"""
 scenario=new_scenario_GUI(0)
 building1= BuildingClass(50) # 공동주택
 
@@ -237,7 +237,7 @@ building1.add(FamilyClass(0,0,1,5))
 scenario.add(building1)
 
 save_scenario_GUI(scenario,"","savetest")
-a=load_scenario_GUI("savetest.txt")
+a=load_scenario_GUI("savetest.txt")"""
 #print(a.__dict__.items())
 #print(a.memo)
 """
