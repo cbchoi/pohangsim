@@ -208,10 +208,8 @@ def select_building_GUI(scenario):
 	
 	edit_building_GUI(scenario,id)
 	
-def edit_building_GUI(scenario,id):
-	S=int(input("Input S"))#ui
-	H=int(input("Input H"))#ui
-	B=int(input("Input B"))#ui
+def edit_family_GUI(building,id,S,H,B,familycan):
+	building(add)
 	Tempcansize=input("tem can size")
 	add_family_GUI(scenario,id,S,H,B,Tempcansize)
 	pass

@@ -3,6 +3,7 @@ import os
 import sys
 import time
 from functools import wraps
+import functools
 
 from PySide2.QtCore import *
 from PySide2.QtUiTools import QUiLoader
@@ -18,26 +19,13 @@ from pohangsim.garbagecan import GarbageCan
 from pohangsim.government import Government
 from pohangsim.human import Human
 from pohangsim.job import *
-from util import scenario_editor  # scenario generator
+
+from signal_model import SignalLoop
+from scenario_editor import *
 
 
 # GUI lib import
 # from config import *
-
-def timefn(fn):
-    @wraps(fn)
-    def measure_time(*args, **kwargs):
-        t1 = time.perf_counter()
-        result = fn(*args, **kwargs)
-        t2 = time.perf_counter()
-        print("@timefn: {} took {} seconds".format(fn.__name__, t2 - t1))
-        return result
-
-    return measure_time
-
-
-
-
 class ScenarioListManager(QDialog):
     SCENARIO_SIGNAL=Signal(list)
     def __init__(self, _parent =None):
@@ -60,7 +48,7 @@ class ScenarioListManager(QDialog):
             msg.setDetailedText("Can generate scenario with positive integer number of buildings\nyour input value:{0}".format(self.N))
             msg.exec_()
         else:
-            scenario=scenario_editor.new_scenario_GUI(self.N)
+            scenario= new_scenario_GUI(self.N)
             scenario.memo="scenario"+str(scenario.id)
             self.listWidget.addItem(scenario.memo)
             self.scenariolist.append(scenario)
@@ -68,11 +56,13 @@ class ScenarioListManager(QDialog):
     def load_scenario(self):
         filename = QFileDialog.getOpenFileName()
         if filename[0]!='':
-            scenario = scenario_editor.load_scenario_GUI(filename[0])
-            self.listWidget.addItem(scenario.memo)
+            scenario = load_scenario_GUI(filename[0])
+            filename=filename[0].split('/')
+            self.listWidget.addItem(filename[-1])
             #print(scenario,"here is laod scenario")
             self.scenariolist.append(scenario)
-            self.SCENARIO_SIGNAL.emit(self.scenariolist)
+    def send_scenario(self):
+        self.SCENARIO_SIGNAL.emit(self.scenariolist)
     def new_scenario(self):
         ui_file = QFile("../../Dialog.ui")
         loader = QUiLoader()
@@ -81,7 +71,7 @@ class ScenarioListManager(QDialog):
         self.dialog.setModal(True)
         self.dialog.show()
         self.dialog.buttonBox.accepted.connect(self.generate_scenario)
-    
+    """    
     def generate_scenario(self):
         a=self.dialog.StudentRatio.value()
         b=self.dialog.ConstructionWorkerRatio.value()
@@ -97,12 +87,13 @@ class ScenarioListManager(QDialog):
             print("wrong ratio and Number of residents")                            
             return False
         print("generate scenario")
-        scenario=scenario_editor.ScenarioClass()
+        scenario= ScenarioClass()
         scenario.load_from_file("./scenario/{0}_N{1}_seed{2}.txt".format(self.dialog.memo.toPlainText(),N,0))
         self.listWidget.addItem(scenario.memo)
         self.group.append(scenario)
         # 케이스가 생성된다 text파일로 scenario에 저장된다.
         self.SCENARIO_SIGNAL.emit(scenario)
+    """
 
     def save_scenario(self):
         if self.listWidget.count()<1:
@@ -114,19 +105,17 @@ class ScenarioListManager(QDialog):
             msg.exec_()
         else:
             filename = QFileDialog.getSaveFileName()
-            scenario_editor.save_scenario_GUI(self.scenariolist[self.listWidget.currentRow()],filename)
+            save_scenario_GUI(self.scenariolist[self.listWidget.currentRow()], filename)
 
-    
     def delete_scenario(self):
         listItems=self.listWidget.selectedItems()
         if not listItems: return        
         for item in listItems:
-           self.listWidget.takeItem(self.listWidget.row(item))
+            self.listWidget.takeItem(self.listWidget.row(item))
+            del self.scenariolist[self.listWidget.row(item)]
 
     def __getattr__(self, attr):
         return getattr(self.obj, attr)
-
-
 
 class MSWSsimulator(QWidget):
     def __init__(self, _parent =None):
@@ -137,10 +126,17 @@ class MSWSsimulator(QWidget):
         self.controlbox=controlBox(self.obj)
         self.output=OutputManager(self.obj)
         self.ScenarioListControl=ScenarioListManager(self.obj)
-        
-        self.ScenarioListControl.SCENARIO_SIGNAL.connect(self.controlbox.prepare_data)
+
+
         #controlbox
-        self.SimulateButton.clicked.connect(self.controlbox.prepare_data)
+        #Simulate 버튼 클릭시
+        self.controlbox.SimulateButton.clicked.connect(self.ScenarioListControl.send_scenario) #scenario list 전달
+        self.ScenarioListControl.SCENARIO_SIGNAL.connect(self.controlbox.prepare_data) #parameter 읽기 -> timerstart
+        #simulation이 끝나면 결과
+        self.controlbox.loopback.LOOPBACK_SIG.connect(self.controlbox.result_show)
+        self.controlbox.RESULT_SIGNAL.connect(self.output.show_result) #외부로 전달
+
+        self.StopButton.clicked.connect(self.controlbox.stop_button)
         
         #slider
         self.simulationtimeinput.valueChanged.connect(self.simul_time.synchro_slider)
@@ -153,30 +149,12 @@ class MSWSsimulator(QWidget):
         self.load_button.clicked.connect(self.ScenarioListControl.load_scenario)
         self.save_button.clicked.connect(self.ScenarioListControl.save_scenario)
         self.delete_button.clicked.connect(self.ScenarioListControl.delete_scenario)
-        
-        #timemode
+        self.controlbox.READY_SIG.connect(self.controlbox.simulate_button)
 
-
-        #controlbox
-        self.controlbox.SIMULATE_SIGNAL.connect(self.controlbox.run_simulation)
-        self.controlbox.SIMULATE_COMPLETE.connect(self.output.show_result)
     def __getattr__(self, attr):
         return getattr(self.obj, attr)
     def show(self):
         self.obj.show()
-class timeMode(QObject):
-    timemodeSignal=Signal(str)
-    def __init__(self, _parent=None):
-        super(timeMode,self).__init__(_parent)
-        self.obj=_parent
-        #self.
-
-    def time_mode_select(self):
-        if self.RealTime.isChecked():
-            msg = "REAL_TIME"
-        elif self.VirtualTime.isChecked():
-            msg = "VIRTUAL_TIME"
-        print("result is here")
 
 class OutputManager(QObject):
     def __init__(self, _parent=None):
@@ -204,23 +182,42 @@ class SimulTime(QObject):
 
 class controlBox(QObject):
     #signal part
-    SIMULATE_SIGNAL=Signal(Parameter,scenario_editor.ScenarioClass)
-    SIMULATE_COMPLETE=Signal()
-
+    SIMULATE_SIGNAL=Signal(Parameter, list)
+    READY_SIG=Signal(SystemSimulator)
+    RESULT_SIGNAL=Signal()
     def __init__(self, _parent=None):
         super(controlBox, self).__init__(_parent)
         self.obj=_parent
-        self.scenario=None
+        self.scenariolist=None
         self.parameter=Parameter()
         self.timer=QTimer()
-        self.timer.timeout.connect(self.run_simulation)
+        self.loopback=SignalLoop(0,self.parameter.simulation_time,"loopback","sname")
+    @Slot()
+    def simulate_button(self,se):
+        ft=functools.partial(self.run_simulate, se)
+        self.timer.timeout.connect(ft)
+        self.timer.start(1)
+        print("timer started")
+
+
+    def stop_button(self):
+        print("timer stopped")
+        self.timer.stop()
+
+    def result_show(self):
+        self.timer.stop()
+        #self.RESULT_SIGNAL.emit()
+        #show result
+        pass
 
     @Slot()
     def prepare_data(self,scenario_signal=False):
         if scenario_signal:
-            self.scenario=scenario_signal
-            #print(scenario_signal,"here is signal")
-        
+            self.scenariolist=scenario_signal
+        if self.RealTime.isChecked():
+            self.parameter.SIMULATION_MODE = "REAL_TIME"
+        elif self.VirtualTime.isChecked():
+            self.parameter.SIMULATION_MODE = "VIRTUAL_TIME"
         self.parameter.TIME_DENSITY=self.TimeDensity.value()                             
         ###################################################
         self.parameter.AVG_TIME= self.AverageTime.value()
@@ -241,115 +238,94 @@ class controlBox(QObject):
         #self.parameter.simulation_time= self.simulationtimeslider.value()
         if self.Verbosebox.isChecked():
             self.parameter.VERBOSE = True
-
-
-        #parameter).SIMULATION_MODE=
-        #parameter).RANDOM_SEED=   #새로 UI에 추가
-        #parameter).VERBOSE=    #verbose가 체크됬을때 TRUE    
         self.parameter.update_config()
-        if scenario_signal is False:
-            self.SIMULATE_SIGNAL.emit(self.parameter,self.scenario)
-    
+        self.loopback = SignalLoop(0, self.parameter.simulation_time, "loopback", "sname")
+        if self.scenariolist==None:
+            print("error message here")
+        else:
+            self.simulation_initialize()
 
-    @Slot()
-    @timefn
-    def run_simulation(self,parameter,scenariolist):
-        if scenariolist != None:
-            if not os.path.exists("output"):
-                os.makedirs("output")
-            #print(parameter.__dict__.items())  #parameter 가제대로 왔는지 체크
+    def simulation_initialize(self):
+        if not os.path.exists("output"):
+            os.makedirs("output")
+        for scenario in self.scenariolist:
+            filename = scenario.memo
+            #sys.stdout=sys.__stdout__
+            print(f"Processing {scenario.id}/{len(self.scenariolist)}:", scenario.memo)
+            #sys.stdout = open("output/result_" + filename + "_.log", 'a')
+            if self.parameter.VERBOSE is True:
+                outputlocation = scenario.memo +"_"+ str(self.parameter.TIME_STDDEV) + "trash" + str(
+                    self.parameter.TRASH_STDDEV) + "_" + str(self.parameter.GARBAGECAN_SIZE)
+                if not os.path.exists(outputlocation):
+                    os.makedirs(outputlocation)
+            else:
+                outputlocation = None
+            se = SystemSimulator()
+            se.register_engine("sname", self.parameter.SIMULATION_MODE, self.parameter.TIME_DENSITY)
+            c = Clock(0, self.parameter.simulation_time, "clock", "sname")
+            se.get_engine("sname").register_entity(c)
+            gt = GarbageTruck(0, self.parameter.simulation_time, "garbage_truck", 'sname',
+                              self.parameter.GARBAGETRUCK_SIZE,
+                              [e for e in enumerate([self.parameter.TRUCK_DELAY for building in scenario])],
+                              outputlocation)  # 4.7*13*3
+            se.get_engine("sname").register_entity(gt)
+            gv = Government(0, self.parameter.simulation_time, "government", "sname")
+            se.get_engine("sname").register_entity(gv)
+            i = 0
+            j = 0
+            for building in scenario:
 
-            for scenario in scenariolist:
-                filename = scenario.memo
-                for kndx in range(5):
-                    sys.stdout=sys.__stdout__
-                    print(f"Processing {scenario.id}/{len(scenariolist)}:", scenario.memo)
-                    sys.stdout = open("output/result_" + filename + "_" + str(kndx) + ".log", 'a')
-                    if parameter.VERBOSE is True:
-                        outputlocation = scenario.memo + str(parameter.TIME_STDDEV) + "trash" + str(
-                            parameter.TRASH_STDDEV) + "_" + str(parameter.GARBAGECAN_SIZE) + "_" + str(kndx)
-                        if not os.path.exists(outputlocation):
-                            os.makedirs(outputlocation)
-                    else:
-                        outputlocation = None
-                    se = SystemSimulator()
+                g = GarbageCan(0, self.parameter.simulation_time, "gc[{0}]".format(i), 'sname',
+                               self.parameter.GARBAGECAN_SIZE, outputlocation)
+                se.get_engine("sname").register_entity(g)
+                for flist in building:
+                    ftype = FamilyType(self.parameter.TEMP_CAN_SIZE)
+                    f = Family(0, self.parameter.simulation_time, "family", 'sname', ftype)
+                    for htype in flist:
+                        # hid = get_human_id()
+                        name = htype.get_name()
+                        cname = "check[{0}]".format(htype.get_name())
+                        h1 = Human(0, self.parameter.simulation_time, cname, "sname", htype)
+                        ch = Check(0, self.parameter.simulation_time, name, "sname", htype)
+                        se.get_engine("sname").register_entity(h1)
+                        se.get_engine("sname").register_entity(ch)
+                        # f1.register_member(htype)
+                        ftype.register_member(htype)
+                        # Connect Check & Can
+                        ports = g.register_human(htype.get_id())
+                        se.get_engine("sname").coupling_relation(h1, "trash", ch, "request")
+                        se.get_engine("sname").coupling_relation(ch, "check", g, ports[0])
 
-                    se.register_engine("sname", parameter.SIMULATION_MODE, parameter.TIME_DENSITY)
+                        se.get_engine("sname").coupling_relation(g, ports[1], ch, "checked")
+                        se.get_engine("sname").coupling_relation(ch, "gov_report", gv, "recv_report")
 
-                    c = Clock(0, parameter.simulation_time, "clock", "sname")
-                    se.get_engine("sname").register_entity(c)
-                    gt = GarbageTruck(0, parameter.simulation_time, "garbage_truck", 'sname',
-                                      parameter.GARBAGETRUCK_SIZE,
-                                      [e for e in enumerate([parameter.TRUCK_DELAY for building in scenario])],
-                                      outputlocation)  # 4.7*13*3
-                    se.get_engine("sname").register_entity(gt)
+                        se.get_engine("sname").coupling_relation(None, "start", h1, "start")
+                        se.get_engine("sname").coupling_relation(None, "end", h1, "end")
+                        se.get_engine("sname").coupling_relation(h1, "trash", f, "receive_membertrash")
+                    se.get_engine("sname").register_entity(f)
+                    ports = g.register_family(j)
+                    se.get_engine("sname").coupling_relation(f, "takeout_trash", g, ports[0])
+                    j += 1
+                # Connect Truck & Can
+                ports = gt.register_garbage_can(i)
+                se.get_engine("sname").coupling_relation(g, "res_garbage", gt, ports[0])
+                se.get_engine("sname").coupling_relation(gt, ports[1], g, "req_empty")
+                i += 1
+            se.get_engine("sname").insert_input_port("start")
+            se.get_engine("sname").coupling_relation(None, "start", c, "start")
+            se.get_engine("sname").coupling_relation(None, "end", c, "end")
+            se.get_engine("sname").coupling_relation(None, "start", gt, "start")
+            se.get_engine("sname").coupling_relation(None, "end", gt, "end")
+            # Connect Truck & Can
+            se.get_engine("sname").register_entity(self.loopback)
+            se.get_engine("sname").coupling_relation(None,"end",self.loopback,"start")
+            # end of simulation signal
+            se.get_engine("sname").insert_external_event("start", None)
+            #se.get_engine("sname").simulate(1)
+            self.READY_SIG.emit(se)
+    def run_simulate(self,engine):
+        engine.get_engine("sname").simulate(1)
+        print("working")
 
-                    gv = Government(0, parameter.simulation_time, "government", "sname")
-                    se.get_engine("sname").register_entity(gv)
-                    i = 0
-                    j = 0
-
-                    for building in scenario:
-                        g = GarbageCan(0, parameter.simulation_time, "gc[{0}]".format(i), 'sname',
-                                       parameter.GARBAGECAN_SIZE, outputlocation)
-                        se.get_engine("sname").register_entity(g)
-
-                        for flist in building:
-                            ftype = FamilyType(parameter.TEMP_CAN_SIZE)
-                            f = Family(0, parameter.simulation_time, "family", 'sname', ftype)
-                            for htype in flist:
-                                # hid = get_human_id()
-                                name = htype.get_name()
-                                cname = "check[{0}]".format(htype.get_name())
-                                h1 = Human(0, parameter.simulation_time, cname, "sname", htype)
-                                ch = Check(0, parameter.simulation_time, name, "sname", htype)
-
-                                se.get_engine("sname").register_entity(h1)
-                                se.get_engine("sname").register_entity(ch)
-                                # f1.register_member(htype)
-                                ftype.register_member(htype)
-
-                                # Connect Check & Can
-                                ports = g.register_human(htype.get_id())
-                                se.get_engine("sname").coupling_relation(h1, "trash", ch, "request")
-                                se.get_engine("sname").coupling_relation(ch, "check", g, ports[0])
-
-                                se.get_engine("sname").coupling_relation(g, ports[1], ch, "checked")
-                                se.get_engine("sname").coupling_relation(ch, "gov_report", gv, "recv_report")
-
-                                se.get_engine("sname").coupling_relation(None, "start", h1, "start")
-                                se.get_engine("sname").coupling_relation(None, "end", h1, "end")
-                                se.get_engine("sname").coupling_relation(h1, "trash", f, "receive_membertrash")
-
-                            se.get_engine("sname").register_entity(f)
-
-                            ports = g.register_family(j)
-                            se.get_engine("sname").coupling_relation(f, "takeout_trash", g, ports[0])
-                            j += 1
-
-                        # Connect Truck & Can
-
-                        ports = gt.register_garbage_can(i)
-                        se.get_engine("sname").coupling_relation(g, "res_garbage", gt, ports[0])
-                        se.get_engine("sname").coupling_relation(gt, ports[1], g, "req_empty")
-                        i += 1
-
-                    se.get_engine("sname").insert_input_port("start")
-
-                    se.get_engine("sname").coupling_relation(None, "start", c, "start")
-                    se.get_engine("sname").coupling_relation(None, "end", c, "end")
-
-                    # se.get_engine("sname").insert_external_event("report", None)
-                    se.get_engine("sname").coupling_relation(None, "start", gt, "start")
-                    se.get_engine("sname").coupling_relation(None, "end", gt, "end")
-
-                    # Connect Truck & Can
-
-                    se.get_engine("sname").insert_external_event("start", None)
-                    se.get_engine("sname").simulate()
-
-
-        #self.SIMULATE_COMPLETE.emit() #시뮬레이션 완료 신호 # 시뮬레이터가 종료되고 나서 시그널을 보내야함
-    
     def __getattr__(self, attr):
         return getattr(self.obj, attr)

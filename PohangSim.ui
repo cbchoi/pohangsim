@@ -67,7 +67,7 @@
     </property>
     <layout class="QVBoxLayout" name="timeMode">
      <item>
-      <widget class="QRadioButton" name="radioButton_5">
+      <widget class="QRadioButton" name="RealTime">
        <property name="text">
         <string>RealTime</string>
        </property>
