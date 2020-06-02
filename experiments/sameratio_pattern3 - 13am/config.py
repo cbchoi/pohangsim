@@ -20,7 +20,7 @@ RANDOM_SEED = 0
 
 VERBOSE = True
 #simulation_time = 72
-simulation_time=448
+simulation_time=40
 #simulation_time=2192 #quarter
 #simulation_time=8762 # year
 #simulation_time=26282# 3year

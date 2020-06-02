@@ -1,4 +1,5 @@
 import contexts
+from config import *
 import sys,os
 
 from evsim.system_simulator import SystemSimulator
@@ -6,8 +7,8 @@ from evsim.behavior_model_executor import BehaviorModelExecutor
 from evsim.system_message import SysMessage
 from evsim.definition import *
 
-from config import *
 
+from signal_model import SignalLoop
 from pohangsim.clock import Clock
 from pohangsim.core_component import HumanType
 from pohangsim.core_component import FamilyType
@@ -21,12 +22,12 @@ from pohangsim.garbagecan import GarbageCan
 from garbage_truck import GarbageTruck
 from pohangsim.family import Family
 
-for kndx in range(30):
+for kndx in range(1):
     blist=[]
     hlist=[]
     fam=[]
 
-    if VERBOSE is True:
+    if kndx==1:
         outputlocation=str(sys.argv[1])+str(TIME_STDDEV)+"trash"+str(TRASH_STDDEV)+"_"+str(GARBAGECAN_SIZE)+"_"+str(kndx)
         if not os.path.exists(outputlocation):
             os.makedirs(outputlocation)
@@ -52,7 +53,7 @@ for kndx in range(30):
 
     se = SystemSimulator()
 
-    se.register_engine("sname", SIMULATION_MODE, TIME_DENSITY)
+    se.register_engine("sname", "VIRTUAL_TIME", TIME_DENSITY)
 
     c = Clock(0, simulation_time, "clock", "sname")
     se.get_engine("sname").register_entity(c)
@@ -121,7 +122,9 @@ for kndx in range(30):
     #se.get_engine("sname").insert_external_event("report", None)
     se.get_engine("sname").coupling_relation(None, "start", gt, "start")
     se.get_engine("sname").coupling_relation(None, "end", gt, "end")
-
+    #loopback = SignalLoop(0, simulation_time, "loopback", "sname")
+    #se.get_engine("sname").register_entity(loopback)
+    #se.get_engine("sname").coupling_relation(None,"end",loopback,"start")
 
     # Connect Truck & Can
 

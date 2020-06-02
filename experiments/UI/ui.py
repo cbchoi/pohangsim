@@ -1,26 +1,31 @@
 #GUI lib import
-import os
-import sys
-import time
-from functools import wraps
+import contexts
+import sys,os
+
+from evsim.system_simulator import SystemSimulator
+from evsim.behavior_model_executor import BehaviorModelExecutor
+from evsim.system_simulator import SystemSimulator
+from evsim.definition import *
 import functools
 
 from PySide2.QtCore import *
 from PySide2.QtUiTools import QUiLoader
 from PySide2.QtWidgets import *
-from data_component import Parameter
-from garbage_truck import GarbageTruck
 
+
+from data_component import Parameter
+#from garbage_truck import GarbageTruck
+from pohangsim.garbage_truck import GarbageTruck
 from pohangsim.check import Check
 from pohangsim.clock import Clock
-from pohangsim.core_component import FamilyType
+from pohangsim.core_component import HumanType,FamilyType
 from pohangsim.family import Family
 from pohangsim.garbagecan import GarbageCan
 from pohangsim.government import Government
 from pohangsim.human import Human
 from pohangsim.job import *
 
-from signal_model import SignalLoop
+from pohangsim.signal_model import *
 from scenario_editor import *
 
 
@@ -133,7 +138,7 @@ class MSWSsimulator(QWidget):
         self.controlbox.SimulateButton.clicked.connect(self.ScenarioListControl.send_scenario) #scenario list 전달
         self.ScenarioListControl.SCENARIO_SIGNAL.connect(self.controlbox.prepare_data) #parameter 읽기 -> timerstart
         #simulation이 끝나면 결과
-        self.controlbox.loopback.LOOPBACK_SIG.connect(self.controlbox.result_show)
+        #self.controlbox.loopback.signal.LOOPBACK_SIG.connect(self.controlbox.result_show)
         self.controlbox.RESULT_SIGNAL.connect(self.output.show_result) #외부로 전달
 
         self.StopButton.clicked.connect(self.controlbox.stop_button)
@@ -183,7 +188,7 @@ class SimulTime(QObject):
 class controlBox(QObject):
     #signal part
     SIMULATE_SIGNAL=Signal(Parameter, list)
-    READY_SIG=Signal(SystemSimulator)
+    READY_SIG=Signal(object)
     RESULT_SIGNAL=Signal()
     def __init__(self, _parent=None):
         super(controlBox, self).__init__(_parent)
@@ -239,7 +244,7 @@ class controlBox(QObject):
         if self.Verbosebox.isChecked():
             self.parameter.VERBOSE = True
         self.parameter.update_config()
-        self.loopback = SignalLoop(0, self.parameter.simulation_time, "loopback", "sname")
+        #self.loopback = SignalLoop(0, self.parameter.simulation_time, "loopback", "sname")
         if self.scenariolist==None:
             print("error message here")
         else:
@@ -262,6 +267,7 @@ class controlBox(QObject):
                 outputlocation = None
             se = SystemSimulator()
             se.register_engine("sname", self.parameter.SIMULATION_MODE, self.parameter.TIME_DENSITY)
+            se.get_engine("sname").register_entity(self.loopback)
             c = Clock(0, self.parameter.simulation_time, "clock", "sname")
             se.get_engine("sname").register_entity(c)
             gt = GarbageTruck(0, self.parameter.simulation_time, "garbage_truck", 'sname',
@@ -317,13 +323,12 @@ class controlBox(QObject):
             se.get_engine("sname").coupling_relation(None, "start", gt, "start")
             se.get_engine("sname").coupling_relation(None, "end", gt, "end")
             # Connect Truck & Can
-            se.get_engine("sname").register_entity(self.loopback)
             se.get_engine("sname").coupling_relation(None,"end",self.loopback,"start")
             # end of simulation signal
             se.get_engine("sname").insert_external_event("start", None)
-            #se.get_engine("sname").simulate(1)
             self.READY_SIG.emit(se)
     def run_simulate(self,engine):
+        print("running simul1")
         engine.get_engine("sname").simulate(1)
         print("working")
 

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>888</width>
-    <height>597</height>
+    <width>928</width>
+    <height>640</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -88,7 +88,7 @@
       <x>655</x>
       <y>20</y>
       <width>160</width>
-      <height>153</height>
+      <height>187</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="ScenarioControl">
@@ -110,6 +110,13 @@
       <widget class="QPushButton" name="load_button">
        <property name="text">
         <string>Load</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="EditButton">
+       <property name="text">
+        <string>Edit</string>
        </property>
       </widget>
      </item>
@@ -670,8 +677,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>888</width>
-     <height>22</height>
+     <width>928</width>
+     <height>26</height>
     </rect>
    </property>
   </widget>
