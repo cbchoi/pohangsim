@@ -27,7 +27,7 @@ from pohangsim.job import *
 
 from pohangsim.signal_model import *
 from scenario_editor import *
-
+from matplot import * 
 
 # GUI lib import
 # from config import *
@@ -77,6 +77,7 @@ class ScenarioListManager(QDialog):
         self.dialog.setModal(True)
         self.dialog.show()
         self.dialog.buttonBox.accepted.connect(self.generate_scenario)
+
     """    
     def generate_scenario(self):
         a=self.dialog.StudentRatio.value()
@@ -132,8 +133,8 @@ class MSWSsimulator(QWidget):
         self.controlbox=controlBox(self.obj)
         self.output=OutputManager(self.obj)
         self.ScenarioListControl=ScenarioListManager(self.obj)
-
-
+        #기본을 벌츄얼 타임으로 
+        self.VirtualTime.setChecked(True)
         #controlbox
         #Simulate 버튼 클릭시
         self.controlbox.SimulateButton.clicked.connect(self.ScenarioListControl.send_scenario) #scenario list 전달
@@ -169,11 +170,18 @@ class OutputManager(QObject):
 
     @Slot()
     def show_result(self):
-        #matplotlib 사용파트
-
-
-        print("result is here")
+        print("Result is here")
+        
+        QCoreApplication.setAttribute(Qt.AA_ShareOpenGLContexts)
+        ui_file = QFile("project3.ui")
+        loader=QUiLoader()
+        window=loader.load(ui_file)
+        ui_file.close()
+        self.dialog=MatplotlibExample(window)
+        self.dialog.setModal(False)
+        self.dialog.show()
         pass
+
 
 class SimulTime(QObject):
     def __init__(self, _parent=None):
