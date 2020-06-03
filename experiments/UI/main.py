@@ -11,7 +11,6 @@ ui_file = QFile("../../PohangSim.ui")
 loader = QUiLoader()
 window = loader.load(ui_file)
 ui_file.close()
-
 pohangMSWS = MSWSsimulator(window)
 pohangMSWS.show()
 

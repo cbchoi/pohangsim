@@ -40,7 +40,6 @@ class Clock(BehaviorModelExecutor):
             #print("progress")
 
     def int_trans(self):
-        print("clock int")
         if self._cur_state == "WAKE":
             self._cur_state = "WAKE"
     
