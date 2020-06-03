@@ -24,14 +24,12 @@ class Clock(BehaviorModelExecutor):
         self.sim_time = 0
 
     def ext_trans(self,port, msg):
-        print("clock ext")
         if port == "start":
             self._cur_state = "WAKE"
         if port == "end":
             self._cur_state = "IDLE"
                         
     def output(self):
-        print("clock outp")
         if self._cur_state == "WAKE":
             self.sim_time += 1
             #if self.sim_time%24==0:

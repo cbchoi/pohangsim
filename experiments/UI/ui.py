@@ -138,7 +138,7 @@ class MSWSsimulator(QWidget):
         self.controlbox.SimulateButton.clicked.connect(self.ScenarioListControl.send_scenario) #scenario list 전달
         self.ScenarioListControl.SCENARIO_SIGNAL.connect(self.controlbox.prepare_data) #parameter 읽기 -> timerstart
         #simulation이 끝나면 결과
-        #self.controlbox.loopback.signal.LOOPBACK_SIG.connect(self.controlbox.result_show)
+        self.controlbox.loopback.signal.LOOPBACK_SIG.connect(self.controlbox.result_show)
         self.controlbox.RESULT_SIGNAL.connect(self.output.show_result) #외부로 전달
 
         self.StopButton.clicked.connect(self.controlbox.stop_button)
@@ -196,7 +196,7 @@ class controlBox(QObject):
         self.scenariolist=None
         self.parameter=Parameter()
         self.timer=QTimer()
-        self.loopback=SignalLoop(0,self.parameter.simulation_time,"loopback","sname")
+        self.loopback=SignalLoop
     @Slot()
     def simulate_button(self,se):
         ft=functools.partial(self.run_simulate, se)
@@ -209,8 +209,10 @@ class controlBox(QObject):
         print("timer stopped")
         self.timer.stop()
 
+    @Slot()
     def result_show(self):
-        self.timer.stop()
+        #print("signal model is working")
+        #self.timer.stop()
         #self.RESULT_SIGNAL.emit()
         #show result
         pass
@@ -239,12 +241,12 @@ class controlBox(QObject):
         #self.parameter.TRUCK_CYCLE = self.CollectionCycle.value()
         self.parameter.TRUCK_DELAY=    self.CollectionDelay.value()
         ###################################################
-        self.parameter.simulation_time = 400
+        self.parameter.simulation_time = 48
         #self.parameter.simulation_time= self.simulationtimeslider.value()
         if self.Verbosebox.isChecked():
             self.parameter.VERBOSE = True
         self.parameter.update_config()
-        #self.loopback = SignalLoop(0, self.parameter.simulation_time, "loopback", "sname")
+        self.loopback = SignalLoop(0, self.parameter.simulation_time, "loopback", "sname")
         if self.scenariolist==None:
             print("error message here")
         else:
@@ -330,6 +332,8 @@ class controlBox(QObject):
     def run_simulate(self,engine):
         print("running simul1")
         engine.get_engine("sname").simulate(1)
+        if engine.get_engine("sname").is_terminated():
+            print("done")
         print("working")
 
     def __getattr__(self, attr):
