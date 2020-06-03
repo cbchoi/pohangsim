@@ -211,7 +211,7 @@ class controlBox(QObject):
 
     @Slot()
     def result_show(self):
-        #print("signal model is working")
+        print("signal model is working")
         #self.timer.stop()
         #self.RESULT_SIGNAL.emit()
         #show result
@@ -331,7 +331,7 @@ class controlBox(QObject):
             self.READY_SIG.emit(se)
     def run_simulate(self,engine):
         print("simulate")
-        engine.get_engine("sname").simulate(1)
+        SystemSimulator().get_engine("sname").simulate(10)
         if engine.get_engine("sname").is_terminated():
             print("done")
         print("working")
