@@ -325,12 +325,12 @@ class controlBox(QObject):
             se.get_engine("sname").coupling_relation(None, "start", gt, "start")
             se.get_engine("sname").coupling_relation(None, "end", gt, "end")
             # Connect Truck & Can
-            se.get_engine("sname").coupling_relation(None,"end",self.loopback,"start")
+            se.get_engine("sname").coupling_relation(None,"start",self.loopback,"start")
             # end of simulation signal
             se.get_engine("sname").insert_external_event("start", None)
             self.READY_SIG.emit(se)
     def run_simulate(self,engine):
-        print("running simul1")
+        print("simulate")
         engine.get_engine("sname").simulate(1)
         if engine.get_engine("sname").is_terminated():
             print("done")
