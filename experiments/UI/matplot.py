@@ -54,8 +54,8 @@ class MatplotlibExample(QWidget):
 		self._data_controller.DATA_SIG.connect(self._update_canvas)
 		self.radioPlot.setChecked(True)
 		self.radioPlot.toggled.connect(self._redraw_graph)
-
 		self.radioPie.toggled.connect(self._redraw_graph)
+		self.radioBar.toggled.connect(self._redraw_graph)
 
 	def __getattr__(self, attr):
 		return getattr(self.obj, attr)
@@ -95,7 +95,7 @@ class MatplotlibExample(QWidget):
 		self.obj.repaint()
 
 		pass
-		
+"""		
 
 QCoreApplication.setAttribute(Qt.AA_ShareOpenGLContexts)
 # Create a Qt application
@@ -111,3 +111,4 @@ matplot = MatplotlibExample(window)
 matplot.show()
 # Enter Qt application main loop
 sys.exit(app.exec_())
+"""

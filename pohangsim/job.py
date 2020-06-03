@@ -110,7 +110,7 @@ class StudentWithVacation(HumanType):
         pass
     
     def get_type(self):
-        return "Student"
+        return "StudentWithVacation"
 
     def get_wakeup(self):
         return TimeStruct(7,58, Statistic(RANDOM_SEED, 0, 1))

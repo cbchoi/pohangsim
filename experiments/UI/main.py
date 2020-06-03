@@ -3,7 +3,7 @@ from PySide2.QtWidgets import *
 from PySide2.QtUiTools import QUiLoader
 from PySide2.QtCore import *
 
-from ui import MSWSsimulator
+from main_window import MSWSsimulator
 
 app = QApplication(sys.argv)
 

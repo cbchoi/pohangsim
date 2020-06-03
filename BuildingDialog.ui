@@ -98,10 +98,13 @@
     <property name="spacing">
      <number>30</number>
     </property>
+    <property name="sizeConstraint">
+     <enum>QLayout::SetMaximumSize</enum>
+    </property>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0,0">
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
       <property name="spacing">
-       <number>1</number>
+       <number>6</number>
       </property>
       <property name="sizeConstraint">
        <enum>QLayout::SetMaximumSize</enum>
@@ -111,7 +114,7 @@
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
           <horstretch>0</horstretch>
-          <verstretch>18</verstretch>
+          <verstretch>0</verstretch>
          </sizepolicy>
         </property>
         <property name="text">
@@ -124,7 +127,7 @@
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
           <horstretch>0</horstretch>
-          <verstretch>11</verstretch>
+          <verstretch>0</verstretch>
          </sizepolicy>
         </property>
         <property name="text">
@@ -137,7 +140,7 @@
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
           <horstretch>0</horstretch>
-          <verstretch>11</verstretch>
+          <verstretch>0</verstretch>
          </sizepolicy>
         </property>
         <property name="text">
@@ -149,8 +152,14 @@
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <property name="spacing">
+       <number>6</number>
+      </property>
+      <property name="sizeConstraint">
+       <enum>QLayout::SetMaximumSize</enum>
+      </property>
       <item>
-       <widget class="QPushButton" name="B4">
+       <widget class="QPushButton" name="B1_2">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
           <horstretch>0</horstretch>
@@ -158,12 +167,12 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Building4</string>
+         <string>Building1</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="B5">
+       <widget class="QPushButton" name="B2_2">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
           <horstretch>0</horstretch>
@@ -171,12 +180,12 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Building5</string>
+         <string>Building2</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="B6">
+       <widget class="QPushButton" name="B3_2">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
           <horstretch>0</horstretch>
@@ -184,10 +193,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Building6</string>
-        </property>
-        <property name="autoDefault">
-         <bool>true</bool>
+         <string>Building3</string>
         </property>
        </widget>
       </item>

@@ -3,7 +3,6 @@ import contexts
 import sys,os
 import math
 
-from evsim.system_simulator import SystemSimulator
 from evsim.behavior_model_executor import BehaviorModelExecutor
 from evsim.system_simulator import SystemSimulator
 from evsim.definition import *
@@ -28,20 +27,9 @@ from pohangsim.job import *
 
 from pohangsim.signal_model import *
 from scenario_editor import *
+from building_dialog import BuildingTypeManager
 from matplot import MatplotlibExample,DataGroupHandler
 
-
-
-class BuildingTypeManager(QDialog):
-    def __init__(self, _parent = None):
-        super(BuildingTypeManager, self).__init__(_parent)
-        self.obj = _parent
-
-    def __getattr__(self, attr):
-        return getattr(self.obj, attr)
-
-    def show(self):
-        self.obj.show()
 
 
 # GUI lib import
@@ -88,27 +76,8 @@ class ScenarioListManager(QDialog):
         self.dialog= loader.load(ui_file)
         ui_file.close()
         self.dialog.setModal(True)
-        self.dialog=BuildingTypeManager(self.dialog)
-        """
-        total_buildingn=len(selected_scenario)
-        total_pagen = math.celi(len(selected_scenario)/6)
-        currentpage=1 #1로 초기화
-        if > button clicked:
-            currentpage+=1
-        elif < button clicked:
-            currentpage-=1
-        elif << button clicked:
-            currentpage=1
-        elif >> button clicked:
-            currentpage=total_pagen
+        self.dialog=BuildingTypeManager(selected_scenario,self.dialog)
 
-        if currentpage==total_pagen:
-            b_in_page=total_buildingn-(6*(total_pagen-1))
-        for building in selected_scenario:
-            print(building)
-            버튼 만들기 
-
-        self.dialog."""
         self.dialog.show()
         #빌딩을 로딩
 
