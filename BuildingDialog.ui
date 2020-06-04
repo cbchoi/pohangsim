@@ -99,7 +99,7 @@
      <number>30</number>
     </property>
     <property name="sizeConstraint">
-     <enum>QLayout::SetMaximumSize</enum>
+     <enum>QLayout::SetFixedSize</enum>
     </property>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -117,8 +117,14 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="acceptDrops">
+         <bool>true</bool>
+        </property>
         <property name="text">
-         <string>Building1</string>
+         <string>Empty</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -130,21 +136,36 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="acceptDrops">
+         <bool>true</bool>
+        </property>
         <property name="text">
-         <string>Building2</string>
+         <string>Empty</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="B3">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
           <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="acceptDrops">
+         <bool>true</bool>
+        </property>
         <property name="text">
-         <string>Building3</string>
+         <string>Empty</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -166,8 +187,17 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="acceptDrops">
+         <bool>true</bool>
+        </property>
         <property name="text">
-         <string>Building1</string>
+         <string>Empty</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="autoDefault">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -179,8 +209,14 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="acceptDrops">
+         <bool>true</bool>
+        </property>
         <property name="text">
-         <string>Building2</string>
+         <string>Empty</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -192,8 +228,14 @@
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
+        <property name="acceptDrops">
+         <bool>true</bool>
+        </property>
         <property name="text">
-         <string>Building3</string>
+         <string>Empty</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -248,7 +290,7 @@
     <string>Edit</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="addButton">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -261,7 +303,7 @@
     <string>Add</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton_2">
+  <widget class="QPushButton" name="removeButton">
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -287,6 +329,29 @@
     <string>Building</string>
    </property>
   </widget>
+  <widget class="QGroupBox" name="groupBox">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>10</y>
+     <width>611</width>
+     <height>341</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>GroupBox</string>
+   </property>
+  </widget>
+  <zorder>groupBox</zorder>
+  <zorder>buttonBox</zorder>
+  <zorder>horizontalLayoutWidget</zorder>
+  <zorder>label</zorder>
+  <zorder>verticalLayoutWidget</zorder>
+  <zorder>FamilyTypeList</zorder>
+  <zorder>EditButton</zorder>
+  <zorder>addButton</zorder>
+  <zorder>removeButton</zorder>
+  <zorder>label_2</zorder>
  </widget>
  <resources/>
  <connections>
