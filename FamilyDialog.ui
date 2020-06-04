@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>656</width>
-    <height>338</height>
+    <width>621</width>
+    <height>262</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,11 +16,17 @@
   <widget class="QGroupBox" name="groupBox">
    <property name="geometry">
     <rect>
-     <x>20</x>
+     <x>10</x>
      <y>10</y>
-     <width>621</width>
-     <height>311</height>
+     <width>601</width>
+     <height>241</height>
     </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
    </property>
    <property name="title">
     <string/>
@@ -29,9 +35,9 @@
     <property name="geometry">
      <rect>
       <x>340</x>
-      <y>20</y>
+      <y>10</y>
       <width>131</width>
-      <height>261</height>
+      <height>221</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -41,16 +47,16 @@
      </sizepolicy>
     </property>
     <property name="resizeMode">
-     <enum>QListView::Adjust</enum>
+     <enum>QListView::Fixed</enum>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>480</x>
-      <y>20</y>
+      <y>10</y>
       <width>111</width>
-      <height>261</height>
+      <height>221</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_6">
@@ -58,7 +64,7 @@
       <number>50</number>
      </property>
      <property name="sizeConstraint">
-      <enum>QLayout::SetMinimumSize</enum>
+      <enum>QLayout::SetFixedSize</enum>
      </property>
      <property name="topMargin">
       <number>0</number>
@@ -107,10 +113,10 @@
    <widget class="QWidget" name="horizontalLayoutWidget_2">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>20</y>
-      <width>311</width>
-      <height>261</height>
+      <x>10</x>
+      <y>10</y>
+      <width>321</width>
+      <height>221</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0">
@@ -170,7 +176,7 @@
         <number>30</number>
        </property>
        <property name="sizeConstraint">
-        <enum>QLayout::SetMinimumSize</enum>
+        <enum>QLayout::SetFixedSize</enum>
        </property>
        <property name="leftMargin">
         <number>0</number>
@@ -397,10 +403,10 @@ p, li { white-space: pre-wrap; }
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>490</x>
-      <y>150</y>
-      <width>109</width>
-      <height>51</height>
+      <x>480</x>
+      <y>130</y>
+      <width>101</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">

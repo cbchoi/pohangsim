@@ -70,15 +70,16 @@ class ScenarioListManager(QDialog):
             #print(scenario,"here is laod scenario")
             self.scenariolist.append(scenario)
     def edit_scenario(self):
-        selected_scenario=self.scenariolist[self.listWidget.currentRow()]
-        ui_file = QFile("../../BuildingDialog.ui")
-        loader = QUiLoader()
-        self.dialog= loader.load(ui_file)
-        ui_file.close()
-        self.dialog.setModal(True)
-        self.dialog=BuildingTypeManager(selected_scenario,self.dialog)
+        if self.listWidget.currentRow()>=0:
 
-        self.dialog.show()
+            selected_scenario=self.scenariolist[self.listWidget.currentRow()]
+            ui_file = QFile("../../BuildingDialog.ui")
+            loader = QUiLoader()
+            self.dialog= loader.load(ui_file)
+            ui_file.close()
+            self.dialog.setModal(True)
+            self.dialog=BuildingTypeManager(selected_scenario,self.dialog)
+            self.dialog.show()
         #빌딩을 로딩
 
     def send_scenario(self):
@@ -109,7 +110,7 @@ class ScenarioListManager(QDialog):
         if not listItems: return
         for item in listItems:
             self.listWidget.takeItem(self.listWidget.row(item))
-            del self.scenariolist[self.listWidget.row(item)]
+            del_scenario_GUI(self.scenariolist[self.listWidget.row(item)])
 
     def __getattr__(self, attr):
         return getattr(self.obj, attr)

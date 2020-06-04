@@ -173,6 +173,7 @@ class ScenarioClass(object):
 
 
 #N개의 빌딩을 가진  시나리오 class를 생성
+
 def new_scenario_GUI(N):
 	scenario=ScenarioClass()
 	for idx in range(N):
