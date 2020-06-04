@@ -41,6 +41,9 @@ class BuildingTypeManager(QDialog):
 		self.scenario.add(building)
 		if self.b_in_page==6:
 			self.currentpage+=1
+			self.update_page()
+			if self.currentpage<self.total_pagen:
+				self.currentpage=self.total_pagen
 		self.update_page()
 
 	def remove_buildings(self):

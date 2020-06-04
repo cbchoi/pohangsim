@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>689</width>
-    <height>269</height>
+    <width>1074</width>
+    <height>1004</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -17,21 +17,18 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Familytype Manager</string>
   </property>
-  <widget class="QWidget" name="horizontalLayoutWidget_2">
+  <widget class="QWidget" name="horizontalLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>10</y>
-     <width>351</width>
-     <height>241</height>
+     <x>60</x>
+     <y>30</y>
+     <width>935</width>
+     <height>898</height>
     </rect>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0">
-    <property name="sizeConstraint">
-     <enum>QLayout::SetMinimumSize</enum>
-    </property>
+   <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,0,4,1,0">
     <item>
      <layout class="QVBoxLayout" name="verticalLayout_4">
       <property name="sizeConstraint">
@@ -39,45 +36,94 @@
       </property>
       <item>
        <widget class="QLabel" name="label_11">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="text">
          <string>Number of Students:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
+        <property name="indent">
+         <number>0</number>
+        </property>
        </widget>
       </item>
       <item>
        <widget class="QLabel" name="label_12">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="text">
          <string>Number of Homemakers:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
+        <property name="indent">
+         <number>0</number>
+        </property>
        </widget>
       </item>
       <item>
        <widget class="QLabel" name="label_13">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="text">
          <string>Number of Blue-collars:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
+        <property name="indent">
+         <number>0</number>
+        </property>
        </widget>
       </item>
       <item>
        <widget class="QLabel" name="label_14">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="text">
          <string>Family Can Size:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
+        <property name="indent">
+         <number>0</number>
+        </property>
        </widget>
       </item>
      </layout>
+    </item>
+    <item>
+     <spacer name="horizontalSpacer">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>40</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
     </item>
     <item>
      <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -121,6 +167,9 @@
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="inputMethodHints">
+           <set>Qt::ImhDigitsOnly|Qt::ImhMultiLine</set>
           </property>
           <property name="tabChangesFocus">
            <bool>true</bool>
@@ -184,8 +233,14 @@ p, li { white-space: pre-wrap; }
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="inputMethodHints">
+           <set>Qt::ImhDigitsOnly|Qt::ImhMultiLine</set>
+          </property>
           <property name="tabChangesFocus">
            <bool>true</bool>
+          </property>
+          <property name="acceptRichText">
+           <bool>false</bool>
           </property>
           <property name="placeholderText">
            <string notr="true">0</string>
@@ -233,8 +288,14 @@ p, li { white-space: pre-wrap; }
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="inputMethodHints">
+           <set>Qt::ImhDigitsOnly|Qt::ImhMultiLine</set>
+          </property>
           <property name="tabChangesFocus">
            <bool>true</bool>
+          </property>
+          <property name="acceptRichText">
+           <bool>false</bool>
           </property>
           <property name="placeholderText">
            <string notr="true">0</string>
@@ -282,8 +343,14 @@ p, li { white-space: pre-wrap; }
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
+          <property name="inputMethodHints">
+           <set>Qt::ImhDigitsOnly|Qt::ImhMultiLine</set>
+          </property>
           <property name="tabChangesFocus">
            <bool>true</bool>
+          </property>
+          <property name="acceptRichText">
+           <bool>false</bool>
           </property>
           <property name="placeholderText">
            <string notr="true">0</string>
@@ -307,82 +374,68 @@ p, li { white-space: pre-wrap; }
       </item>
      </layout>
     </item>
-   </layout>
-  </widget>
-  <widget class="QListWidget" name="FamilyTypeList">
-   <property name="geometry">
-    <rect>
-     <x>390</x>
-     <y>10</y>
-     <width>141</width>
-     <height>241</height>
-    </rect>
-   </property>
-   <property name="sizePolicy">
-    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-     <horstretch>0</horstretch>
-     <verstretch>0</verstretch>
-    </sizepolicy>
-   </property>
-   <property name="resizeMode">
-    <enum>QListView::Fixed</enum>
-   </property>
-  </widget>
-  <widget class="QWidget" name="layoutWidget">
-   <property name="geometry">
-    <rect>
-     <x>550</x>
-     <y>10</y>
-     <width>111</width>
-     <height>241</height>
-    </rect>
-   </property>
-   <layout class="QVBoxLayout" name="verticalLayout_6">
-    <property name="spacing">
-     <number>50</number>
-    </property>
-    <property name="sizeConstraint">
-     <enum>QLayout::SetFixedSize</enum>
-    </property>
-    <property name="topMargin">
-     <number>0</number>
-    </property>
-    <property name="bottomMargin">
-     <number>0</number>
-    </property>
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout_7">
-      <item>
-       <widget class="QPushButton" name="OkButton">
-        <property name="text">
-         <string>Ok</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="CancelButton">
-        <property name="text">
-         <string>Cancel</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
+     <widget class="QListWidget" name="FamilyTypeList">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="resizeMode">
+       <enum>QListView::Fixed</enum>
+      </property>
+     </widget>
     </item>
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout_9">
+     <layout class="QVBoxLayout" name="verticalLayout_6">
+      <property name="spacing">
+       <number>50</number>
+      </property>
+      <property name="sizeConstraint">
+       <enum>QLayout::SetFixedSize</enum>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
       <item>
-       <widget class="QPushButton" name="addFamilyType">
-        <property name="text">
-         <string>Add Family</string>
-        </property>
-       </widget>
+       <layout class="QVBoxLayout" name="verticalLayout_7">
+        <item>
+         <widget class="QPushButton" name="OkButton">
+          <property name="text">
+           <string>Ok</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="CancelButton">
+          <property name="text">
+           <string>Cancel</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item>
-       <widget class="QPushButton" name="deleteFamilyType">
-        <property name="text">
-         <string>Delete Family</string>
-        </property>
-       </widget>
+       <layout class="QVBoxLayout" name="verticalLayout_9">
+        <item>
+         <widget class="QPushButton" name="addFamilyType">
+          <property name="text">
+           <string>Add Family</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="deleteFamilyType">
+          <property name="text">
+           <string>Delete Family</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
     </item>

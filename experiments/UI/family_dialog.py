@@ -10,9 +10,22 @@ class FamilyTypeManager(QDialog):
     def __init__(self, _parent=None):
         super(FamilyTypeManager, self).__init__(_parent)
         self.obj = _parent
-        #self.setFixedSize(600,200)# not working
-        print(self.size())
+        self.increaseS.pressed.connect()
+        self.increaseH.pressed.connect()
+        self.increaseB.pressed.connect()
+        self.increaseFCan.pressed.connect()
+        self.decreaseS.pressed.connect()
+        self.decreaseH.pressed.connect()
+        self.decreaseB.pressed.connect()
+        self.decreaseFCan.pressed.connect()
 
+    def decrease_value(self,target):
+        if target.value<=0:
+            pass
+        else:
+            target.value-=1
+    def increase_value(self,target):
+        target.value-=1
     def __getattr__(self, attr):
         return getattr(self.obj, attr)
 
