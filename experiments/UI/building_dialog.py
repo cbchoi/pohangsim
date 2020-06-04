@@ -1,9 +1,11 @@
 import math
-from PySide2.QtWidgets import *
 from scenario_editor import *
+#Ui
+from PySide2.QtWidgets import *
 from PySide2.QtUiTools import QUiLoader
-from PySide2.QtCore import QFile, QObject, Slot, Signal, Qt
+from PySide2.QtCore import *
 from PySide2.QtGui import *
+
 
 from family_dialog import FamilyTypeManager
 
@@ -25,15 +27,15 @@ class BuildingTypeManager(QDialog):
 		self.removeButton.clicked.connect(self.remove_buildings)
 		self.EditButton.clicked.connect(self.edit_familytype)
 		self.update_page()
-		self.dialog=None
+		self.familydialog=None
 	def edit_familytype(self):
 		ui_file = QFile("../../FamilyDialog.ui")
 		loader = QUiLoader()
-		self.dialog = loader.load(ui_file)
+		self.familydialog = loader.load(ui_file)
 		ui_file.close()
-		self.dialog.setModal(True)
-		self.dialog = FamilyTypeManager(self.dialog)
-		self.dialog.show()
+		self.familydialog.setModal(True)
+		self.familydialog = FamilyTypeManager(self.familydialog)
+		self.familydialog.show()
 	def add_building(self):
 		building=BuildingClass()
 		self.scenario.add(building)
