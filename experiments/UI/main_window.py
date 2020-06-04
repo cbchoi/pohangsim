@@ -25,8 +25,8 @@ from pohangsim.government import Government
 from pohangsim.human import Human
 from pohangsim.job import *
 
-from pohangsim.signal_model import *
-from scenario_editor import *
+from pohangsim.signal_model import SignalLoop
+from scenario_editor import FamilyClass,BuildingClass,ScenarioClass,new_scenario_GUI,load_scenario_GUI,save_scenario_GUI
 from building_dialog import BuildingTypeManager
 from matplot import MatplotlibExample,DataGroupHandler
 
@@ -81,10 +81,16 @@ class ScenarioListManager(QDialog):
         self.dialog.show()
         #빌딩을 로딩
 
-
     def send_scenario(self):
         if self.listWidget.currentRow() >=0:
             self.SCENARIO_SIGNAL.emit(self.scenariolist[self.listWidget.currentRow()])
+        else:
+            msg = QMessageBox()
+            msg.setWindowTitle("Try Again!")
+            msg.setText("Select scenario to simulate")
+            msg.setDetailedText(
+                "No scenario is selected!")
+            msg.exec_()
     
     def save_scenario(self):
         if self.listWidget.count()<1:
@@ -112,6 +118,7 @@ class MSWSsimulator(QWidget):
     def __init__(self, _parent =None):
         super(MSWSsimulator, self).__init__(_parent)
         self.obj= _parent
+        self.dialog=None
         self.obj.setWindowTitle("Pohangsim")
         self.simul_time=SimulTime(self.obj)
         self.controlbox=controlBox(self.obj)
@@ -124,8 +131,12 @@ class MSWSsimulator(QWidget):
         self.controlbox.SimulateButton.clicked.connect(self.ScenarioListControl.send_scenario) #scenario list 전달
         self.ScenarioListControl.SCENARIO_SIGNAL.connect(self.controlbox.prepare_data) #parameter 읽기 -> timerstart
         #simulation이 끝나면 결과
-        self.controlbox.loopback.signal.LOOPBACK_SIG.connect(self.controlbox.run_simulate)
-        self.controlbox.RESULT_SIGNAL.connect(self.output.show_result) #외부로 전달
+        self.controlbox.READY_SIG.connect(self.controlbox.timer_start)
+        #self.controlbox.READY_SIG.connect(self.controlbox.timer_start) # ready - > loopback -> result
+        #self.controlbox.loopback.signal.LOOPBACK_SIG.connect(self.controlbox.run_simulate)
+        self.controlbox.RESULT_SIGNAL.connect(self.output.show_result)
+        
+
 
         self.StopButton.clicked.connect(self.controlbox.stop_button)
         
@@ -140,7 +151,7 @@ class MSWSsimulator(QWidget):
         self.edit_button.clicked.connect(self.ScenarioListControl.edit_scenario)
         self.save_button.clicked.connect(self.ScenarioListControl.save_scenario)
         self.delete_button.clicked.connect(self.ScenarioListControl.delete_scenario)
-        self.controlbox.READY_SIG.connect(self.controlbox.simulate_button)
+        
 
     def __getattr__(self, attr):
         return getattr(self.obj, attr)
@@ -155,14 +166,17 @@ class OutputManager(QObject):
 
     @Slot()
     def show_result(self):
+        print("Result page")
+        pass
+        """
         QCoreApplication.setAttribute(Qt.AA_ShareOpenGLContexts)
         ui_file = QFile("../../Output.ui")
         self.dialog= QUiLoader.load(ui_file)
         ui_file.close()
         self.dialog.setModal(False)
-        self.dialog=MatplotlibExample(self.dialog)
+        #self.dialog=MatplotlibExample(self.dialog)
         self.dialog.show()
-
+        """
 
 class SimulTime(QObject):
     def __init__(self, _parent=None):
@@ -188,27 +202,29 @@ class controlBox(QObject):
         self.obj=_parent
         self.scenario=None
         self.parameter=Parameter()
-        self.timer=QTimer()
+        self.worker=QTimer()
         self.loopback=SignalLoop
         self.time=0
-
-    def simulate_button(self):
+    @Slot()
+    def timer_start(self):
         print("timer started")
-        #ft=functools.partial(self.run_simulate, self.time)
-        self.timer.timeout.connect(self.run_simulate)
-        self.timer.start(1)
-
-
+        ft=functools.partial(self.run_simulate, self.time)
+        self.worker.timeout.connect(ft)
+        self.worker.start(1)
 
     def stop_button(self):
         print("timer stopped")
-        self.timer.stop()
+        self.worker.stop()
         self.time = 0
 
     @Slot()
     def result_show(self):
         print("signal model is working")
         pass
+    
+    @Slot()
+    def progress_show(self):
+        print("loopback signal")
 
     @Slot()
     def prepare_data(self,scenario_signal=False):
@@ -238,7 +254,7 @@ class controlBox(QObject):
         self.parameter.TRUCK_CYCLE= 24
         self.parameter.TRUCK_DELAY=    0.01
         self.parameter.simulation_time = 480
-        self.parameter.VERBOSE = True
+
         #self.parameter.TIME_STDDEV=   self.TimeStandardDeviation.value()
         #self.parameter.TRASH_STDDEV= self.TrashStandardDeviation.value()      
         #self.parameter.TRUCK_CYCLE = self.CollectionCycle.value()
@@ -249,6 +265,9 @@ class controlBox(QObject):
         #self.parameter.simulation_time= self.simulationtimeslider.value()
         if self.Verbosebox.isChecked():
             self.parameter.VERBOSE = True
+        else:
+            self.parameter.VERBOSE = False
+        self.parameter.VERBOSE = True
         self.parameter.update_config()
         self.loopback = SignalLoop(0, self.parameter.simulation_time, "loopback", "sname")
         if self.scenario==None:
@@ -261,7 +280,7 @@ class controlBox(QObject):
             os.makedirs("output")
         filename = self.scenario.memo
         #sys.stdout=sys.__stdout__
-        print(f"Processing {self.scenario.id}/{len(self.scenario)}:", self.scenario.memo)
+        print("Processing",  self.scenario.memo)
         #sys.stdout = open("output/result_" + filename + "_.log", 'a')
         if self.parameter.VERBOSE is True:
             outputlocation = self.scenario.memo +"_"+ str(self.parameter.TIME_STDDEV) + "trash" + str(
@@ -333,13 +352,12 @@ class controlBox(QObject):
         se.get_engine("sname").insert_external_event("start", None)
         self.READY_SIG.emit()
 
-    @Slot()
-    def run_simulate(self):
-        SystemSimulator().get_engine("sname").simulate(self.time)
-        self.time += 1
+    def run_simulate(self,time):
+        SystemSimulator().get_engine("sname").simulate(time)
+        self.time+=1
         if self.time==self.parameter.simulation_time:
             self.RESULT_SIGNAL.emit()
-            self.timer.stop()
+            self.worker.stop()
             self.time=0
 
     def __getattr__(self, attr):

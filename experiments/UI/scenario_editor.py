@@ -224,7 +224,8 @@ def add_family_GUI(scenario,id,S,H,B,tempcan):
 def remove_family_GUI(scenario,id,familyid):
 	scenario[id].remove(scenario[id].familylist[familyid])
 
-
+#
+"""
 scenario=new_scenario_GUI(0)
 building1= BuildingClass(50) # 공동주택
 
@@ -235,7 +236,7 @@ building1.add(FamilyClass(0,0,1,5))
 scenario.add(building1)
 
 save_scenario_GUI(scenario,"savetest.txt")
-"""
+
 #
 #a=load_scenario_GUI("savetest.txt")
 
