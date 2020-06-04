@@ -88,7 +88,7 @@
   <widget class="QWidget" name="verticalLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>20</x>
      <y>30</y>
      <width>594</width>
      <height>311</height>
@@ -249,7 +249,7 @@
      <x>630</x>
      <y>30</y>
      <width>131</width>
-     <height>261</height>
+     <height>291</height>
     </rect>
    </property>
    <property name="sizePolicy">
@@ -281,7 +281,7 @@
    <property name="geometry">
     <rect>
      <x>630</x>
-     <y>300</y>
+     <y>330</y>
      <width>131</width>
      <height>21</height>
     </rect>
@@ -332,7 +332,7 @@
   <widget class="QGroupBox" name="groupBox">
    <property name="geometry">
     <rect>
-     <x>0</x>
+     <x>10</x>
      <y>10</y>
      <width>611</width>
      <height>341</height>
@@ -348,7 +348,20 @@
     <enum>Qt::LeftToRight</enum>
    </property>
    <property name="title">
-    <string>GroupBox</string>
+    <string>Buildings</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>630</x>
+     <y>10</y>
+     <width>121</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Family Types</string>
    </property>
   </widget>
   <zorder>groupBox</zorder>
@@ -361,6 +374,7 @@
   <zorder>addButton</zorder>
   <zorder>removeButton</zorder>
   <zorder>label_2</zorder>
+  <zorder>label_3</zorder>
  </widget>
  <resources/>
  <connections>
