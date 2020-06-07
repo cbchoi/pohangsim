@@ -8,9 +8,16 @@ from PySide2.QtGui import *
 
 
 from family_dialog import FamilyTypeManager
+class FSig(QObject):
+	LISTSIG = Signal(list)
+	def __init__(self):
+		QObject.__init__(self)
+
 
 class BuildingTypeManager(QDialog):
-	def __init__(self, scenario, _parent = None):
+	signal = FSig()
+	familytype_list = []
+	def __init__(self,familytypelist, scenario, _parent = None):
 		super(BuildingTypeManager, self).__init__(_parent)
 		self.obj = _parent
 		self.scenario=scenario
@@ -27,15 +34,68 @@ class BuildingTypeManager(QDialog):
 		self.removeButton.clicked.connect(self.remove_buildings)
 		self.EditButton.clicked.connect(self.edit_familytype)
 		self.update_page()
-		self.familydialog=None
+		self.familydialog=FamilyTypeManager
+		self.buttonBox.accepted.connect(self.update_familytype_list)
+		self.FamilyTypeList.addItems(self.familytype_list)
+		self.familytype_list=familytypelist
+		self.templist=[]
+		self.load_list()
+		self.B1.setAcceptDrops(True)
+		self.B2.setAcceptDrops(True)
+		self.B3.setAcceptDrops(True)
+		self.B1_2.setAcceptDrops(True)
+		self.B2_2.setAcceptDrops(True)
+		self.B3_2.setAcceptDrops(True)
+
+	#familytype drag and drop
+	def dragEnterEvent(self, e):
+		e.accept()
+		"""
+		if e.mimeData().hasFormat('text/plain'):
+			e.accept()
+		else:
+			e.ignore()
+		"""
+	def dropEvent(self, e):
+		print(self.text)
+		pass
+		#self.
+
+	def load_list(self):
+		for index in self.familytype_list:
+			self.FamilyTypeList.addItem(
+				"S:" + str(index.S) + "H:" + str(index.H) + "B:" + str(index.B) + "_" + str(index.cansize))
+
+	def update_familytype_list(self):
+		self.familytype_list=self.templist
+		self.signal.LISTSIG.emit(self.familytype_list)
+
+	@Slot()
+	def get_familytype_list(self,list):
+		while (self.FamilyTypeList.count() > 0):
+			self.FamilyTypeList.takeItem(0)
+		for family in list:
+			self.FamilyTypeList.addItem(
+				"S:" + str(family.S) + "H:" + str(family.H) + "B:" + str(family.B) + "_" + str(family.cansize))
+		self.templist = list
+
 	def edit_familytype(self):
-		ui_file = QFile("../../FamilyDialog.ui")
+		ui_file = QFile("../../FamilyDialog2.ui")
 		loader = QUiLoader()
 		self.familydialog = loader.load(ui_file)
 		ui_file.close()
 		self.familydialog.setModal(True)
-		self.familydialog = FamilyTypeManager(self.familydialog)
+		self.familydialog = FamilyTypeManager(self.familytype_list, self.familydialog)
+		self.familydialog.OKSIG.connect(self.get_familytype_list)
 		self.familydialog.show()
+
+	def add_family_to_building(self,text,building_id,family):
+		text=text.split('_')
+		print(text)
+		#self.scenario[building_id].add(FamilyClass(int(self.editS_2.toPlainText()), int(self.editH_2.toPlainText()), int(self.editB_2.toPlainText()), int(self.editFCan_2.toPlainText())))
+
+		self.update_page()
+
 	def add_building(self):
 		building=BuildingClass()
 		self.scenario.add(building)

@@ -39,9 +39,14 @@ class ScenarioListManager(QDialog):
     def __init__(self, _parent =None):
         super(ScenarioListManager, self).__init__(_parent)
         self.obj= _parent
-        self.dialog=None
+        self.dialog=BuildingTypeManager
         self.scenariolist=[]
         self.N=0
+        self.familytypelist=[]
+
+    @Slot()
+    def get_familytype(self,list):
+        self.familytypelist=list
 
     def getBuildingNumber(self):
         text, ok = QInputDialog.getInt(self, 'Number of buildings', 'Enter the number of buildings')
@@ -64,11 +69,12 @@ class ScenarioListManager(QDialog):
     def load_scenario(self):
         filename = QFileDialog.getOpenFileName()
         if filename[0]!='':
-            scenario = load_scenario_GUI(filename[0])
+            scenario,familytype = load_scenario_GUI(filename[0])
             filename=filename[0].split('/')
             self.listWidget.addItem(filename[-1])
             #print(scenario,"here is laod scenario")
             self.scenariolist.append(scenario)
+            self.familytypelist=familytype
     def edit_scenario(self):
         if self.listWidget.currentRow()>=0:
 
@@ -78,7 +84,7 @@ class ScenarioListManager(QDialog):
             self.dialog= loader.load(ui_file)
             ui_file.close()
             self.dialog.setModal(True)
-            self.dialog=BuildingTypeManager(selected_scenario,self.dialog)
+            self.dialog=BuildingTypeManager(self.familytypelist,selected_scenario,self.dialog)
             self.dialog.show()
         #빌딩을 로딩
 
@@ -103,14 +109,50 @@ class ScenarioListManager(QDialog):
             msg.exec_()
         else:
             filename = QFileDialog.getSaveFileName()
-            save_scenario_GUI(self.scenariolist[self.listWidget.currentRow()], filename)
+            save_scenario_GUI(self.scenariolist[self.listWidget.currentRow()],self.familytypelist, filename)
 
     def delete_scenario(self):
         listItems=self.listWidget.selectedItems()
         if not listItems: return
         for item in listItems:
             self.listWidget.takeItem(self.listWidget.row(item))
-            del_scenario_GUI(self.scenariolist[self.listWidget.row(item)])
+            del self.scenariolist[self.listWidget.row(item)]
+    def load_drop(self):
+        print(self.fname)
+        if filename[0]!='':
+            scenario = load_scenario_GUI(filename[0])
+            filename=filename[0].split('/')
+            self.listWidget.addItem(filename[-1])
+            #print(scenario,"here is laod scenario")
+            self.scenariolist.append(scenario)
+
+    def dragEnterEvent(self, e):
+        if e.mimeData().hasUrls:
+            e.accept()
+        else:
+            e.ignore()
+
+    def dragMoveEvent(self, e):
+        if e.mimeData().hasUrls:
+            e.accept()
+        else:
+            e.ignore()
+
+    def dropEvent(self, e):
+        """ Drop files directly onto the widget File locations are stored in fname :param e: :return: """
+        if e.mimeData().hasUrls:
+            e.setDropAction(QtCore.Qt.CopyAction)
+            e.accept()  # Workaround for OSx dragging and dropping
+            for url in e.mimeData().urls():
+                if op_sys == 'Darwin':
+                    fname = str(NSURL.URLWithString_(str(url.toString())).filePathURL().path())
+                else:
+                    fname = str(url.toLocalFile())
+            self.fname = fname
+            self.load_drop()
+        else:
+            e.ignore()
+
 
     def __getattr__(self, attr):
         return getattr(self.obj, attr)
@@ -125,7 +167,9 @@ class MSWSsimulator(QWidget):
         self.controlbox=controlBox(self.obj)
         self.output=OutputManager(self.obj)
         self.ScenarioListControl=ScenarioListManager(self.obj)
-        #기본을 벌츄얼 타임으로 
+
+        self.ScenarioListControl.dialog.signal.LISTSIG.connect(self.ScenarioListControl.get_familytype)
+        #기본을 벌츄얼 타임으로
         self.VirtualTime.setChecked(True)
         #controlbox
         #Simulate 버튼 클릭시

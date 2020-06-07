@@ -197,9 +197,9 @@ def load_scenario_GUI(filename):
 	file.close()
 	return scenario
 
-def save_scenario_GUI(scenario,output):
+def save_scenario_GUI(scenario,familytype,output):
 	file=open(output[0]+".scn","wb")
-	dill.dump(scenario,file)
+	dill.dump((scenario,familytype),file)
 	file.close()
 
 

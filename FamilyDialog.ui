@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1074</width>
-    <height>1004</height>
+    <width>1292</width>
+    <height>995</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -24,7 +24,7 @@
     <rect>
      <x>60</x>
      <y>30</y>
-     <width>935</width>
+     <width>1101</width>
      <height>898</height>
     </rect>
    </property>
@@ -169,7 +169,7 @@
            </sizepolicy>
           </property>
           <property name="inputMethodHints">
-           <set>Qt::ImhDigitsOnly|Qt::ImhMultiLine</set>
+           <set>Qt::ImhDigitsOnly</set>
           </property>
           <property name="tabChangesFocus">
            <bool>true</bool>
@@ -183,6 +183,9 @@ p, li { white-space: pre-wrap; }
           </property>
           <property name="acceptRichText">
            <bool>false</bool>
+          </property>
+          <property name="textInteractionFlags">
+           <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse|Qt::TextBrowserInteraction|Qt::TextEditable|Qt::TextEditorInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
           </property>
           <property name="placeholderText">
            <string notr="true">0</string>
@@ -234,7 +237,7 @@ p, li { white-space: pre-wrap; }
            </sizepolicy>
           </property>
           <property name="inputMethodHints">
-           <set>Qt::ImhDigitsOnly|Qt::ImhMultiLine</set>
+           <set>Qt::ImhDigitsOnly</set>
           </property>
           <property name="tabChangesFocus">
            <bool>true</bool>
@@ -289,7 +292,7 @@ p, li { white-space: pre-wrap; }
            </sizepolicy>
           </property>
           <property name="inputMethodHints">
-           <set>Qt::ImhDigitsOnly|Qt::ImhMultiLine</set>
+           <set>Qt::ImhDigitsOnly</set>
           </property>
           <property name="tabChangesFocus">
            <bool>true</bool>
@@ -344,7 +347,7 @@ p, li { white-space: pre-wrap; }
            </sizepolicy>
           </property>
           <property name="inputMethodHints">
-           <set>Qt::ImhDigitsOnly|Qt::ImhMultiLine</set>
+           <set>Qt::ImhDigitsOnly</set>
           </property>
           <property name="tabChangesFocus">
            <bool>true</bool>
