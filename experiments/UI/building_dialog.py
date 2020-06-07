@@ -113,7 +113,7 @@ class BuildingTypeManager(QDialog):
 		self.templist = list
 
 	def edit_familytype(self):
-		ui_file = QFile("../../FamilyDialog2.ui")
+		ui_file = QFile("../../FamilyDialog.ui")
 		loader = QUiLoader()
 		self.familydialog = loader.load(ui_file)
 		ui_file.close()
