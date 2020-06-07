@@ -40,16 +40,15 @@ class FamilyTypeManager(QDialog):
 
     def load_list(self):
         for index in self.familytype_list:
-            self.FamilyTypeList_2.addItem("S:"+str(index.S)+ "H:"+str(index.H)+ "B:"+str(index.B)+"_"+ str(index.cansize))
+            self.FamilyTypeList_2.addItem(index)
 
 
     def sendlist(self):
         self.OKSIG.emit(self.familytype_list)
 
     def add_family(self):
-        family=FamilyClass(int(self.editS_2.toPlainText()), int(self.editH_2.toPlainText()), int(self.editB_2.toPlainText()), int(self.editFCan_2.toPlainText()))
-        self.FamilyTypeList_2.addItem("S:"+str(family.S)+ "_H:"+str(family.H)+ "_B:"+str(family.B)+"_"+ str(family.cansize))
-        self.familytype_list.append(family)
+        self.FamilyTypeList_2.addItem("S:"+str(self.editS_2.toPlainText())+ "_H:"+str(self.editH_2.toPlainText())+ "_B:"+str(self.editB_2.toPlainText())+"_"+ str(self.editFCan_2.toPlainText()))
+        self.familytype_list.append("S:"+str(self.editS_2.toPlainText())+ "_H:"+str(self.editH_2.toPlainText())+ "_B:"+str(self.editB_2.toPlainText())+"_"+ str(self.editFCan_2.toPlainText()))
 
 
     def delete_family(self):
@@ -67,37 +66,7 @@ class FamilyTypeManager(QDialog):
             obj.setText(str(int(obj.toPlainText())-1))
     def increase(self,obj):
         obj.setText(str(int(obj.toPlainText())+1))
-    """  
-    
-    def decrease_S(self):
-        if int(self.editS.toPlainText())<=0:
-            pass
-        else:
-            self.editS.setText(str(int(self.editS.toPlainText())-1))
-    def decrease_H(self):
-        if int(self.editH.toPlainText())<=0:
-            pass
-        else:
-            self.editH.setText(str(int(self.editH.toPlainText())-1))
-    def decrease_B(self):
-        if int(self.editB.toPlainText())<=0:
-            pass
-        else:
-            self.editB.setText(str(int(self.editB.toPlainText())-1))
-    def decrease_FC(self):
-        if int(self.editFCan.toPlainText())<=0:
-            pass
-        else:
-            self.editS.setText(str(int(self.editS.toPlainText())-1))
-    def increase_S(self):
-        self.editS.setText(str(int(self.editS.toPlainText())+1))
-    def increase_H(self):
-        self.editS.setText(str(int(self.editS.toPlainText())+1))
-    def increase_B(self):
-        self.editS.setText(str(int(self.editS.toPlainText())+1))
-    def increase_FC(self):
-        self.editS.setText(str(int(self.editS.toPlainText())+1))
-    """
+
     def __getattr__(self, attr):
         return getattr(self.obj, attr)
 
