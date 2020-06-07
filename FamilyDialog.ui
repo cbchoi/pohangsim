@@ -403,6 +403,9 @@ p, li { white-space: pre-wrap; }
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="selectionMode">
+       <enum>QAbstractItemView::ExtendedSelection</enum>
+      </property>
       <property name="resizeMode">
        <enum>QListView::Fixed</enum>
       </property>
