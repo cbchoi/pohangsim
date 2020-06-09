@@ -305,7 +305,7 @@ class SysExecutor(SysObject, BehaviorModel):
 
 #        self.eval_time = 0
         self.dmc = DefaultMessageCatcher(0, Infinite, "dc", "default")
-        self.register_entity(dmc)
+        self.register_entity(self.dmc)
 
     # External Event Handling - by cbchoi
     def insert_external_event(self, _port, _msg, scheduled_time=0):

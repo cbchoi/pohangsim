@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>928</width>
+    <width>945</width>
     <height>640</height>
    </rect>
   </property>
@@ -19,8 +19,8 @@
      <rect>
       <x>631</x>
       <y>239</y>
-      <width>201</width>
-      <height>71</height>
+      <width>251</width>
+      <height>81</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -31,6 +31,9 @@
        </property>
        <property name="text">
         <string>Fixed Sequence</string>
+       </property>
+       <property name="tristate">
+        <bool>false</bool>
        </property>
       </widget>
      </item>
@@ -62,7 +65,7 @@
       <x>440</x>
       <y>240</y>
       <width>160</width>
-      <height>51</height>
+      <height>81</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="timeMode">
@@ -78,7 +81,43 @@
        <property name="text">
         <string>VirtualTime</string>
        </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
       </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="Verbosebox">
+       <property name="text">
+        <string>Verbose</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
      </item>
     </layout>
    </widget>
@@ -140,9 +179,9 @@
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>440</y>
+      <y>450</y>
       <width>313</width>
-      <height>61</height>
+      <height>71</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -169,13 +208,6 @@
          </property>
         </widget>
        </item>
-       <item>
-        <widget class="QPushButton" name="ResumeButton">
-         <property name="text">
-          <string>Resume</string>
-         </property>
-        </widget>
-       </item>
       </layout>
      </item>
     </layout>
@@ -198,7 +230,7 @@
      <rect>
       <x>440</x>
       <y>220</y>
-      <width>101</width>
+      <width>191</width>
       <height>16</height>
      </rect>
     </property>
@@ -211,35 +243,12 @@
      <rect>
       <x>640</x>
       <y>220</y>
-      <width>141</width>
+      <width>241</width>
       <height>16</height>
      </rect>
     </property>
     <property name="text">
      <string>Collection Sequence</string>
-    </property>
-   </widget>
-   <widget class="QGraphicsView" name="output">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>20</y>
-      <width>391</width>
-      <height>371</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="Verbosebox">
-    <property name="geometry">
-     <rect>
-      <x>350</x>
-      <y>450</y>
-      <width>77</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Verbose</string>
     </property>
    </widget>
    <widget class="QWidget" name="layoutWidget">
@@ -314,45 +323,41 @@
     <property name="geometry">
      <rect>
       <x>430</x>
-      <y>320</y>
-      <width>431</width>
-      <height>231</height>
+      <y>330</y>
+      <width>461</width>
+      <height>221</height>
      </rect>
     </property>
     <property name="title">
      <string/>
     </property>
-    <widget class="QLabel" name="label">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>71</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>GetoutTime</string>
-     </property>
-    </widget>
     <widget class="QDoubleSpinBox" name="AverageTime">
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>60</y>
-       <width>51</width>
+       <y>70</y>
+       <width>61</width>
        <height>22</height>
       </rect>
+     </property>
+     <property name="value">
+      <double>1.000000000000000</double>
      </property>
     </widget>
     <widget class="QLabel" name="label_15">
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>20</y>
-       <width>51</width>
-       <height>31</height>
+       <y>10</y>
+       <width>71</width>
+       <height>51</height>
       </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
      <property name="text">
       <string>Average Time</string>
@@ -368,20 +373,29 @@
      <property name="geometry">
       <rect>
        <x>120</x>
-       <y>60</y>
-       <width>51</width>
+       <y>70</y>
+       <width>61</width>
        <height>22</height>
       </rect>
+     </property>
+     <property name="value">
+      <double>0.900000000000000</double>
      </property>
     </widget>
     <widget class="QLabel" name="label_18">
      <property name="geometry">
       <rect>
        <x>110</x>
-       <y>20</y>
-       <width>61</width>
-       <height>31</height>
+       <y>10</y>
+       <width>71</width>
+       <height>51</height>
       </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
      <property name="text">
       <string>Average Trash</string>
@@ -397,20 +411,32 @@
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>130</y>
-       <width>51</width>
+       <y>180</y>
+       <width>61</width>
        <height>22</height>
       </rect>
+     </property>
+     <property name="singleStep">
+      <double>0.010000000000000</double>
+     </property>
+     <property name="value">
+      <double>0.200000000000000</double>
      </property>
     </widget>
     <widget class="QLabel" name="label_17">
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>90</y>
-       <width>91</width>
-       <height>31</height>
+       <y>120</y>
+       <width>101</width>
+       <height>51</height>
       </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
      <property name="contextMenuPolicy">
       <enum>Qt::DefaultContextMenu</enum>
@@ -422,7 +448,7 @@
       <enum>Qt::LeftToRight</enum>
      </property>
      <property name="text">
-      <string>Time standard deviation</string>
+      <string>Time SD</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -434,24 +460,30 @@
     <widget class="QDoubleSpinBox" name="TrashStandardDeviation">
      <property name="geometry">
       <rect>
-       <x>120</x>
-       <y>130</y>
-       <width>51</width>
+       <x>110</x>
+       <y>180</y>
+       <width>61</width>
        <height>22</height>
       </rect>
+     </property>
+     <property name="singleStep">
+      <double>0.010000000000000</double>
+     </property>
+     <property name="value">
+      <double>0.100000000000000</double>
      </property>
     </widget>
     <widget class="QLabel" name="label_16">
      <property name="geometry">
       <rect>
-       <x>100</x>
-       <y>90</y>
-       <width>91</width>
-       <height>31</height>
+       <x>90</x>
+       <y>120</y>
+       <width>101</width>
+       <height>51</height>
       </rect>
      </property>
      <property name="text">
-      <string>Trash standard deviation</string>
+      <string>Trash SD</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignBottom|Qt::AlignHCenter</set>
@@ -463,20 +495,23 @@
     <widget class="QSpinBox" name="GarbageCanSize">
      <property name="geometry">
       <rect>
-       <x>270</x>
-       <y>60</y>
-       <width>41</width>
+       <x>290</x>
+       <y>70</y>
+       <width>51</width>
        <height>22</height>
       </rect>
+     </property>
+     <property name="value">
+      <number>5</number>
      </property>
     </widget>
     <widget class="QLabel" name="label_3">
      <property name="geometry">
       <rect>
-       <x>260</x>
-       <y>20</y>
-       <width>71</width>
-       <height>31</height>
+       <x>280</x>
+       <y>10</y>
+       <width>81</width>
+       <height>51</height>
       </rect>
      </property>
      <property name="text">
@@ -492,9 +527,9 @@
     <widget class="QSpinBox" name="FamilyCanSize">
      <property name="geometry">
       <rect>
-       <x>200</x>
-       <y>60</y>
-       <width>41</width>
+       <x>210</x>
+       <y>70</y>
+       <width>51</width>
        <height>22</height>
       </rect>
      </property>
@@ -502,10 +537,10 @@
     <widget class="QLabel" name="label_13">
      <property name="geometry">
       <rect>
-       <x>190</x>
-       <y>20</y>
-       <width>61</width>
-       <height>31</height>
+       <x>200</x>
+       <y>10</y>
+       <width>71</width>
+       <height>51</height>
       </rect>
      </property>
      <property name="text">
@@ -521,20 +556,23 @@
     <widget class="QSpinBox" name="CollectionCycle">
      <property name="geometry">
       <rect>
-       <x>270</x>
-       <y>130</y>
+       <x>290</x>
+       <y>180</y>
        <width>42</width>
        <height>22</height>
       </rect>
+     </property>
+     <property name="value">
+      <number>24</number>
      </property>
     </widget>
     <widget class="QLabel" name="label_8">
      <property name="geometry">
       <rect>
-       <x>260</x>
-       <y>90</y>
-       <width>61</width>
-       <height>31</height>
+       <x>270</x>
+       <y>120</y>
+       <width>81</width>
+       <height>51</height>
       </rect>
      </property>
      <property name="text">
@@ -550,20 +588,23 @@
     <widget class="QSpinBox" name="GarbageTruckSize">
      <property name="geometry">
       <rect>
-       <x>340</x>
-       <y>60</y>
-       <width>51</width>
+       <x>370</x>
+       <y>70</y>
+       <width>61</width>
        <height>22</height>
       </rect>
+     </property>
+     <property name="value">
+      <number>15</number>
      </property>
     </widget>
     <widget class="QLabel" name="label_4">
      <property name="geometry">
       <rect>
-       <x>340</x>
-       <y>20</y>
-       <width>61</width>
-       <height>31</height>
+       <x>360</x>
+       <y>0</y>
+       <width>81</width>
+       <height>61</height>
       </rect>
      </property>
      <property name="text">
@@ -579,20 +620,26 @@
     <widget class="QDoubleSpinBox" name="CollectionDelay">
      <property name="geometry">
       <rect>
-       <x>340</x>
-       <y>130</y>
-       <width>51</width>
+       <x>380</x>
+       <y>180</y>
+       <width>61</width>
        <height>22</height>
       </rect>
+     </property>
+     <property name="minimum">
+      <double>0.010000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>0.010000000000000</double>
      </property>
     </widget>
     <widget class="QLabel" name="label_14">
      <property name="geometry">
       <rect>
-       <x>320</x>
-       <y>90</y>
+       <x>360</x>
+       <y>120</y>
        <width>91</width>
-       <height>31</height>
+       <height>51</height>
       </rect>
      </property>
      <property name="text">
@@ -609,19 +656,25 @@
      <property name="geometry">
       <rect>
        <x>200</x>
-       <y>130</y>
+       <y>180</y>
        <width>42</width>
        <height>22</height>
       </rect>
+     </property>
+     <property name="maximum">
+      <number>96</number>
+     </property>
+     <property name="value">
+      <number>7</number>
      </property>
     </widget>
     <widget class="QLabel" name="label_2">
      <property name="geometry">
       <rect>
-       <x>190</x>
-       <y>90</y>
-       <width>61</width>
-       <height>31</height>
+       <x>180</x>
+       <y>120</y>
+       <width>81</width>
+       <height>51</height>
       </rect>
      </property>
      <property name="text">
@@ -635,33 +688,32 @@
      </property>
     </widget>
    </widget>
-   <widget class="QWidget" name="resultWidget" native="true">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>20</y>
-      <width>391</width>
-      <height>371</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QDoubleSpinBox" name="TimeDensity">
     <property name="geometry">
      <rect>
       <x>350</x>
-      <y>510</y>
-      <width>51</width>
+      <y>490</y>
+      <width>71</width>
       <height>22</height>
      </rect>
+    </property>
+    <property name="minimum">
+     <double>0.010000000000000</double>
+    </property>
+    <property name="singleStep">
+     <double>0.100000000000000</double>
+    </property>
+    <property name="value">
+     <double>0.100000000000000</double>
     </property>
    </widget>
    <widget class="QLabel" name="label_19">
     <property name="geometry">
      <rect>
       <x>350</x>
-      <y>470</y>
-      <width>51</width>
-      <height>31</height>
+      <y>440</y>
+      <width>61</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
@@ -674,14 +726,25 @@
      <bool>true</bool>
     </property>
    </widget>
+   <widget class="QWidget" name="verticalLayoutWidget_4">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>20</y>
+      <width>401</width>
+      <height>351</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="resultLayout"/>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>928</width>
-     <height>26</height>
+     <width>945</width>
+     <height>22</height>
     </rect>
    </property>
   </widget>

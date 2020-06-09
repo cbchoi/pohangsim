@@ -1,4 +1,3 @@
-import contexts
 from evsim.system_simulator import SystemSimulator
 from evsim.behavior_model_executor import BehaviorModelExecutor
 from evsim.system_message import SysMessage
@@ -6,7 +5,6 @@ from evsim.definition import *
 
 from config import *
 import os, sys
-import random
 #from instance.config import *
 
 class GarbageTruck(BehaviorModelExecutor):
@@ -32,14 +30,17 @@ class GarbageTruck(BehaviorModelExecutor):
         
         # for analysis
         self.accummulated_garbage = 0
+        
         self.schedule = schedule
-        random.shuffle(self.schedule)
         # schedule = [(current_can_id, next_can_delay)]
         self.cur_index = 0
         #for file save
         self.outname=outp
         #print(schedule)
+        self.file=None
 
+    def __del__(self):
+        self.file.close()
 
     def register_garbage_can(self, garbage_can_id):
         in_p = "trash_from_can[{0}]".format(garbage_can_id)
@@ -67,24 +68,23 @@ class GarbageTruck(BehaviorModelExecutor):
             self.garbage_port_map[port] += msg.retrieve()[0] # 각 건물별 쓰레기 수거량 분석
             self.truck_current_storage += msg.retrieve()[0]
             #print("self.truck_current_storage", self.truck_current_storage)
-            #self.accummulated_garbage += self.truck_current_storage
             self.accummulated_garbage += msg.retrieve()[0]
 
             ev_t = SystemSimulator().get_engine("sname").get_global_time()
 
             if self.outname is not None:
-                with open("{0}/truck.csv".format(self.outname),'a') as file: 
-                    file.write(str(ev_t))
-                    file.write(",")
-                    file.write(str(self.cur_index))
-                    file.write(",")
-                    file.write(str(self.schedule[self.cur_index-1][0]))
-                    file.write(",")
-                    file.write(str(self.truck_current_storage))
-                    file.write(",")
-                    file.write(str(self.accummulated_garbage))
-                    file.write("\n")
-            
+                with open("{0}/truck.csv".format(self.outname),'a') as self.file:
+                    self.file.write(str(ev_t))
+                    self.file.write(",")
+                    self.file.write(str(self.cur_index))
+                    self.file.write(",")
+                    self.file.write(str(self.schedule[self.cur_index-1][0]))
+                    self.file.write(",")
+                    self.file.write(str(self.truck_current_storage))
+                    self.file.write(",")
+                    self.file.write(str(self.accummulated_garbage))
+                    self.file.write("\n")
+            #print(self.cur_index)
             #print("[truck_storage]"+  str(port) + ":" +str(self.garbage_port_map[port]),self.truck_current_storage)
             
     def output(self):
@@ -109,6 +109,4 @@ class GarbageTruck(BehaviorModelExecutor):
         elif self._cur_state == "APPROACH":
             self.cur_index = 0       
             self.truck_current_storage = 0
-            random.shuffle(self.schedule)
             self._cur_state = "REQUEST"
-            

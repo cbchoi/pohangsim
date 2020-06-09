@@ -14,8 +14,10 @@ from PySide2.QtWidgets import *
 
 
 from data_component import Parameter
-#from garbage_truck import GarbageTruck
-from pohangsim.garbage_truck import GarbageTruck
+#from garbage_truckpalindrome import GarbageTruck
+from garbage_truckfixed import GarbageTruck
+#from garbage_truckrandom import GarbageTruck
+
 from pohangsim.check import Check
 from pohangsim.clock import Clock
 from pohangsim.core_component import HumanType,FamilyType
@@ -28,7 +30,11 @@ from pohangsim.job import *
 from pohangsim.signal_model import SignalLoop
 from scenario_editor import FamilyClass,BuildingClass,ScenarioClass,new_scenario_GUI,load_scenario_GUI,save_scenario_GUI
 from building_dialog import BuildingTypeManager
-from matplot import MatplotlibExample,DataGroupHandler
+#matplot
+from matplotlib.backends.backend_qt5agg import FigureCanvas
+from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
+from matplotlib.figure import Figure
+#from matplot import resultWidget
 
 
 
@@ -41,12 +47,15 @@ class ScenarioListManager(QDialog):
         self.obj= _parent
         self.dialog=BuildingTypeManager
         self.scenariolist=[]
+        self.selected_scenario=ScenarioClass
         self.N=0
         self.familytypelist=[]
 
     @Slot()
-    def get_familytype(self,list):
-        self.familytypelist=list
+    def get_familytype(self,list1,list2):
+        self.familytypelist=list1
+        self.selected_scenario=list2
+        self.scenariolist[self.listWidget.currentRow()]=self.selected_scenario
 
     def getBuildingNumber(self):
         text, ok = QInputDialog.getInt(self, 'Number of buildings', 'Enter the number of buildings')
@@ -78,13 +87,13 @@ class ScenarioListManager(QDialog):
     def edit_scenario(self):
         if self.listWidget.currentRow()>=0:
 
-            selected_scenario=self.scenariolist[self.listWidget.currentRow()]
+            self.selected_scenario=self.scenariolist[self.listWidget.currentRow()]
             ui_file = QFile("../../BuildingDialog.ui")
             loader = QUiLoader()
             self.dialog= loader.load(ui_file)
             ui_file.close()
             self.dialog.setModal(True)
-            self.dialog=BuildingTypeManager(self.familytypelist,selected_scenario,self.dialog)
+            self.dialog=BuildingTypeManager(self.familytypelist,self.selected_scenario,self.dialog)
             self.dialog.show()
         #빌딩을 로딩
 
@@ -121,6 +130,80 @@ class ScenarioListManager(QDialog):
     def __getattr__(self, attr):
         return getattr(self.obj, attr)
 
+
+class DataGroupHandler(QObject):
+    DATA_SIG = Signal(list)
+
+    def __init__(self, _parent=None):
+        super(DataGroupHandler, self).__init__(_parent)
+        self.obj = _parent
+        #self.editX.setText('0')
+        #self.editY.setText('0')
+        self._data_points = []
+        pass
+
+    def load(self):
+        self._data_points.append((int(self.editX.text()), int(self.editY.text())))
+        self.listWidget.addItem("({0}, {1})".format(self._data_points[-1][0], self._data_points[-1][1]))
+        self.DATA_SIG.emit(self._data_points)
+
+    def clearBtn(self):
+        self._data_points = []
+
+    def __getattr__(self, attr):
+        return getattr(self.obj, attr)
+
+class resultWidget(QObject):
+    def __init__(self, _parent=None):
+        super(resultWidget, self).__init__(_parent)
+        self.obj = _parent
+
+        self.dynamic_canvas = FigureCanvas(Figure(figsize=(5, 3)))
+        self.resultLayout.addWidget(self.dynamic_canvas)
+
+        self._dynamic_ax = self.dynamic_canvas.figure.subplots()
+        self._data_controller = DataGroupHandler(_parent)
+
+        self._data_controller.DATA_SIG.connect(self._update_canvas)
+
+    def __getattr__(self, attr):
+        return getattr(self.obj, attr)
+
+    def show(self):
+        self.obj.show()
+
+    @Slot(list)
+    def _update_canvas(self, points):
+        self._dynamic_ax.clear()
+        unzipped = list(zip(*points))
+        print("update", *unzipped)
+
+        self.x_data, self.y_data = unzipped[0], unzipped[1]
+
+        if self.radioPlot.isChecked():
+            self._dynamic_ax.plot(unzipped[0], unzipped[1])
+        elif self.radioPie.isChecked():
+            self._dynamic_ax.pie(upzipped[1])
+        else:
+            self._dynamic_ax.bar(unzipped[0], unzipped[1])
+
+        self.dynamic_canvas.figure.canvas.draw()
+        self.obj.repaint()
+
+    @Slot()
+    def _redraw_graph(self):
+        self._dynamic_ax.clear()
+        if self.radioPlot.isChecked():
+            self._dynamic_ax.plot(self.x_data, self.y_data)
+        elif self.radioPie.isChecked():
+            self._dynamic_ax.pie(self.y_data)
+        else:
+            self._dynamic_ax.bar(self.x_data, self.y_data)
+
+        self.dynamic_canvas.figure.canvas.draw()
+        self.obj.repaint()
+
+        pass
 class MSWSsimulator(QWidget):
     def __init__(self, _parent =None):
         super(MSWSsimulator, self).__init__(_parent)
@@ -131,7 +214,7 @@ class MSWSsimulator(QWidget):
         self.controlbox=controlBox(self.obj)
         self.output=OutputManager(self.obj)
         self.ScenarioListControl=ScenarioListManager(self.obj)
-
+        self.MatplotResult=resultWidget(self.obj)
         self.ScenarioListControl.dialog.signal.LISTSIG.connect(self.ScenarioListControl.get_familytype)
         #기본을 벌츄얼 타임으로
         self.VirtualTime.setChecked(True)
@@ -175,7 +258,13 @@ class OutputManager(QObject):
 
     @Slot()
     def show_result(self):
-        print("Result page")
+        msg = QMessageBox()
+        msg.setWindowTitle("Success")
+        msg.setText("Simulation is finished")
+        msg.exec_()
+        sys.stdout.close()
+        sys.stdout = sys.__stdout__
+        #self.resultWidget
         pass
         """
         QCoreApplication.setAttribute(Qt.AA_ShareOpenGLContexts)
@@ -221,6 +310,7 @@ class controlBox(QObject):
         self.worker.start(1)
 
     def stop_button(self):
+        SystemSimulator().get_engine("sname").simulation_stop()
         self.worker.stop()
         self.time = 0
 
@@ -288,7 +378,7 @@ class controlBox(QObject):
         if not os.path.exists("output"):
             os.makedirs("output")
         filename = self.scenario.memo
-        #sys.stdout=sys.__stdout__
+        sys.stdout=sys.__stdout__
         print("Processing",  self.scenario.memo)
         sys.stdout = open("output/result_" + filename + "_.log", 'a')
         if self.parameter.VERBOSE is True:
@@ -313,7 +403,6 @@ class controlBox(QObject):
         i = 0
         j = 0
         for building in self.scenario:
-
             g = GarbageCan(0, self.parameter.simulation_time, "gc[{0}]".format(i), 'sname',
                            self.parameter.GARBAGECAN_SIZE, outputlocation)
             se.get_engine("sname").register_entity(g)
@@ -364,11 +453,10 @@ class controlBox(QObject):
     def run_simulate(self,time):
         SystemSimulator().get_engine("sname").simulate(time)
         self.time+=1
-        if self.time==self.parameter.simulation_time:
+        if SystemSimulator().get_engine("sname").is_terminated:
             self.worker.stop()
             self.time = 0
             self.RESULT_SIGNAL.emit()
-
 
 
     def __getattr__(self, attr):

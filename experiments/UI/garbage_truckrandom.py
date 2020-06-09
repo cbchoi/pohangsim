@@ -5,6 +5,7 @@ from evsim.definition import *
 
 from config import *
 import os, sys
+import random
 #from instance.config import *
 
 class GarbageTruck(BehaviorModelExecutor):
@@ -30,8 +31,8 @@ class GarbageTruck(BehaviorModelExecutor):
         
         # for analysis
         self.accummulated_garbage = 0
-        
         self.schedule = schedule
+        random.shuffle(self.schedule)
         # schedule = [(current_can_id, next_can_delay)]
         self.cur_index = 0
         #for file save
@@ -68,6 +69,7 @@ class GarbageTruck(BehaviorModelExecutor):
             self.garbage_port_map[port] += msg.retrieve()[0] # 각 건물별 쓰레기 수거량 분석
             self.truck_current_storage += msg.retrieve()[0]
             #print("self.truck_current_storage", self.truck_current_storage)
+            #self.accummulated_garbage += self.truck_current_storage
             self.accummulated_garbage += msg.retrieve()[0]
 
             ev_t = SystemSimulator().get_engine("sname").get_global_time()
@@ -84,6 +86,7 @@ class GarbageTruck(BehaviorModelExecutor):
                     self.file.write(",")
                     self.file.write(str(self.accummulated_garbage))
                     self.file.write("\n")
+            
             #print("[truck_storage]"+  str(port) + ":" +str(self.garbage_port_map[port]),self.truck_current_storage)
             
     def output(self):
@@ -108,4 +111,6 @@ class GarbageTruck(BehaviorModelExecutor):
         elif self._cur_state == "APPROACH":
             self.cur_index = 0       
             self.truck_current_storage = 0
+            random.shuffle(self.schedule)
             self._cur_state = "REQUEST"
+            

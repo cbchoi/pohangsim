@@ -38,13 +38,13 @@ class DataGroupHandler(QObject):
 	def __getattr__(self, attr):
 		return getattr(self.obj, attr)
 
-class MatplotlibExample(QWidget):
+class resultWidget(QWidget):
 	def __init__(self, _parent = None):
-		super(MatplotlibExample, self).__init__(_parent)
+		super(resultWidget, self).__init__(_parent)
 		self.obj = _parent
 
 		self.dynamic_canvas = FigureCanvas(Figure(figsize=(5, 3)))
-		self.matplot_vertical.addWidget(self.dynamic_canvas)
+		self.resultLayout.addWidget(self.dynamic_canvas)
 
 		self._dynamic_ax = self.dynamic_canvas.figure.subplots()
 		self._data_controller = DataGroupHandler(_parent)
