@@ -117,42 +117,6 @@ class ScenarioListManager(QDialog):
         for item in listItems:
             self.listWidget.takeItem(self.listWidget.row(item))
             del self.scenariolist[self.listWidget.row(item)]
-    def load_drop(self):
-        print(self.fname)
-        if filename[0]!='':
-            scenario = load_scenario_GUI(filename[0])
-            filename=filename[0].split('/')
-            self.listWidget.addItem(filename[-1])
-            #print(scenario,"here is laod scenario")
-            self.scenariolist.append(scenario)
-
-    def dragEnterEvent(self, e):
-        if e.mimeData().hasUrls:
-            e.accept()
-        else:
-            e.ignore()
-
-    def dragMoveEvent(self, e):
-        if e.mimeData().hasUrls:
-            e.accept()
-        else:
-            e.ignore()
-
-    def dropEvent(self, e):
-        """ Drop files directly onto the widget File locations are stored in fname :param e: :return: """
-        if e.mimeData().hasUrls:
-            e.setDropAction(QtCore.Qt.CopyAction)
-            e.accept()  # Workaround for OSx dragging and dropping
-            for url in e.mimeData().urls():
-                if op_sys == 'Darwin':
-                    fname = str(NSURL.URLWithString_(str(url.toString())).filePathURL().path())
-                else:
-                    fname = str(url.toLocalFile())
-            self.fname = fname
-            self.load_drop()
-        else:
-            e.ignore()
-
 
     def __getattr__(self, attr):
         return getattr(self.obj, attr)
@@ -252,13 +216,11 @@ class controlBox(QObject):
         self.time=0
     @Slot()
     def timer_start(self):
-        print("timer started")
         ft=functools.partial(self.run_simulate, self.time)
         self.worker.timeout.connect(ft)
         self.worker.start(1)
 
     def stop_button(self):
-        print("timer stopped")
         self.worker.stop()
         self.time = 0
 
@@ -279,13 +241,8 @@ class controlBox(QObject):
             self.parameter.SIMULATION_MODE = "REAL_TIME"
         elif self.VirtualTime.isChecked():
             self.parameter.SIMULATION_MODE = "VIRTUAL_TIME"
-        #self.parameter.TIME_DENSITY=self.TimeDensity.value()                             
-        ####################################################
-        #self.parameter.AVG_TIME= self.AverageTime.value()
-        #self.parameter.AVG_TRASH = self.AverageTrash.value()
-        #self.parameter.GARBAGECAN_SIZE=    self.GarbageCanSize.value()
-        #self.parameter.TEMP_CAN_SIZE=     self.FamilyCanSize.value()
-        #self.parameter.GARBAGETRUCK_SIZE=   self.GarbageTruckSize.value()
+
+        """
         self.parameter.SIMULATION_MODE = "VIRTUAL_TIME"
         self.parameter.TIME_DENSITY=0.01
         self.parameter.AVG_TIME=1
@@ -299,20 +256,27 @@ class controlBox(QObject):
         self.parameter.TRUCK_CYCLE= 24
         self.parameter.TRUCK_DELAY=    0.01
         self.parameter.simulation_time = 480
-
-        #self.parameter.TIME_STDDEV=   self.TimeStandardDeviation.value()
-        #self.parameter.TRASH_STDDEV= self.TrashStandardDeviation.value()      
-        #self.parameter.TRUCK_CYCLE = self.CollectionCycle.value()
-        #self.parameter.TRUCK_DELAY=    self.CollectionDelay.value()
-#self.parameter.TRUCK_INITIAL=    self.CollectionTime.value()
+        """
+        self.parameter.TIME_DENSITY = self.TimeDensity.value()
+        self.parameter.AVG_TIME = self.AverageTime.value()
+        self.parameter.AVG_TRASH = self.AverageTrash.value()
+        self.parameter.GARBAGECAN_SIZE = self.GarbageCanSize.value()
+        self.parameter.TEMP_CAN_SIZE = self.FamilyCanSize.value()
+        self.parameter.GARBAGETRUCK_SIZE = self.GarbageTruckSize.value()
+        self.parameter.TIME_STDDEV=   self.TimeStandardDeviation.value()
+        self.parameter.TRASH_STDDEV= self.TrashStandardDeviation.value()
+        self.parameter.TRUCK_CYCLE = self.CollectionCycle.value()
+        self.parameter.TRUCK_DELAY=    self.CollectionDelay.value()
+        self.parameter.TRUCK_INITIAL=    self.CollectionTime.value()
+        self.parameter.simulation_time = self.simulationtimeslider.value()
         ###################################################
         
-        #self.parameter.simulation_time= self.simulationtimeslider.value()
+
         if self.Verbosebox.isChecked():
             self.parameter.VERBOSE = True
         else:
             self.parameter.VERBOSE = False
-        self.parameter.VERBOSE = True
+        #self.parameter.VERBOSE = True
         self.parameter.update_config()
         self.loopback = SignalLoop(0, self.parameter.simulation_time, "loopback", "sname")
         if self.scenario==None:
@@ -326,7 +290,7 @@ class controlBox(QObject):
         filename = self.scenario.memo
         #sys.stdout=sys.__stdout__
         print("Processing",  self.scenario.memo)
-        #sys.stdout = open("output/result_" + filename + "_.log", 'a')
+        sys.stdout = open("output/result_" + filename + "_.log", 'a')
         if self.parameter.VERBOSE is True:
             outputlocation = self.scenario.memo +"_"+ str(self.parameter.TIME_STDDEV) + "trash" + str(
                 self.parameter.TRASH_STDDEV) + "_" + str(self.parameter.GARBAGECAN_SIZE)
@@ -401,9 +365,11 @@ class controlBox(QObject):
         SystemSimulator().get_engine("sname").simulate(time)
         self.time+=1
         if self.time==self.parameter.simulation_time:
-            self.RESULT_SIGNAL.emit()
             self.worker.stop()
-            self.time=0
+            self.time = 0
+            self.RESULT_SIGNAL.emit()
+
+
 
     def __getattr__(self, attr):
         return getattr(self.obj, attr)
