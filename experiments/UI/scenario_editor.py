@@ -1,6 +1,7 @@
 import sys
 import contexts
 import dill
+import copy
 
 #FamilyType and humantype
 from pohangsim.core_component import HumanType
@@ -129,11 +130,22 @@ class ScenarioClass(object):
 	N_building=0
 	buildinglist=[]
 	memo=""
-	def __new__(self):
+	def __deepcopy__(self, memo):
+		 new= ScenarioClass(copy.deepcopy(object))
+		 new.id= self.id
+		 new.N_building = self.N_building
+		 new.buildinglist = self.buildinglist
+		 new.memo=self.memo
+		 return new
+
+	def __new__(self,memo=None):
+		if memo:
+			print("copied")
+			self.id-=1
 		self.id+=1
 		return object.__new__(self)
 		pass
-	def __init__(self):
+	def __init__(self,memo=None):
 		self.id=self.id
 		self.N_building=0
 		self.buildinglist=[]

@@ -11,7 +11,7 @@ from family_dialog import FamilyTypeManager
 
 
 class FSig(QObject):
-	LISTSIG = Signal(list)
+	LISTSIG = Signal(list,list)
 
 	def __init__(self):
 		QObject.__init__(self)
@@ -24,7 +24,8 @@ class BuildingTypeManager(QDialog):
 		super(BuildingTypeManager, self).__init__(_parent)
 		self.obj = _parent
 		self.scenario = scenario
-		self.tempscenario=scenario
+		self.tempscenario=copy.deepcopy(self.scenario)
+		self.scenario.id-=1
 		self.total_buildingn = 0
 		self.total_pagen = 0
 		self.currentpage = 1  # 1로 초기화
@@ -103,13 +104,13 @@ class BuildingTypeManager(QDialog):
 	def load_list(self):
 		for family in self.familytype_list:
 			self.FamilyTypeList.addItem(family)
+	#when rejected
 	def revert_scenario(self):
-		self.tempscenario = self.scenario
-		self.signal.LISTSIG.emit(self.familytype_list)
-
+		self.signal.LISTSIG.emit(self.familytype_list,self.scenario)
+	#when accepted
 	def update_familytype_list(self):
-		self.scenario = self.tempscenario
-		self.signal.LISTSIG.emit(self.familytype_list)
+		self.scenario=self.tempscenario
+		self.signal.LISTSIG.emit(self.familytype_list,self.scenario)
 
 	@Slot()
 	def get_familytype_list(self, list):

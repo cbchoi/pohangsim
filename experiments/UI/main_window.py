@@ -41,12 +41,15 @@ class ScenarioListManager(QDialog):
         self.obj= _parent
         self.dialog=BuildingTypeManager
         self.scenariolist=[]
+        self.selected_scenario=ScenarioClass
         self.N=0
         self.familytypelist=[]
 
     @Slot()
-    def get_familytype(self,list):
-        self.familytypelist=list
+    def get_familytype(self,list1,list2):
+        self.familytypelist=list1
+        self.selected_scenario=list2
+        self.scenariolist[self.listWidget.currentRow()]=self.selected_scenario
 
     def getBuildingNumber(self):
         text, ok = QInputDialog.getInt(self, 'Number of buildings', 'Enter the number of buildings')
@@ -78,13 +81,13 @@ class ScenarioListManager(QDialog):
     def edit_scenario(self):
         if self.listWidget.currentRow()>=0:
 
-            selected_scenario=self.scenariolist[self.listWidget.currentRow()]
+            self.selected_scenario=self.scenariolist[self.listWidget.currentRow()]
             ui_file = QFile("../../BuildingDialog.ui")
             loader = QUiLoader()
             self.dialog= loader.load(ui_file)
             ui_file.close()
             self.dialog.setModal(True)
-            self.dialog=BuildingTypeManager(self.familytypelist,selected_scenario,self.dialog)
+            self.dialog=BuildingTypeManager(self.familytypelist,self.selected_scenario,self.dialog)
             self.dialog.show()
         #빌딩을 로딩
 
