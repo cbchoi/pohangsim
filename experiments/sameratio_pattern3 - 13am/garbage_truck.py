@@ -65,8 +65,7 @@ class GarbageTruck(BehaviorModelExecutor):
         elif port in self.garbage_port_map:
             self.garbage_port_map[port] += msg.retrieve()[0] # 각 건물별 쓰레기 수거량 분석
             self.truck_current_storage += msg.retrieve()[0]
-            #print("self.truck_current_storage", self.truck_current_storage)
-            #self.accummulated_garbage += self.truck_current_storage
+            print("self.truck_current_storage", self.truck_current_storage)
             self.accummulated_garbage += msg.retrieve()[0]
 
             ev_t = SystemSimulator().get_engine("sname").get_global_time()
@@ -84,7 +83,7 @@ class GarbageTruck(BehaviorModelExecutor):
                     file.write(str(self.accummulated_garbage))
                     file.write("\n")
             
-            #print("[truck_storage]"+  str(port) + ":" +str(self.garbage_port_map[port]),self.truck_current_storage)
+            print("[truck_storage]"+  str(port) + ":" +str(self.garbage_port_map[port]),self.truck_current_storage)
             
     def output(self):
         if self._cur_state == "REQUEST":

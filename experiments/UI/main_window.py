@@ -262,8 +262,8 @@ class OutputManager(QObject):
         msg.setWindowTitle("Success")
         msg.setText("Simulation is finished")
         msg.exec_()
-        sys.stdout.close()
-        sys.stdout = sys.__stdout__
+
+
         #self.resultWidget
         pass
         """
@@ -301,19 +301,30 @@ class controlBox(QObject):
         self.scenario=None
         self.parameter=Parameter()
         self.worker=QTimer()
+
         self.loopback=SignalLoop
-        self.time=0
+        self.timer=0
     @Slot()
     def timer_start(self):
-        ft=functools.partial(self.run_simulate, self.time)
-        self.worker.timeout.connect(ft)
+        self.progressBar.setMaximum(self.parameter.simulation_time)
+        self.timer=0
+        self.worker.timeout.connect(self.run_simulate)
         self.worker.start(1)
 
     def stop_button(self):
-        SystemSimulator().get_engine("sname").simulation_stop()
-        self.worker.stop()
-        self.time = 0
-
+        if self.timer!=0:
+            SystemSimulator().get_engine("sname").simulation_stop()
+            self.worker.stop()
+            self.timer = 0
+            msg = QMessageBox()
+            msg.setWindowTitle("Stopped!")
+            msg.setText("Simulation Stopped")
+            msg.exec_()
+        else:
+            msg = QMessageBox()
+            msg.setWindowTitle("Already Stopped!")
+            msg.setText("Nothing to stop")
+            msg.exec_()
     @Slot()
     def result_show(self):
         print("signal model is working")
@@ -331,22 +342,6 @@ class controlBox(QObject):
             self.parameter.SIMULATION_MODE = "REAL_TIME"
         elif self.VirtualTime.isChecked():
             self.parameter.SIMULATION_MODE = "VIRTUAL_TIME"
-
-        """
-        self.parameter.SIMULATION_MODE = "VIRTUAL_TIME"
-        self.parameter.TIME_DENSITY=0.01
-        self.parameter.AVG_TIME=1
-        self.parameter.AVG_TRASH =0.9
-        self.parameter.GARBAGECAN_SIZE=5
-        self.parameter.TEMP_CAN_SIZE=0
-        self.parameter.GARBAGETRUCK_SIZE=10
-        self.parameter.TIME_STDDEV=   0.2
-        self.parameter.TRASH_STDDEV= 0.2
-        self.parameter.TRUCK_INITIAL = 7
-        self.parameter.TRUCK_CYCLE= 24
-        self.parameter.TRUCK_DELAY=    0.01
-        self.parameter.simulation_time = 480
-        """
         self.parameter.TIME_DENSITY = self.TimeDensity.value()
         self.parameter.AVG_TIME = self.AverageTime.value()
         self.parameter.AVG_TRASH = self.AverageTrash.value()
@@ -377,10 +372,6 @@ class controlBox(QObject):
     def simulation_initialize(self):
         if not os.path.exists("output"):
             os.makedirs("output")
-        filename = self.scenario.memo
-        sys.stdout=sys.__stdout__
-        print("Processing",  self.scenario.memo)
-        sys.stdout = open("output/result_" + filename + "_.log", 'a')
         if self.parameter.VERBOSE is True:
             outputlocation = self.scenario.memo +"_"+ str(self.parameter.TIME_STDDEV) + "trash" + str(
                 self.parameter.TRASH_STDDEV) + "_" + str(self.parameter.GARBAGECAN_SIZE)
@@ -402,6 +393,7 @@ class controlBox(QObject):
         se.get_engine("sname").register_entity(gv)
         i = 0
         j = 0
+        id=0
         for building in self.scenario:
             g = GarbageCan(0, self.parameter.simulation_time, "gc[{0}]".format(i), 'sname',
                            self.parameter.GARBAGECAN_SIZE, outputlocation)
@@ -410,14 +402,14 @@ class controlBox(QObject):
                 ftype = FamilyType(self.parameter.TEMP_CAN_SIZE)
                 f = Family(0, self.parameter.simulation_time, "family", 'sname', ftype)
                 for htype in flist:
-                    # hid = get_human_id()
+                    id+=1
                     name = htype.get_name()
-                    cname = "check[{0}]".format(htype.get_name())
+                    name= name.split('<')[0]+"("+ str(id)+")"
+                    cname = "check[{0}]".format(name)
                     h1 = Human(0, self.parameter.simulation_time, cname, "sname", htype)
                     ch = Check(0, self.parameter.simulation_time, name, "sname", htype)
                     se.get_engine("sname").register_entity(h1)
                     se.get_engine("sname").register_entity(ch)
-                    # f1.register_member(htype)
                     ftype.register_member(htype)
                     # Connect Check & Can
                     ports = g.register_human(htype.get_id())
@@ -450,14 +442,17 @@ class controlBox(QObject):
         se.get_engine("sname").insert_external_event("start", None)
         self.READY_SIG.emit()
 
-    def run_simulate(self,time):
-        SystemSimulator().get_engine("sname").simulate(time)
-        self.time+=1
-        if SystemSimulator().get_engine("sname").is_terminated:
+    def run_simulate(self):
+        self.timer+=1
+        SystemSimulator().get_engine("sname").simulate(self.timer)
+        sim_t=SystemSimulator().get_engine("sname").get_global_time()
+        self.progressBar.setValue(sim_t)
+        if sim_t/self.parameter.simulation_time>=1:
             self.worker.stop()
-            self.time = 0
+            SystemSimulator().get_engine("sname").simulation_stop()
+            self.timer=0
+            self.progressBar.setValue(self.parameter.simulation_time)
             self.RESULT_SIGNAL.emit()
-
 
     def __getattr__(self, attr):
         return getattr(self.obj, attr)

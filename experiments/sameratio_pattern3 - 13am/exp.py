@@ -8,7 +8,7 @@ from evsim.system_message import SysMessage
 from evsim.definition import *
 
 
-from signal_model import SignalLoop
+#from signal_model import SignalLoop
 from pohangsim.clock import Clock
 from pohangsim.core_component import HumanType
 from pohangsim.core_component import FamilyType
@@ -19,7 +19,7 @@ from pohangsim.human import Human
 from pohangsim.check import Check
 from pohangsim.government import Government
 from pohangsim.garbagecan import GarbageCan
-from garbage_truck import GarbageTruck
+from pohangsim.garbage_truck import GarbageTruck
 from pohangsim.family import Family
 
 for kndx in range(1):
@@ -129,6 +129,6 @@ for kndx in range(1):
     # Connect Truck & Can
 
     se.get_engine("sname").insert_external_event("start", None)
-    se.get_engine("sname").simulate()
+    #se.get_engine("sname").simulate()
 
 

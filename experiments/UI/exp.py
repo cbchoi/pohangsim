@@ -1,3 +1,4 @@
+from config import *
 import contexts
 import sys,os
 
@@ -6,7 +7,7 @@ from evsim.behavior_model_executor import BehaviorModelExecutor
 from evsim.system_message import SysMessage
 from evsim.definition import *
 
-from config import *
+
 
 from pohangsim.clock import Clock
 from pohangsim.core_component import HumanType
@@ -18,15 +19,15 @@ from pohangsim.human import Human
 from pohangsim.check import Check
 from pohangsim.government import Government
 from pohangsim.garbagecan import GarbageCan
-from garbage_truck import GarbageTruck
+from pohangsim.garbage_truck import GarbageTruck
 from pohangsim.family import Family
 
-for kndx in range(30):
+for kndx in range(1):
     blist=[]
     hlist=[]
     fam=[]
 
-    if VERBOSE is True:
+    if True:
         outputlocation=str(sys.argv[1])+str(TIME_STDDEV)+"trash"+str(TRASH_STDDEV)+"_"+str(GARBAGECAN_SIZE)+"_"+str(kndx)
         if not os.path.exists(outputlocation):
             os.makedirs(outputlocation)
@@ -78,6 +79,7 @@ for kndx in range(30):
             for htype in flist:
                 #hid = get_human_id()
                 name = htype.get_name()
+                print(name)
                 cname = "check[{0}]".format(htype.get_name())               
                 h1 = Human(0, simulation_time, cname, "sname", htype)
                 ch = Check(0, simulation_time, name, "sname", htype)

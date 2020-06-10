@@ -6,7 +6,8 @@ from evsim.definition import *
 import os
 import datetime
 from pohangsim.core_component import Statistic
-from config import *
+import contexts
+from experiments.UI.config import *
 #from instance.config import *
 
 class Check(BehaviorModelExecutor):

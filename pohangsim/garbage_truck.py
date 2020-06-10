@@ -4,6 +4,8 @@ from evsim.system_message import SysMessage
 from evsim.definition import *
 
 from config import *
+import contexts
+from experiments.UI.config import *
 import os, sys
 #from instance.config import *
 
@@ -37,7 +39,6 @@ class GarbageTruck(BehaviorModelExecutor):
         #for file save
         self.outname=outp
         #print(schedule)
-        self.file=None
 
     def __del__(self):
         self.file.close()

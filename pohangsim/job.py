@@ -9,8 +9,8 @@ from pohangsim.core_component import TimeStructDeterministic
 from pohangsim.core_component import TimeStructContstraintToDayDeterministic
 
 from evsim.system_simulator import SystemSimulator
-
-from config import *
+import contexts
+from experiments.UI.config  import *
 class Homemaker(HumanType):
     def __init__(self,_id):
         HumanType.__init__(self ,_id)
