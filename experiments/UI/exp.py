@@ -50,7 +50,7 @@ for kndx in range(1):
             hlist = []
         if i == len(lines)-1:
             blist.append(hlist)
-
+    print(blist)
     se = SystemSimulator()
 
     se.register_engine("sname", SIMULATION_MODE, TIME_DENSITY)

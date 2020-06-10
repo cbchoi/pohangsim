@@ -11,6 +11,7 @@ from pohangsim.job import *
 
 class FamilyClass(Student,Homemaker,Blue_collar):
 	id=0
+	h_id=0
 	N_member=0
 	memberlist=[]
 
@@ -21,14 +22,18 @@ class FamilyClass(Student,Homemaker,Blue_collar):
 		fam=[]
 		for i in range(S):
 			self.N_member+=1
-			fam.append(Student(HumanType(self.N_member)))
+			self.h_id+=1
+			fam.append(Student(self.h_id))
 		for i in range(H):
 			self.N_member+=1
-			fam.append(Homemaker(HumanType(self.N_member)))
+			self.h_id+=1
+			fam.append(Homemaker(self.h_id))
 		for i in range(B):
 			self.N_member+=1
-			fam.append(Blue_collar(HumanType(self.N_member)))
+			self.h_id+=1
+			fam.append(Blue_collar(self.h_id))
 		self.memberlist.append(fam)
+
 		return object.__new__(self)
 
 	def __init__(self,S,H,B,cansize):
@@ -39,18 +44,22 @@ class FamilyClass(Student,Homemaker,Blue_collar):
 		self.memberlist=[]
 		self.id=self.id
 		self.N_member=0
+		self.h_id-=1
 		if S>0:
 			for i in range(S):
 				self.N_member+=1
-				self.memberlist.append(Student(HumanType(self.N_member)))
+				self.h_id +=1
+				self.memberlist.append(Student(self.h_id))
 		if H>0:
 			for i in range(H):
 				self.N_member+=1
-				self.memberlist.append(Homemaker(HumanType(self.N_member)))
+				self.h_id += 1
+				self.memberlist.append(Homemaker(self.h_id))
 		if B>0:
 			for i in range(B):
 				self.N_member+=1
-				self.memberlist.append(Blue_collar(HumanType(self.N_member)))
+				self.h_id += 1
+				self.memberlist.append(Blue_collar(self.h_id))
 
 	def __add__(self,member):
 		self.memberlist.append(member)

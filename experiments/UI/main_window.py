@@ -404,7 +404,8 @@ class controlBox(QObject):
                 for htype in flist:
                     id+=1
                     name = htype.get_name()
-                    name= name.split('<')[0]+"("+ str(id)+")"
+                    print(name)
+                    #name= name.split('<')[0]+"("+ str(id)+")"
                     cname = "check[{0}]".format(name)
                     h1 = Human(0, self.parameter.simulation_time, cname, "sname", htype)
                     ch = Check(0, self.parameter.simulation_time, name, "sname", htype)

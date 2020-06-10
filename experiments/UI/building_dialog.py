@@ -26,6 +26,7 @@ class BuildingTypeManager(QDialog):
 		self.scenario = scenario
 		self.tempscenario=copy.deepcopy(self.scenario)
 		ScenarioClass.id-=1
+		FamilyClass.h_id=0
 		self.total_buildingn = 0
 		self.total_pagen = 0
 		self.currentpage = 1  # 1로 초기화
@@ -75,7 +76,8 @@ class BuildingTypeManager(QDialog):
 		for item in self.FamilyTypeList.selectedItems():
 			item = re.findall("\d+", item.text())
 			item = list(map(int, item))
-			self.tempscenario[id-1].add(FamilyClass(item[0], item[1], item[2], item[3]))
+			family=FamilyClass(item[0], item[1], item[2], item[3])
+			self.tempscenario[id-1].add(family)
 		self.update_page()
 
 	def put_in(self):
@@ -87,17 +89,23 @@ class BuildingTypeManager(QDialog):
 			item = re.findall("\d+",item.text())
 			item= list(map(int, item))
 			if self.B1.isChecked():
-				dv[0].add(FamilyClass(item[0],item[1],item[2],item[3]))
+				family = FamilyClass(item[0], item[1], item[2], item[3])
+				dv[0].add(family)
 			if self.B2.isChecked():
-				dv[1].add(FamilyClass(item[0],item[1],item[2],item[3]))
+				family = FamilyClass(item[0], item[1], item[2], item[3])
+				dv[1].add(family)
 			if self.B3.isChecked():
-				dv[2].add(FamilyClass(item[0],item[1],item[2],item[3]))
+				family = FamilyClass(item[0], item[1], item[2], item[3])
+				dv[2].add(family)
 			if self.B1_2.isChecked():
-				dv[3].add(FamilyClass(item[0],item[1],item[2],item[3]))
+				family = FamilyClass(item[0], item[1], item[2], item[3])
+				dv[3].add(family)
 			if self.B2_2.isChecked():
-				dv[4].add(FamilyClass(item[0],item[1],item[2],item[3]))
+				family = FamilyClass(item[0], item[1], item[2], item[3])
+				dv[4].add(family)
 			if self.B3_2.isChecked():
-				dv[5].add(FamilyClass(item[0],item[1],item[2],item[3]))
+				family = FamilyClass(item[0], item[1], item[2], item[3])
+				dv[5].add(family)
 		self.update_page()
 
 
