@@ -1,42 +1,17 @@
 #GUI lib import
-import contexts
-import sys,os
-import math
-
-from evsim.behavior_model_executor import BehaviorModelExecutor
-from evsim.system_simulator import SystemSimulator
-from evsim.definition import *
-import functools
-
 from PySide2.QtCore import *
 from PySide2.QtUiTools import QUiLoader
 from PySide2.QtWidgets import *
-
-
-from data_component import Parameter
-#from garbage_truckpalindrome import GarbageTruck
-from garbage_truckfixed import GarbageTruck
-#from garbage_truckrandom import GarbageTruck
-
-from pohangsim.check import Check
-from pohangsim.clock import Clock
-from pohangsim.core_component import HumanType,FamilyType
-from pohangsim.family import Family
-from pohangsim.garbagecan import GarbageCan
-from pohangsim.government import Government
-from pohangsim.human import Human
-from pohangsim.job import *
-
-from pohangsim.signal_model import SignalLoop
-from scenario_editor import FamilyClass,BuildingClass,ScenarioClass,new_scenario_GUI,load_scenario_GUI,save_scenario_GUI
 from building_dialog import BuildingTypeManager
-#matplot
+from control_box import controlBox
+# matplot
 from matplotlib.backends.backend_qt5agg import FigureCanvas
-from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
+#from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
-#from matplot import resultWidget
 
+from scenario_editor import ScenarioClass, new_scenario_GUI, load_scenario_GUI, save_scenario_GUI
 
+import pandas as pd
 
 # GUI lib import
 # from config import *
@@ -157,36 +132,112 @@ class resultWidget(QObject):
     def __init__(self, _parent=None):
         super(resultWidget, self).__init__(_parent)
         self.obj = _parent
-
-        self.dynamic_canvas = FigureCanvas(Figure(figsize=(5, 3)))
+        self.fig= Figure(figsize=(5, 3))
+        self.dynamic_canvas = FigureCanvas(self.fig)
+        #self.toolbar = NavigationToolbar(self.dynamic_canvas, self.obj)
+        self.dynamic_canvas.setVisible(False)
+        self.figindex=0
+        self.length=0
+        self.data=None
+        #self.dynamic_canvas.figure.tight_layout()+
         self.resultLayout.addWidget(self.dynamic_canvas)
-
         self._dynamic_ax = self.dynamic_canvas.figure.subplots()
-        self._data_controller = DataGroupHandler(_parent)
-
-        self._data_controller.DATA_SIG.connect(self._update_canvas)
+        self.plusFig.setVisible(False)
+        self.minusFig.setVisible(False)
+        self.plusFig.clicked.connect(self.nextfig)
+        self.minusFig.clicked.connect(self.prevfig)
 
     def __getattr__(self, attr):
         return getattr(self.obj, attr)
 
     def show(self):
         self.obj.show()
+    def nextfig(self):
+        if self.figindex == self.length-1:
+            self.figindex = 0
+        else:
+            self.figindex += 1
+        self.show_plot()
+        pass
+
+    def prevfig(self):
+        if self.figindex==0:
+            self.figindex=self.length-1
+        else:
+            self.figindex-=1
+        self.show_plot()
+        pass
+
+    def show_plot(self):
+        self._dynamic_ax.clear()
+        if self.figindex==0:
+            #truckcsv, main
+            truckcsv=self.data[0]
+            unzipped = list(zip(*truckcsv))
+            self._dynamic_ax.bar(unzipped[0], unzipped[4])
+            self._dynamic_ax.set_title('Truck Data')
+        elif self.figindex==1:
+            if self.data[1] == []:
+                self._dynamic_ax.bar(['Student', 'Homemaker', "Blue_Collar"], [0, 0, 0])
+                self._dynamic_ax.set_title('Total reports')
+            else:
+                nonver = self.data[1]
+                unzipped = list(zip(*nonver))
+                self._dynamic_ax.bar(unzipped[0], unzipped[1])
+                self._dynamic_ax.set_title('Total reports')
+        elif self.figindex>1:
+            can = self.data[self.figindex]
+            unzipped = list(zip(*can))
+            if len(unzipped) != 0:
+                if int(self.figindex % 2) == 1:
+                    self._dynamic_ax.bar(unzipped[0], unzipped[2])
+                    #satisfaction
+                    self._dynamic_ax.set_title('Garbagecan Trash#' + str(int(self.figindex - 1)/2))
+                else:
+                    #trash
+                    self._dynamic_ax.bar(unzipped[0], unzipped[2])
+                    self._dynamic_ax.set_title('Satisfaction  Can #' + str(int(self.figindex/2)))
+            else:
+                if int(self.figindex % 2) == 1:
+                    self._dynamic_ax.set_title('No reports for can' + str(int(self.figindex - 1)/2))
+                else:
+                    self._dynamic_ax.set_title('No reports for Checker' + str(int(self.figindex/2)))
+
+
+        self.dynamic_canvas.figure.canvas.draw()
+        self.obj.repaint()
+
 
     @Slot(list)
     def _update_canvas(self, points):
         self._dynamic_ax.clear()
-        unzipped = list(zip(*points))
-        print("update", *unzipped)
-
-        self.x_data, self.y_data = unzipped[0], unzipped[1]
-
-        if self.radioPlot.isChecked():
-            self._dynamic_ax.plot(unzipped[0], unzipped[1])
-        elif self.radioPie.isChecked():
-            self._dynamic_ax.pie(upzipped[1])
-        else:
-            self._dynamic_ax.bar(unzipped[0], unzipped[1])
-
+        self.length=len(points)
+        if self.length == 1:
+            self.plusFig.setVisible(False)
+            self.minusFig.setVisible(False)
+            nonver=points[-1]
+            if nonver!=[]:
+                unzipped = list(zip(*nonver))
+                self.x_data, self.y_data = unzipped[0], unzipped[1]
+                self._dynamic_ax.bar(unzipped[0], unzipped[1])
+                self._dynamic_ax.set_title('Total reports')
+            else:#complain이 없을때
+                self._dynamic_ax.bar(['Student','Homemaker',"Blue_Collar"],[0,0,0])
+                self._dynamic_ax.set_title('Total reports')
+        elif self.length >1:
+            self.plusFig.setVisible(True)
+            self.minusFig.setVisible(True)
+            if points[1]==[]:
+                self._dynamic_ax.bar(['Student', 'Homemaker', "Blue_Collar"], [0, 0, 0])
+                self._dynamic_ax.set_title('Total reports')
+            else:
+                ver=points[1]
+                unzipped = list(zip(*ver))
+                self._dynamic_ax.bar(unzipped[0], unzipped[1])
+                self._dynamic_ax.set_title('Total reports')
+        self.figindex=1
+        self.data=points
+        self.dynamic_canvas.setVisible(True)
         self.dynamic_canvas.figure.canvas.draw()
         self.obj.repaint()
 
@@ -216,20 +267,15 @@ class MSWSsimulator(QWidget):
         self.ScenarioListControl=ScenarioListManager(self.obj)
         self.MatplotResult=resultWidget(self.obj)
         self.ScenarioListControl.dialog.signal.LISTSIG.connect(self.ScenarioListControl.get_familytype)
-        #기본을 벌츄얼 타임으로
-        self.VirtualTime.setChecked(True)
+
         #controlbox
         #Simulate 버튼 클릭시
         self.controlbox.SimulateButton.clicked.connect(self.ScenarioListControl.send_scenario) #scenario list 전달
         self.ScenarioListControl.SCENARIO_SIGNAL.connect(self.controlbox.prepare_data) #parameter 읽기 -> timerstart
-        #simulation이 끝나면 결과
         self.controlbox.READY_SIG.connect(self.controlbox.timer_start)
-        #self.controlbox.READY_SIG.connect(self.controlbox.timer_start) # ready - > loopback -> result
-        #self.controlbox.loopback.signal.LOOPBACK_SIG.connect(self.controlbox.run_simulate)
-        self.controlbox.RESULT_SIGNAL.connect(self.output.show_result)
-        
-
-
+        # simulation이 끝나면 결과
+        self.controlbox.RESULT_SIGNAL.connect(self.output.show_result) #알림창 띄우기
+        self.output.DATA_SIG.connect(self.MatplotResult._update_canvas)
         self.StopButton.clicked.connect(self.controlbox.stop_button)
         
         #slider
@@ -251,20 +297,50 @@ class MSWSsimulator(QWidget):
         self.obj.show()
 
 class OutputManager(QObject):
+    DATA_SIG=Signal(list)
     def __init__(self, _parent=None):
         super(OutputManager,self).__init__(_parent)
         self.obj=_parent
         self.dialog=None
 
     @Slot()
-    def show_result(self):
+    def show_result(self, Ncan,fileurl):
         msg = QMessageBox()
         msg.setWindowTitle("Success")
         msg.setText("Simulation is finished")
         msg.exec_()
+        loadedlist = []
+        if fileurl.startswith("output"):
+            try:
+                log = pd.read_csv(fileurl + ".log",index_col=False, names=['1', '2', '3', '4', '5','6'])
+                df = pd.DataFrame(index=range(0, 3), columns=['job', 'reports'])
+                df['job'] =  log['1'][0], log['3'][0], log['5'][0]
+                df['reports'] =log['2'][0], log['4'][0], log['6'][0]
+                loadedlist.append(df.values.tolist())
 
+            except:
+                loadedlist.append([])
+        else:
+            truck = pd.read_csv(fileurl + "truck.csv",
+                                names=['time', 'Visit order', 'Building number', 'Current Truck Storage',
+                                       'Total Accumulated Waste'])
+            loadedlist.append(truck.values.tolist())
+            try:
+                log = pd.read_csv("output/"+fileurl.strip("/") + ".log", index_col=False, names=['1', '2', '3', '4', '5', '6'])
+                df = pd.DataFrame(index=range(0, 3), columns=['job', 'reports'])
+                df['job'] = log['1'][0], log['3'][0], log['5'][0]
+                df['reports'] = log['2'][0], log['4'][0], log['6'][0]
+                loadedlist.append(df.values.tolist())
+            except:
+                loadedlist.append([])
+            for i in range(Ncan):
+                df_can = pd.read_csv(fileurl + "can_outputgc["+str(i)+"].csv")
+                df_can_check = pd.read_csv(fileurl + "can_outputgc["+str(i)+"]_checker.csv")
+                loadedlist.append(df_can.values.tolist())
+                loadedlist.append(df_can_check.values.tolist())
 
-        #self.resultWidget
+        self.DATA_SIG.emit(loadedlist)
+
         pass
         """
         QCoreApplication.setAttribute(Qt.AA_ShareOpenGLContexts)
@@ -290,170 +366,4 @@ class SimulTime(QObject):
     def __getattr__(self, attr):
         return getattr(self.obj, attr)
 
-class controlBox(QObject):
-    #signal part
-    SIMULATE_SIGNAL=Signal(Parameter, list)
-    READY_SIG=Signal()
-    RESULT_SIGNAL=Signal()
-    def __init__(self, _parent=None):
-        super(controlBox, self).__init__(_parent)
-        self.obj=_parent
-        self.scenario=None
-        self.parameter=Parameter()
-        self.worker=QTimer()
 
-        self.loopback=SignalLoop
-        self.timer=0
-    @Slot()
-    def timer_start(self):
-        self.progressBar.setMaximum(self.parameter.simulation_time)
-        self.timer=0
-        self.worker.timeout.connect(self.run_simulate)
-        self.worker.start(1)
-
-    def stop_button(self):
-        if self.timer!=0:
-            SystemSimulator().get_engine("sname").simulation_stop()
-            self.worker.stop()
-            self.timer = 0
-            msg = QMessageBox()
-            msg.setWindowTitle("Stopped!")
-            msg.setText("Simulation Stopped")
-            msg.exec_()
-        else:
-            msg = QMessageBox()
-            msg.setWindowTitle("Already Stopped!")
-            msg.setText("Nothing to stop")
-            msg.exec_()
-    @Slot()
-    def result_show(self):
-        print("signal model is working")
-        pass
-    
-    @Slot()
-    def progress_show(self):
-        print("loopback signal")
-
-    @Slot()
-    def prepare_data(self,scenario_signal=False):
-        if scenario_signal:
-            self.scenario=scenario_signal
-        if self.RealTime.isChecked():
-            self.parameter.SIMULATION_MODE = "REAL_TIME"
-        elif self.VirtualTime.isChecked():
-            self.parameter.SIMULATION_MODE = "VIRTUAL_TIME"
-        self.parameter.TIME_DENSITY = self.TimeDensity.value()
-        self.parameter.AVG_TIME = self.AverageTime.value()
-        self.parameter.AVG_TRASH = self.AverageTrash.value()
-        self.parameter.GARBAGECAN_SIZE = self.GarbageCanSize.value()
-        self.parameter.TEMP_CAN_SIZE = self.FamilyCanSize.value()
-        self.parameter.GARBAGETRUCK_SIZE = self.GarbageTruckSize.value()
-        self.parameter.TIME_STDDEV=   self.TimeStandardDeviation.value()
-        self.parameter.TRASH_STDDEV= self.TrashStandardDeviation.value()
-        self.parameter.TRUCK_CYCLE = self.CollectionCycle.value()
-        self.parameter.TRUCK_DELAY=    self.CollectionDelay.value()
-        self.parameter.TRUCK_INITIAL=    self.CollectionTime.value()
-        self.parameter.simulation_time = self.simulationtimeslider.value()
-        ###################################################
-        
-
-        if self.Verbosebox.isChecked():
-            self.parameter.VERBOSE = True
-        else:
-            self.parameter.VERBOSE = False
-        #self.parameter.VERBOSE = True
-        self.parameter.update_config()
-        self.loopback = SignalLoop(0, self.parameter.simulation_time, "loopback", "sname")
-        if self.scenario==None:
-            print("error message here")
-        else:
-            self.simulation_initialize()
-
-    def simulation_initialize(self):
-        if not os.path.exists("output"):
-            os.makedirs("output")
-        if self.parameter.VERBOSE is True:
-            outputlocation = self.scenario.memo +"_"+ str(self.parameter.TIME_STDDEV) + "trash" + str(
-                self.parameter.TRASH_STDDEV) + "_" + str(self.parameter.GARBAGECAN_SIZE)
-            if not os.path.exists(outputlocation):
-                os.makedirs(outputlocation)
-        else:
-            outputlocation = None
-        se = SystemSimulator()
-        se.register_engine("sname", self.parameter.SIMULATION_MODE, self.parameter.TIME_DENSITY)
-        se.get_engine("sname").register_entity(self.loopback)
-        c = Clock(0, self.parameter.simulation_time, "clock", "sname")
-        se.get_engine("sname").register_entity(c)
-        gt = GarbageTruck(0, self.parameter.simulation_time, "garbage_truck", 'sname',
-                          self.parameter.GARBAGETRUCK_SIZE,
-                          [e for e in enumerate([self.parameter.TRUCK_DELAY for building in self.scenario])],
-                          outputlocation)  # 4.7*13*3
-        se.get_engine("sname").register_entity(gt)
-        gv = Government(0, self.parameter.simulation_time, "government", "sname")
-        se.get_engine("sname").register_entity(gv)
-        i = 0
-        j = 0
-        id=0
-        for building in self.scenario:
-            g = GarbageCan(0, self.parameter.simulation_time, "gc[{0}]".format(i), 'sname',
-                           self.parameter.GARBAGECAN_SIZE, outputlocation)
-            se.get_engine("sname").register_entity(g)
-            for flist in building:
-                ftype = FamilyType(self.parameter.TEMP_CAN_SIZE)
-                f = Family(0, self.parameter.simulation_time, "family", 'sname', ftype)
-                for htype in flist:
-                    id+=1
-                    name = htype.get_name()
-                    print(name)
-                    #name= name.split('<')[0]+"("+ str(id)+")"
-                    cname = "check[{0}]".format(name)
-                    h1 = Human(0, self.parameter.simulation_time, cname, "sname", htype)
-                    ch = Check(0, self.parameter.simulation_time, name, "sname", htype)
-                    se.get_engine("sname").register_entity(h1)
-                    se.get_engine("sname").register_entity(ch)
-                    ftype.register_member(htype)
-                    # Connect Check & Can
-                    ports = g.register_human(htype.get_id())
-                    se.get_engine("sname").coupling_relation(h1, "trash", ch, "request")
-                    se.get_engine("sname").coupling_relation(ch, "check", g, ports[0])
-
-                    se.get_engine("sname").coupling_relation(g, ports[1], ch, "checked")
-                    se.get_engine("sname").coupling_relation(ch, "gov_report", gv, "recv_report")
-
-                    se.get_engine("sname").coupling_relation(None, "start", h1, "start")
-                    se.get_engine("sname").coupling_relation(None, "end", h1, "end")
-                    se.get_engine("sname").coupling_relation(h1, "trash", f, "receive_membertrash")
-                se.get_engine("sname").register_entity(f)
-                ports = g.register_family(j)
-                se.get_engine("sname").coupling_relation(f, "takeout_trash", g, ports[0])
-                j += 1
-            # Connect Truck & Can
-            ports = gt.register_garbage_can(i)
-            se.get_engine("sname").coupling_relation(g, "res_garbage", gt, ports[0])
-            se.get_engine("sname").coupling_relation(gt, ports[1], g, "req_empty")
-            i += 1
-        se.get_engine("sname").insert_input_port("start")
-        se.get_engine("sname").coupling_relation(None, "start", c, "start")
-        se.get_engine("sname").coupling_relation(None, "end", c, "end")
-        se.get_engine("sname").coupling_relation(None, "start", gt, "start")
-        se.get_engine("sname").coupling_relation(None, "end", gt, "end")
-        # Connect Truck & Can
-        se.get_engine("sname").coupling_relation(None,"start",self.loopback,"start")
-        # end of simulation signal
-        se.get_engine("sname").insert_external_event("start", None)
-        self.READY_SIG.emit()
-
-    def run_simulate(self):
-        self.timer+=1
-        SystemSimulator().get_engine("sname").simulate(self.timer)
-        sim_t=SystemSimulator().get_engine("sname").get_global_time()
-        self.progressBar.setValue(sim_t)
-        if sim_t/self.parameter.simulation_time>=1:
-            self.worker.stop()
-            SystemSimulator().get_engine("sname").simulation_stop()
-            self.timer=0
-            self.progressBar.setValue(self.parameter.simulation_time)
-            self.RESULT_SIGNAL.emit()
-
-    def __getattr__(self, attr):
-        return getattr(self.obj, attr)

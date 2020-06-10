@@ -26,13 +26,8 @@ for kndx in range(1):
     blist=[]
     hlist=[]
     fam=[]
+    outputlocation=str(sys.argv[1])+str(TIME_STDDEV)+"trash"+str(TRASH_STDDEV)+"_"+str(GARBAGECAN_SIZE)+"_"+str(kndx)
 
-    if True:
-        outputlocation=str(sys.argv[1])+str(TIME_STDDEV)+"trash"+str(TRASH_STDDEV)+"_"+str(GARBAGECAN_SIZE)+"_"+str(kndx)
-        if not os.path.exists(outputlocation):
-            os.makedirs(outputlocation)
-    else:
-        outputlocation = None
 
     file = open("./scenario/"+sys.argv[1]+".txt",'r')
     lines = file.readlines()
@@ -50,7 +45,6 @@ for kndx in range(1):
             hlist = []
         if i == len(lines)-1:
             blist.append(hlist)
-    print(blist)
     se = SystemSimulator()
 
     se.register_engine("sname", SIMULATION_MODE, TIME_DENSITY)
@@ -79,7 +73,6 @@ for kndx in range(1):
             for htype in flist:
                 #hid = get_human_id()
                 name = htype.get_name()
-                print(name)
                 cname = "check[{0}]".format(htype.get_name())               
                 h1 = Human(0, simulation_time, cname, "sname", htype)
                 ch = Check(0, simulation_time, name, "sname", htype)
