@@ -1,18 +1,6 @@
-from evsim.system_simulator import SystemSimulator
 from evsim.behavior_model_executor import BehaviorModelExecutor
-from evsim.system_message import SysMessage
 from evsim.definition import *
-
-import os
-import datetime
-
-from config import *
-import contexts
-from experiments.UI.config import *
-#from instance.config import *
-
-from pohangsim.job import TimeStruct
-from pohangsim.job import HumanType
+from evsim.system_message import SysMessage
 
 class Human(BehaviorModelExecutor):
     def __init__(self, instance_time, destruct_time, name, engine_name, human):

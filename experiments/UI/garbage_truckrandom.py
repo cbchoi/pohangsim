@@ -37,6 +37,7 @@ class GarbageTruck(BehaviorModelExecutor):
         self.cur_index = 0
         # for file save
         self.outname = outp
+        random.seed(RANDOM_SEED)
         # print(schedule)
 
     def register_garbage_can(self, garbage_can_id):

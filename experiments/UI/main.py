@@ -1,11 +1,10 @@
-import sys,getopt
+import sys #getopt
 from PySide2.QtWidgets import *
 from PySide2.QtUiTools import QUiLoader
 from PySide2.QtCore import *
 
 from main_window import MSWSsimulator
-from family_dialog import FamilyTypeManager
-import telegram_bot
+#from family_dialog import FamilyTypeManager
 
 app = QApplication(sys.argv)
 

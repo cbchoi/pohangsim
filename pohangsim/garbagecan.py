@@ -3,15 +3,6 @@ from evsim.behavior_model_executor import BehaviorModelExecutor
 from evsim.system_message import SysMessage
 from evsim.definition import *
 
-import sys
-import os
-import datetime
-
-from config import *
-import contexts
-from experiments.UI.config import *
-#from instance.config import *
-
 class GarbageCan(BehaviorModelExecutor):
     def __init__(self, instance_time, destruct_time, name, engine_name, size, outp):
         BehaviorModelExecutor.__init__(self, instance_time, destruct_time, name, engine_name)
@@ -214,7 +205,10 @@ class GarbageCan(BehaviorModelExecutor):
             #print(self.human_port_map[self.recv_checker_port])
             port = self.recv_checker_port.pop(0)
             msg = SysMessage(self.get_name(), self.human_port_map[port])
-            msg.insert(float(self.cur_amount/self.can_size))
+            if self.can_size!=0:
+                msg.insert(float(self.cur_amount/self.can_size))
+            else:
+                msg.insert(1.0)
             #print("$")
             #print("[gc] " + str(float(self.cur_amount/self.can_size)))
             return msg

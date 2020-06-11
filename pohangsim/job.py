@@ -14,7 +14,7 @@ from experiments.UI.config  import *
 class Homemaker(HumanType):
     def __init__(self,_id):
         HumanType.__init__(self ,_id)
-        self.out_time = TimeStructContstraintToDay(13,00, Statistic(0, AVG_TIME, TIME_STDDEV))
+        self.out_time = TimeStructContstraintToDay(13,00, Statistic(RANDOM_SEED, AVG_TIME, TIME_STDDEV))
         #self.out_time = TimeStructContstraintToDayDeterministic(13,00)
         #self.out_time= TimeStructConstraintRandom(self.get_wakeup(), self.get_sleep(), Statistic(0, 10, 6))
         self.trash = Statistic(RANDOM_SEED,AVG_TRASH,TRASH_STDDEV)
@@ -24,10 +24,10 @@ class Homemaker(HumanType):
         return "Homemaker"
         
     def get_wakeup(self):
-        return TimeStruct(6, 17, Statistic(RANDOM_SEED, 0, TIME_STDDEV))
+        return TimeStruct(6, 17, Statistic(RANDOM_SEED, AVG_TIME, TIME_STDDEV))
     
     def get_sleep(self):
-        return TimeStruct(23, 21, Statistic(RANDOM_SEED, 0, TIME_STDDEV))
+        return TimeStruct(23, 21, Statistic(RANDOM_SEED, AVG_TIME, TIME_STDDEV))
         
     def get_out(self):
         return self.out_time 
@@ -67,7 +67,7 @@ class Homemaker(HumanType):
 class Student(HumanType):
     def __init__(self,_id):
         HumanType.__init__(self ,_id)
-        self.out_time = TimeStructContstraintToDay(7,58, Statistic(0, AVG_TIME, TIME_STDDEV))
+        self.out_time = TimeStructContstraintToDay(7,58, Statistic(RANDOM_SEED, AVG_TIME, TIME_STDDEV))
         self.trash = Statistic(RANDOM_SEED+1,AVG_TRASH,TRASH_STDDEV)
         pass
     
@@ -75,10 +75,10 @@ class Student(HumanType):
         return "Student"
 
     def get_wakeup(self):
-        return TimeStruct(7,58, Statistic(RANDOM_SEED, 0, 1))
+        return TimeStruct(7,58, Statistic(RANDOM_SEED, AVG_TIME, TIME_STDDEV))
         
     def get_sleep(self):
-        return TimeStruct(24,51, Statistic(RANDOM_SEED, 0, 1))
+        return TimeStruct(24,51, Statistic(RANDOM_SEED, AVG_TIME, TIME_STDDEV))
   
     def get_out(self):
         return self.out_time
@@ -168,7 +168,7 @@ class StudentWithVacation(HumanType):
 class Blue_collar(HumanType):
     def __init__(self,_id):
         HumanType.__init__(self ,_id)
-        self.out_time = TimeStructContstraintToDay(6,22, Statistic(0, AVG_TIME, TIME_STDDEV))
+        self.out_time = TimeStructContstraintToDay(6,22, Statistic(RANDOM_SEED, AVG_TIME, TIME_STDDEV))
         #self.out_time = TimeStructContstraintToDayDeterministic(6,22)
         self.trash = Statistic(RANDOM_SEED+2,AVG_TRASH,TRASH_STDDEV)
         pass
@@ -177,10 +177,10 @@ class Blue_collar(HumanType):
         return "Blue_collar"
 
     def get_wakeup(self):
-        return TimeStruct(6,22, Statistic(RANDOM_SEED, 0, 1))
+        return TimeStruct(6,22, Statistic(RANDOM_SEED, AVG_TIME, TIME_STDDEV))
         
     def get_sleep(self):
-        return TimeStruct(23,35, Statistic(RANDOM_SEED, 0, 1))
+        return TimeStruct(23,35, Statistic(RANDOM_SEED, AVG_TIME, TIME_STDDEV))
   
     def get_out(self):
         return self.out_time

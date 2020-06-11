@@ -190,6 +190,7 @@ venv.bak/
 .mypy_cache/
 
 # instance
+instance.py
 instance/
 
 #excel data

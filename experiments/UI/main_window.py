@@ -2,6 +2,7 @@
 from PySide2.QtCore import *
 from PySide2.QtUiTools import QUiLoader
 from PySide2.QtWidgets import *
+from PySide2.QtGui import *
 from building_dialog import BuildingTypeManager
 from control_box import controlBox
 # matplot
@@ -12,7 +13,7 @@ from matplotlib.figure import Figure
 from scenario_editor import ScenarioClass, new_scenario_GUI, load_scenario_GUI, save_scenario_GUI
 
 import pandas as pd
-
+import copy
 # GUI lib import
 # from config import *
 class ScenarioListManager(QDialog):
@@ -142,14 +143,35 @@ class resultWidget(QObject):
         #self.dynamic_canvas.figure.tight_layout()+
         self.resultLayout.addWidget(self.dynamic_canvas)
         self._dynamic_ax = self.dynamic_canvas.figure.subplots()
+        self.ax2=self.dynamic_canvas.figure.add_subplot()
         self.plusFig.setVisible(False)
         self.minusFig.setVisible(False)
         self.plusFig.clicked.connect(self.nextfig)
         self.minusFig.clicked.connect(self.prevfig)
+        #CONTEXT MENU
+        self.popMenu = QMenu(_parent)
+        self.dynamic_canvas.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.dynamic_canvas.customContextMenuRequested.connect(self.on_context_menu)
+        self.save = QAction('saveplot', self)
+        self.popMenu.addAction(self.save)
 
+        self.save.triggered.connect(self.saveplot)
     def __getattr__(self, attr):
         return getattr(self.obj, attr)
 
+    def saveplot(self):
+        file_dialog = QFileDialog()
+        file_dialog.setNameFilters(["Text files (*.txt)", "Images (*.png *.jpg)"])
+        file_dialog.selectNameFilter("Images (*.png *.jpg)")
+        savefile=file_dialog.getSaveFileName()
+        a=self.fig.get_size_inches()
+        self.fig.savefig(savefile[0])
+
+    def on_context_menu(self, point):
+        # show context menu
+        self.popMenu.exec_(self.dynamic_canvas.mapToGlobal(point))
+
+        return False
     def show(self):
         self.obj.show()
     def nextfig(self):
@@ -169,41 +191,51 @@ class resultWidget(QObject):
         pass
 
     def show_plot(self):
-        self._dynamic_ax.clear()
+        self._dynamic_ax.cla()
+        try:
+            self.fig.delaxes(self.ax2)
+            pass
+        except:
+            pass
         if self.figindex==0:
             #truckcsv, main
             truckcsv=self.data[0]
             unzipped = list(zip(*truckcsv))
-            self._dynamic_ax.bar(unzipped[0], unzipped[4])
-            self._dynamic_ax.set_title('Truck Data')
+            self._dynamic_ax.bar(unzipped[0], unzipped[3])
+            self._dynamic_ax.set_title('Truck Storage')
+            self.ax2=self._dynamic_ax.twinx()
+            self.ax2.plot(unzipped[0], unzipped[4], 'g')
+            self.ax2.grid(False)
         elif self.figindex==1:
             if self.data[1] == []:
-                self._dynamic_ax.bar(['Student', 'Homemaker', "Blue_Collar"], [0, 0, 0])
+                self._dynamic_ax.hist(['Student', 'Homemaker', "Blue_Collar"], [0, 0, 0])
                 self._dynamic_ax.set_title('Total reports')
+                self._dynamic_ax.tick_params(axis='x', which='major', zorder=25)
             else:
                 nonver = self.data[1]
                 unzipped = list(zip(*nonver))
                 self._dynamic_ax.bar(unzipped[0], unzipped[1])
                 self._dynamic_ax.set_title('Total reports')
         elif self.figindex>1:
+
             can = self.data[self.figindex]
             unzipped = list(zip(*can))
             if len(unzipped) != 0:
                 if int(self.figindex % 2) == 1:
                     self._dynamic_ax.bar(unzipped[0], unzipped[2])
                     #satisfaction
-                    self._dynamic_ax.set_title('Garbagecan Trash#' +  str(int(self.figindex - 1/2)))
+                    self._dynamic_ax.set_title('Garbagecan Trash#' +  str(int((self.figindex - 1)/2)))
                 else:
                     #trash
                     self._dynamic_ax.bar(unzipped[0], unzipped[2])
                     self._dynamic_ax.set_title('Satisfaction  Can #' + str(int(self.figindex/2)))
             else:
                 if int(self.figindex % 2) == 1:
-                    self._dynamic_ax.set_title('No reports for can' + str(int(self.figindex - 1/2)))
+                    self._dynamic_ax.set_title('No reports for can' + str(int((self.figindex - 1)/2)))
                 else:
                     self._dynamic_ax.set_title('No reports for Checker' + str(int(self.figindex/2)))
 
-
+        self._dynamic_ax.autoscale()
         self.dynamic_canvas.figure.canvas.draw()
         self.obj.repaint()
 
@@ -211,6 +243,7 @@ class resultWidget(QObject):
     @Slot(list)
     def _update_canvas(self, points):
         self._dynamic_ax.clear()
+        self.fig.delaxes(self.ax2)
         self.length=len(points)
         if self.length == 1:
             self.plusFig.setVisible(False)
@@ -222,19 +255,21 @@ class resultWidget(QObject):
                 self._dynamic_ax.bar(unzipped[0], unzipped[1])
                 self._dynamic_ax.set_title('Total reports')
             else:#complain이 없을때
-                self._dynamic_ax.bar(['Student','Homemaker',"Blue_Collar"],[0,0,0])
+                self._dynamic_ax.hist(['Student','Homemaker',"Blue_Collar"],[0,0,0])
                 self._dynamic_ax.set_title('Total reports')
         elif self.length >1:
             self.plusFig.setVisible(True)
             self.minusFig.setVisible(True)
             if points[1]==[]:
-                self._dynamic_ax.bar(['Student', 'Homemaker', "Blue_Collar"], [0, 0, 0])
+                self._dynamic_ax.hist(['Student', 'Homemaker', "Blue_Collar"], [0, 0, 0])
                 self._dynamic_ax.set_title('Total reports')
+
             else:
                 ver=points[1]
                 unzipped = list(zip(*ver))
                 self._dynamic_ax.bar(unzipped[0], unzipped[1])
                 self._dynamic_ax.set_title('Total reports')
+
         self.figindex=1
         self.data=points
         self.dynamic_canvas.setVisible(True)
@@ -303,6 +338,7 @@ class OutputManager(QObject):
                 df['job'] =  log['1'][0], log['3'][0], log['5'][0]
                 df['reports'] =log['2'][0], log['4'][0], log['6'][0]
                 df=df.dropna(axis=0)
+                df = df.sort_values(by=['job'])
                 loadedlist.append(df.values.tolist())
 
             except:
@@ -318,6 +354,7 @@ class OutputManager(QObject):
                 df['job'] = log['1'][0], log['3'][0], log['5'][0]
                 df['reports'] = log['2'][0], log['4'][0], log['6'][0]
                 df=df.dropna(axis=0)
+                df = df.sort_values(by=['job'])
                 loadedlist.append(df.values.tolist())
             except:
                 loadedlist.append([])

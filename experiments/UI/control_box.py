@@ -6,10 +6,10 @@ from PySide2.QtCore import *
 from PySide2.QtWidgets import *
 from data_component import Parameter
 
-# from garbage_truckpalindrome import GarbageTruck
-# from garbage_truckrandom import GarbageTruck
-from garbage_truckfixed import GarbageTruck
-
+from garbage_truckfixed import GarbageTruck as GarbageTruckf
+from garbage_truckpalindrome import GarbageTruck as GarbageTruckp
+from garbage_truckrandom import GarbageTruck as GarbageTruckr
+#
 from pohangsim.check import Check
 from pohangsim.clock import Clock
 from pohangsim.core_component import FamilyType
@@ -95,6 +95,7 @@ class controlBox(QObject):
         if self.scenario == None:
             print("error message here")
         else:
+
             self.simulation_initialize()
 
     def simulation_initialize(self):
@@ -116,10 +117,22 @@ class controlBox(QObject):
         se.get_engine("sname").register_entity(self.loopback)
         c = Clock(0, self.parameter.simulation_time, "clock", "sname")
         se.get_engine("sname").register_entity(c)
-        gt = GarbageTruck(0, self.parameter.simulation_time, "garbage_truck", 'sname',
-                          self.parameter.GARBAGETRUCK_SIZE,
-                          [e for e in enumerate([self.parameter.TRUCK_DELAY for building in self.scenario])],
-                          self.outputlocation)  # 4.7*13*3
+        if self.radioButton.isChecked():
+            gt = GarbageTruckf(0, self.parameter.simulation_time, "garbage_truck", 'sname',
+                              self.parameter.GARBAGETRUCK_SIZE,
+                              [e for e in enumerate([self.parameter.TRUCK_DELAY for building in self.scenario])],
+                              self.outputlocation)  # 4.7*13*3
+        elif self.radioButton_2.isChecked():
+            gt = GarbageTruckp(0, self.parameter.simulation_time, "garbage_truck", 'sname',
+                               self.parameter.GARBAGETRUCK_SIZE,
+                               [e for e in enumerate([self.parameter.TRUCK_DELAY for building in self.scenario])],
+                               self.outputlocation)  # 4.7*13*3
+        elif self.radioButton_3.isChecked():
+            gt = GarbageTruckr(0, self.parameter.simulation_time, "garbage_truck", 'sname',
+                               self.parameter.GARBAGETRUCK_SIZE,
+                               [e for e in enumerate([self.parameter.TRUCK_DELAY for building in self.scenario])],
+                               self.outputlocation)  # 4.7*13*3
+
         se.get_engine("sname").register_entity(gt)
         gv = Government(0, self.parameter.simulation_time, "government", "sname")
         se.get_engine("sname").register_entity(gv)

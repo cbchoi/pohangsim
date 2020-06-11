@@ -25,20 +25,20 @@
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QCheckBox" name="checkBox">
+      <widget class="QRadioButton" name="radioButton">
        <property name="acceptDrops">
         <bool>false</bool>
        </property>
        <property name="text">
         <string>Fixed Sequence</string>
        </property>
-       <property name="tristate">
-        <bool>false</bool>
+       <property name="checked">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QCheckBox" name="checkBox_2">
+      <widget class="QRadioButton" name="radioButton_2">
        <property name="acceptDrops">
         <bool>false</bool>
        </property>
@@ -48,7 +48,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QCheckBox" name="checkBox_3">
+      <widget class="QRadioButton" name="radioButton_3">
        <property name="acceptDrops">
         <bool>false</bool>
        </property>

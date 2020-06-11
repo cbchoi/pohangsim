@@ -1,16 +1,14 @@
-from abc import *
-#import numpy as np
-import copy
 import random
-from datetime import datetime
+from abc import *
+
 
 class Statistic(object):
     def __init__(self, seed, mean, stddev):
         self.mean = mean
         self.stddev = stddev
-        self.rseed = datetime.now()
+        #self.rseed = datetime.now()
+        self.rseed = seed
         self.random = random.Random(self.rseed)
-        #self.random.seed(datetime.now())
 
     def get_mean(self):
         return self.mean
@@ -150,7 +148,6 @@ class HumanType(object):
         self.satisfaction=satis
         
 
-import random
 
 class FamilyType(object):
     def __init__(self, garbage_size):
