@@ -192,14 +192,14 @@ class resultWidget(QObject):
                 if int(self.figindex % 2) == 1:
                     self._dynamic_ax.bar(unzipped[0], unzipped[2])
                     #satisfaction
-                    self._dynamic_ax.set_title('Garbagecan Trash#' + str(int(self.figindex - 1)/2))
+                    self._dynamic_ax.set_title('Garbagecan Trash#' +  str(int(self.figindex - 1/2)))
                 else:
                     #trash
                     self._dynamic_ax.bar(unzipped[0], unzipped[2])
                     self._dynamic_ax.set_title('Satisfaction  Can #' + str(int(self.figindex/2)))
             else:
                 if int(self.figindex % 2) == 1:
-                    self._dynamic_ax.set_title('No reports for can' + str(int(self.figindex - 1)/2))
+                    self._dynamic_ax.set_title('No reports for can' + str(int(self.figindex - 1/2)))
                 else:
                     self._dynamic_ax.set_title('No reports for Checker' + str(int(self.figindex/2)))
 
@@ -241,20 +241,6 @@ class resultWidget(QObject):
         self.dynamic_canvas.figure.canvas.draw()
         self.obj.repaint()
 
-    @Slot()
-    def _redraw_graph(self):
-        self._dynamic_ax.clear()
-        if self.radioPlot.isChecked():
-            self._dynamic_ax.plot(self.x_data, self.y_data)
-        elif self.radioPie.isChecked():
-            self._dynamic_ax.pie(self.y_data)
-        else:
-            self._dynamic_ax.bar(self.x_data, self.y_data)
-
-        self.dynamic_canvas.figure.canvas.draw()
-        self.obj.repaint()
-
-        pass
 class MSWSsimulator(QWidget):
     def __init__(self, _parent =None):
         super(MSWSsimulator, self).__init__(_parent)
@@ -316,6 +302,7 @@ class OutputManager(QObject):
                 df = pd.DataFrame(index=range(0, 3), columns=['job', 'reports'])
                 df['job'] =  log['1'][0], log['3'][0], log['5'][0]
                 df['reports'] =log['2'][0], log['4'][0], log['6'][0]
+                df=df.dropna(axis=0)
                 loadedlist.append(df.values.tolist())
 
             except:
@@ -330,27 +317,24 @@ class OutputManager(QObject):
                 df = pd.DataFrame(index=range(0, 3), columns=['job', 'reports'])
                 df['job'] = log['1'][0], log['3'][0], log['5'][0]
                 df['reports'] = log['2'][0], log['4'][0], log['6'][0]
+                df=df.dropna(axis=0)
                 loadedlist.append(df.values.tolist())
             except:
                 loadedlist.append([])
             for i in range(Ncan):
                 df_can = pd.read_csv(fileurl + "can_outputgc["+str(i)+"].csv")
+                #df_can_check = pd.read_csv('can_outputgc[0].csv')
                 df_can_check = pd.read_csv(fileurl + "can_outputgc["+str(i)+"]_checker.csv")
+                #df = pd.read_csv('can_outputgc[0]_checker.csv')
+                df_can.dropna(axis=1)
+                df_can=df_can.sort_values(by=['time','name'])
+                df_can_check.dropna(axis=1)
+                df_can_check = df_can_check.sort_values(by=['time','name'])
                 loadedlist.append(df_can.values.tolist())
                 loadedlist.append(df_can_check.values.tolist())
 
         self.DATA_SIG.emit(loadedlist)
-
         pass
-        """
-        QCoreApplication.setAttribute(Qt.AA_ShareOpenGLContexts)
-        ui_file = QFile("../../Output.ui")
-        self.dialog= QUiLoader.load(ui_file)
-        ui_file.close()
-        self.dialog.setModal(False)
-        #self.dialog=MatplotlibExample(self.dialog)
-        self.dialog.show()
-        """
 
 class SimulTime(QObject):
     def __init__(self, _parent=None):

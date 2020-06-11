@@ -1,7 +1,7 @@
 import logging
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-from instance import *
-
+from instance import TELGERAM_TOKEN
+from data_component import Parameter
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
@@ -74,15 +74,21 @@ def _send(update, context):
             context.bot.send_document(chat_id=update.message.chat_id, document=f)
             break
 def scenario(update,context):
-    update.message.reply_text("Entered Scneario Editor")
+    param=Parameter().__dict__
+    print(list(param.keys()))
+    options = list(param.keys())
+    scen=ScenarioClass()
+    #update.message.reply_poll("Input parameters",options)
     #print("Entered Scneario Editor")
     pass
 def simulate(update,context):
     update.message.reply_text("Entered Simulation Mode")
+
     #print("Entered Simulation Mode")
     pass    
 
 def main():
+    print("Starting")
     """Start the bot."""
     # Create the Updater and pass it your bot's token.
     # Make sure to set use_context=True to use the new context based callbacks
@@ -117,6 +123,3 @@ def main():
     # start_polling() is non-blocking and will stop the bot gracefully.
     updater.idle()
 
-
-if __name__ == '__main__':
-    main()

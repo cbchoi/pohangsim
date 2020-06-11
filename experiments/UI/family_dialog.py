@@ -5,7 +5,7 @@ from PySide2.QtUiTools import QUiLoader
 from PySide2.QtCore import *
 from PySide2.QtGui import *
 
-import functools
+import functools, copy
 
 class FamilyTypeManager(QDialog):
     OKSIG=Signal(list)
@@ -35,14 +35,17 @@ class FamilyTypeManager(QDialog):
         self.addFamilyType_2.clicked.connect(self.add_family)
         self.deleteFamilyType_2.clicked.connect(self.delete_family)
         self.buttonBox.accepted.connect(self.sendlist)
+        self.buttonBox.rejected.connect(self.rollback)
         self.familytype_list=familytypelist
+        self.templist=copy.deepcopy(familytypelist)
         self.load_list()
 
     def load_list(self):
         for index in self.familytype_list:
             self.FamilyTypeList_2.addItem(index)
 
-
+    def rollback(self):
+        self.OKSIG.emit(self.templist)
     def sendlist(self):
         self.OKSIG.emit(self.familytype_list)
 
