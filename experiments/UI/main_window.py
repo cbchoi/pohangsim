@@ -164,7 +164,7 @@ class resultWidget(QObject):
         file_dialog.setNameFilters(["Text files (*.txt)", "Images (*.png *.jpg)"])
         file_dialog.selectNameFilter("Images (*.png *.jpg)")
         savefile=file_dialog.getSaveFileName()
-        a=self.fig.get_size_inches()
+        a = self.fig.get_size_inches()
         self.fig.savefig(savefile[0])
 
     def on_context_menu(self, point):
@@ -242,8 +242,11 @@ class resultWidget(QObject):
 
     @Slot(list)
     def _update_canvas(self, points):
-        self._dynamic_ax.clear()
-        self.fig.delaxes(self.ax2)
+        try:
+            self._dynamic_ax.clear()
+            self.fig.delaxes(self.ax2)
+        except:
+            pass
         self.length=len(points)
         if self.length == 1:
             self.plusFig.setVisible(False)
@@ -255,13 +258,12 @@ class resultWidget(QObject):
                 self._dynamic_ax.bar(unzipped[0], unzipped[1])
                 self._dynamic_ax.set_title('Total reports')
             else:#complain이 없을때
-                self._dynamic_ax.hist(['Student','Homemaker',"Blue_Collar"],[0,0,0])
-                self._dynamic_ax.set_title('Total reports')
+                self._dynamic_ax.set_title('No reports')
         elif self.length >1:
             self.plusFig.setVisible(True)
             self.minusFig.setVisible(True)
             if points[1]==[]:
-                self._dynamic_ax.hist(['Student', 'Homemaker', "Blue_Collar"], [0, 0, 0])
+
                 self._dynamic_ax.set_title('Total reports')
 
             else:
