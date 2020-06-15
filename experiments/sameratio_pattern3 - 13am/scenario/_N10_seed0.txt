@@ -1,3 +1,0 @@
-Student(1),Homemaker(2),Homemaker(3),Homemaker(4),Student(5)
-Homemaker(6),Student(7)
-Student(8),Student(9),Homemaker(10)

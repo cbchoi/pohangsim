@@ -208,9 +208,7 @@ class resultWidget(QObject):
             self.ax2.grid(False)
         elif self.figindex==1:
             if self.data[1] == []:
-                self._dynamic_ax.hist(['Student', 'Homemaker', "Blue_Collar"], [0, 0, 0])
-                self._dynamic_ax.set_title('Total reports')
-                self._dynamic_ax.tick_params(axis='x', which='major', zorder=25)
+                self._dynamic_ax.set_title('No reports')
             else:
                 nonver = self.data[1]
                 unzipped = list(zip(*nonver))
