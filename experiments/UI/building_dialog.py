@@ -271,7 +271,7 @@ class BuildingTypeManager(QDialog):
 		if B3_2 is not False:
 			B3_2text = "building id =" + str(id + 6) + "\n"
 			for family in B3_2:
-				B3text += "S:" + str(family.S) + "H:" + str(family.H) + "B:" + str(family.B) + "familycan size:" + str(
+				B3_2text += "S:" + str(family.S) + "H:" + str(family.H) + "B:" + str(family.B) + "familycan size:" + str(
 					family.cansize) + "\n"
 			self.B3_2.setText(B3_2text)
 			self.B3_2.setVisible(True)
