@@ -6,20 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>765</width>
-    <height>312</height>
+    <width>757</width>
+    <height>376</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Family Manager</string>
   </property>
   <widget class="QWidget" name="horizontalLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>17</y>
-     <width>711</width>
-     <height>271</height>
+     <x>30</x>
+     <y>20</y>
+     <width>691</width>
+     <height>321</height>
     </rect>
    </property>
    <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,0,4,1,0">
