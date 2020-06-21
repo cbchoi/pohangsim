@@ -34,7 +34,7 @@ class ScenarioListManager(QDialog):
         self.scenariolist[self.listWidget.currentRow()]=self.selected_scenario
 
     def getBuildingNumber(self):
-        text, ok = QInputDialog.getInt(self, 'Number of buildings', 'Enter the number of buildings')
+        text, ok = QInputDialog.getInt(self, 'Number of buildings\t', 'Enter the number of buildings\t\t\t')
         if ok:
             self.N = text
             self.newScenario()
@@ -42,7 +42,7 @@ class ScenarioListManager(QDialog):
         if self.N <=0:
             msg = QMessageBox()
             msg.setWindowTitle("Try Again!")
-            msg.setText("Wrong Value")
+            msg.setInformativeText("Wrong Value")
             msg.setDetailedText("Can generate scenario with positive integer number of buildings\nyour input value:{0}".format(self.N))
             msg.exec_()
         else:

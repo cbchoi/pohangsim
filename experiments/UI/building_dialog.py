@@ -176,6 +176,8 @@ class BuildingTypeManager(QDialog):
 		if self.b_in_page == 6:
 			if self.currentpage != 1:
 				self.currentpage -= 1
+			elif self.total_pagen==0:
+				self.currentpage=0
 		self.update_page()
 
 	def increase_page(self):
