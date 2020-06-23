@@ -594,6 +594,9 @@
        <height>22</height>
       </rect>
      </property>
+     <property name="maximum">
+      <number>999</number>
+     </property>
      <property name="value">
       <number>15</number>
      </property>
@@ -815,7 +818,7 @@
      <x>0</x>
      <y>0</y>
      <width>1109</width>
-     <height>26</height>
+     <height>22</height>
     </rect>
    </property>
   </widget>

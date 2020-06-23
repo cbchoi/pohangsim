@@ -191,12 +191,8 @@ class resultWidget(QObject):
         pass
 
     def show_plot(self):
-        self._dynamic_ax.cla()
-        try:
-            self.fig.delaxes(self.ax2)
-            pass
-        except:
-            pass
+        self.dynamic_canvas.figure.clear()
+        self._dynamic_ax = self.dynamic_canvas.figure.subplots()
         if self.figindex==0:
             #truckcsv, main
             truckcsv=self.data[0]
@@ -204,8 +200,9 @@ class resultWidget(QObject):
             self._dynamic_ax.bar(unzipped[0], unzipped[3])
             self._dynamic_ax.set_title('Truck Storage')
             self.ax2=self._dynamic_ax.twinx()
-            self.ax2.plot(unzipped[0], unzipped[4], 'g')
+            self.ax2.plot(unzipped[0], unzipped[4], 'g',marker=".",linestyle="-",drawstyle='steps-post')
             self.ax2.grid(False)
+            self.ax2.set_xscale('linear')
         elif self.figindex==1:
             if self.data[1] == []:
                 self._dynamic_ax.set_title('No reports')
@@ -214,6 +211,7 @@ class resultWidget(QObject):
                 unzipped = list(zip(*nonver))
                 self._dynamic_ax.bar(unzipped[0], unzipped[1])
                 self._dynamic_ax.set_title('Total reports')
+                self._dynamic_ax.set_xlim(unzipped[0][0],unzipped[0][-1])
         elif self.figindex>1:
 
             can = self.data[self.figindex]
@@ -222,20 +220,21 @@ class resultWidget(QObject):
                 if int(self.figindex % 2) == 1:
                     self._dynamic_ax.bar(unzipped[0], unzipped[2])
                     #satisfaction
-                    self._dynamic_ax.set_title('Garbagecan Trash#' +  str(int((self.figindex - 1)/2)))
+                    self._dynamic_ax.set_title('Satisfaction  Can #' +  str(int((self.figindex - 1)/2)))
                 else:
                     #trash
                     self._dynamic_ax.bar(unzipped[0], unzipped[2])
-                    self._dynamic_ax.set_title('Satisfaction  Can #' + str(int(self.figindex/2)))
+                    self._dynamic_ax.set_title('Garbagecan Trash#' + str(int(self.figindex/2)))
             else:
                 if int(self.figindex % 2) == 1:
-                    self._dynamic_ax.set_title('No reports for can' + str(int((self.figindex - 1)/2)))
+                    self._dynamic_ax.set_title('No reports for Checker' + str(int((self.figindex - 1)/2)))
                 else:
-                    self._dynamic_ax.set_title('No reports for Checker' + str(int(self.figindex/2)))
+                    self._dynamic_ax.set_title('No reports for Can' + str(int(self.figindex/2)))
 
         self._dynamic_ax.autoscale()
         self.dynamic_canvas.figure.canvas.draw()
         self.obj.repaint()
+
 
 
     @Slot(list)
@@ -246,13 +245,13 @@ class resultWidget(QObject):
         except:
             pass
         self.length=len(points)
+        self.data = points
         if self.length == 1:
             self.plusFig.setVisible(False)
             self.minusFig.setVisible(False)
             nonver=points[-1]
             if nonver!=[]:
                 unzipped = list(zip(*nonver))
-                self.x_data, self.y_data = unzipped[0], unzipped[1]
                 self._dynamic_ax.bar(unzipped[0], unzipped[1])
                 self._dynamic_ax.set_title('Total reports')
             else:#complain이 없을때
@@ -271,7 +270,6 @@ class resultWidget(QObject):
                 self._dynamic_ax.set_title('Total reports')
 
         self.figindex=1
-        self.data=points
         self.dynamic_canvas.setVisible(True)
         self.dynamic_canvas.figure.canvas.draw()
         self.obj.repaint()
