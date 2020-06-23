@@ -181,21 +181,31 @@ class BuildingTypeManager(QDialog):
 	def increase_page(self):
 		if self.currentpage < self.total_pagen:
 			self.currentpage += 1
+			self.reset_selected()
 			self.update_page()
 
 	def decrease_page(self):
 		if self.currentpage > 1:
 			self.currentpage -= 1
+			self.reset_selected()
 			self.update_page()
 
 	def first_page(self):
 		self.currentpage = 1
+		self.reset_selected()
 		self.update_page()
 
 	def last_page(self):
 		self.currentpage = self.total_pagen
+		self.reset_selected()
 		self.update_page()
-
+	def reset_selected(self):
+		self.B1.setChecked(False)
+		self.B2.setChecked(False)
+		self.B3.setChecked(False)
+		self.B1_2.setChecked(False)
+		self.B2_2.setChecked(False)
+		self.B3_2.setChecked(False)
 	def update_page(self):
 		self.total_buildingn = len(self.tempscenario)
 		self.total_pagen = math.ceil(len(self.tempscenario) / 6)
