@@ -143,6 +143,7 @@ class BuildingTypeManager(QDialog):
 		building = BuildingClass()
 		self.tempscenario.add(building)
 		if self.b_in_page == 6:
+			self.reset_selected()
 			self.currentpage += 1
 			self.update_page()
 			if self.currentpage < self.total_pagen:
