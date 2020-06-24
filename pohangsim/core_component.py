@@ -24,8 +24,8 @@ class Statistic(object):
         # calculate delta
         val = self.random.normalvariate(self.mean, self.stddev)
         return val
-    def init_seed(self):
-        self.random = random.Random(self.rseed)
+    def init_seed(self,seed):
+        self.random.seed(seed)
         
 class TimeStruct(object):
     def __init__(self, hour, minute, stat):

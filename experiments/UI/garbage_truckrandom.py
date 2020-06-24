@@ -51,7 +51,7 @@ class GarbageTruck(BehaviorModelExecutor):
         self.insert_input_port(in_p)
         self.insert_output_port(out_p)
 
-        return (in_p, out_p)
+        return in_p, out_p
 
     def get_garbage_can_port_map(self):
         return self.garbage_map

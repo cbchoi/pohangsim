@@ -72,12 +72,12 @@ class BuildingTypeManager(QDialog):
 
 		return False
 	def put_in_drop(self,obj):
-		id = int(re.findall("\d+",obj.text())[0])
+		objid = int(re.findall("\d+",obj.text())[0])
 		for item in self.FamilyTypeList.selectedItems():
 			item = re.findall("\d+", item.text())
 			item = list(map(int, item))
 			family=FamilyClass(item[0], item[1], item[2], item[3])
-			self.tempscenario[id-1].add(family)
+			self.tempscenario[objid-1].add(family)
 		self.update_page()
 
 	def put_in(self):
@@ -121,12 +121,12 @@ class BuildingTypeManager(QDialog):
 		self.signal.LISTSIG.emit(self.familytype_list,self.tempscenario)
 
 	@Slot()
-	def get_familytype_list(self, list):
-		while (self.FamilyTypeList.count() > 0):
+	def get_familytype_list(self, flist):
+		while self.FamilyTypeList.count() > 0:
 			self.FamilyTypeList.takeItem(0)
-		for family in list:
+		for family in flist:
 			self.FamilyTypeList.addItem(family)
-		self.familytype_list = list
+		self.familytype_list = flist
 
 	def edit_familytype(self):
 		ui_file = QFile("../../FamilyDialog.ui")
@@ -227,11 +227,11 @@ class BuildingTypeManager(QDialog):
 		# print(showlist[index_start:index_start+self.b_in_page])
 		self.update_text(index_start, *showlist[index_start:index_start + self.b_in_page])
 
-	def update_text(self, id, B1=False, B2=False, B3=False, B1_2=False, B2_2=False, B3_2=False):
+	def update_text(self, objid, B1=False, B2=False, B3=False, B1_2=False, B2_2=False, B3_2=False):
 		self.label.setText(str(self.currentpage) + "/" + str(self.total_pagen))
 		B1text, B2text, B3text, B1_2text, B2_2text, B3_2text = "", "", "", "", "", ""
 		if B1 is not False:
-			B1text = "building id =" + str(id + 1) + " \n"
+			B1text = "building id =" + str(objid + 1) + " \n"
 			for family in B1:
 				B1text += "S:" + str(family.S) + "H:" + str(family.H) + "B:" + str(family.B) + "familycan size:" + str(
 					family.cansize) + "\n"
@@ -239,57 +239,57 @@ class BuildingTypeManager(QDialog):
 			self.B1.setVisible(True)
 			self.B1.setAcceptDrops(True)
 		else:
-			self.B1.setText("building id =" + str(id + 1) + " \n")
+			self.B1.setText("building id =" + str(objid + 1) + " \n")
 			self.B1.setVisible(False)
 		if B2 is not False:
-			B2text = "building id =" + str(id + 2) + "\n"
+			B2text = "building id =" + str(objid + 2) + "\n"
 			for family in B2:
 				B2text += "S:" + str(family.S) + "H:" + str(family.H) + "B:" + str(family.B) + "familycan size:" + str(
 					family.cansize) + "\n"
 			self.B2.setText(B2text)
 			self.B2.setVisible(True)
 		else:
-			self.B2.setText("building id =" + str(id + 2) + "\n")
+			self.B2.setText("building id =" + str(objid + 2) + "\n")
 			self.B2.setVisible(False)
 		if B3 is not False:
-			B3text = "building id =" + str(id + 3) + "\n"
+			B3text = "building id =" + str(objid + 3) + "\n"
 			for family in B3:
 				B3text += "S:" + str(family.S) + "H:" + str(family.H) + "B:" + str(family.B) + "familycan size:" + str(
 					family.cansize) + "\n"
 			self.B3.setText(B3text)
 			self.B3.setVisible(True)
 		else:
-			self.B3.setText("building id =" + str(id + 3) + "\n")
+			self.B3.setText("building id =" + str(objid + 3) + "\n")
 			self.B3.setVisible(False)
 		if B1_2 is not False:
-			B1_2text = "building id =" + str(id + 4) + " \n"
+			B1_2text = "building id =" + str(objid + 4) + " \n"
 			for family in B1_2:
 				B1_2text += "S:" + str(family.S) + "H:" + str(family.H) + "B:" + str(
 					family.B) + "familycan size:" + str(family.cansize) + "\n"
 			self.B1_2.setText(B1_2text)
 			self.B1_2.setVisible(True)
 		else:
-			self.B1_2.setText("building id =" + str(id + 4) + " \n")
+			self.B1_2.setText("building id =" + str(objid + 4) + " \n")
 			self.B1_2.setVisible(False)
 		if B2_2 is not False:
-			B2_2text = "building id =" + str(id + 5) + "\n"
+			B2_2text = "building id =" + str(objid + 5) + "\n"
 			for family in B2_2:
 				B2_2text += "S:" + str(family.S) + "H:" + str(family.H) + "B:" + str(
 					family.B) + "familycan size:" + str(family.cansize) + "\n"
 			self.B2_2.setText(B2_2text)
 			self.B2_2.setVisible(True)
 		else:
-			self.B2_2.setText("building id =" + str(id + 5) + "\n")
+			self.B2_2.setText("building id =" + str(objid + 5) + "\n")
 			self.B2_2.setVisible(False)
 		if B3_2 is not False:
-			B3_2text = "building id =" + str(id + 6) + "\n"
+			B3_2text = "building id =" + str(objid + 6) + "\n"
 			for family in B3_2:
 				B3_2text += "S:" + str(family.S) + "H:" + str(family.H) + "B:" + str(family.B) + "familycan size:" + str(
 					family.cansize) + "\n"
 			self.B3_2.setText(B3_2text)
 			self.B3_2.setVisible(True)
 		else:
-			self.B3_2.setText("building id =" + str(id + 6) + "\n")
+			self.B3_2.setText("building id =" + str(objid + 6) + "\n")
 			self.B3_2.setVisible(False)
 
 	def __getattr__(self, attr):

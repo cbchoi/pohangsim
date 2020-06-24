@@ -204,7 +204,7 @@ class resultWidget(QObject):
             self.ax2.grid(False)
             self.ax2.set_xscale('linear')
         elif self.figindex==1:
-            if self.data[1] == []:
+            if not self.data[1]:
                 self._dynamic_ax.set_title('No reports')
             else:
                 nonver = self.data[1]
@@ -239,18 +239,15 @@ class resultWidget(QObject):
 
     @Slot(list)
     def _update_canvas(self, points):
-        try:
-            self._dynamic_ax.clear()
-            self.fig.delaxes(self.ax2)
-        except:
-            pass
+        self.dynamic_canvas.figure.clear()
+        self._dynamic_ax = self.dynamic_canvas.figure.subplots()
         self.length=len(points)
         self.data = points
         if self.length == 1:
             self.plusFig.setVisible(False)
             self.minusFig.setVisible(False)
             nonver=points[-1]
-            if nonver!=[]:
+            if nonver:
                 unzipped = list(zip(*nonver))
                 self._dynamic_ax.bar(unzipped[0], unzipped[1])
                 self._dynamic_ax.set_title('Total reports')
@@ -259,7 +256,7 @@ class resultWidget(QObject):
         elif self.length >1:
             self.plusFig.setVisible(True)
             self.minusFig.setVisible(True)
-            if points[1]==[]:
+            if not points[1]:
 
                 self._dynamic_ax.set_title('Total reports')
 

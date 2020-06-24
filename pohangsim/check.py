@@ -26,8 +26,7 @@ class Check(BehaviorModelExecutor):
 #        self.satisfaction = 100
 #        self.hid = hid
         #init seed
-        self.htype.out_time.stat.init_seed()
-        self.htype.trash.init_seed()
+
     def get_satis(self, trash):
         if trash > 0.5:
             return -10

@@ -14,10 +14,10 @@ from experiments.UI.config  import *
 class Homemaker(HumanType):
     def __init__(self,_id):
         HumanType.__init__(self ,_id)
-        self.out_time = TimeStructContstraintToDay(13,00, Statistic(RANDOM_SEED, AVG_TIME, TIME_STDDEV))
+        self.out_time = TimeStructContstraintToDay(13,00, Statistic(RANDOM_SEED+_id, AVG_TIME, TIME_STDDEV))
         #self.out_time = TimeStructContstraintToDayDeterministic(13,00)
         #self.out_time= TimeStructConstraintRandom(self.get_wakeup(), self.get_sleep(), Statistic(0, 10, 6))
-        self.trash = Statistic(RANDOM_SEED,AVG_TRASH,TRASH_STDDEV)
+        self.trash = Statistic(RANDOM_SEED+_id,AVG_TRASH,TRASH_STDDEV)
         pass
     
     def get_type(self):
@@ -67,8 +67,8 @@ class Homemaker(HumanType):
 class Student(HumanType):
     def __init__(self,_id):
         HumanType.__init__(self ,_id)
-        self.out_time = TimeStructContstraintToDay(7,58, Statistic(RANDOM_SEED, AVG_TIME, TIME_STDDEV))
-        self.trash = Statistic(RANDOM_SEED+1,AVG_TRASH,TRASH_STDDEV)
+        self.out_time = TimeStructContstraintToDay(7,58, Statistic(RANDOM_SEED+_id, AVG_TIME, TIME_STDDEV))
+        self.trash = Statistic(RANDOM_SEED+_id,AVG_TRASH,TRASH_STDDEV)
         pass
     
     def get_type(self):
@@ -168,9 +168,9 @@ class StudentWithVacation(HumanType):
 class Blue_collar(HumanType):
     def __init__(self,_id):
         HumanType.__init__(self ,_id)
-        self.out_time = TimeStructContstraintToDay(6,22, Statistic(RANDOM_SEED, AVG_TIME, TIME_STDDEV))
+        self.out_time = TimeStructContstraintToDay(6,22, Statistic(RANDOM_SEED+_id, AVG_TIME, TIME_STDDEV))
         #self.out_time = TimeStructContstraintToDayDeterministic(6,22)
-        self.trash = Statistic(RANDOM_SEED+2,AVG_TRASH,TRASH_STDDEV)
+        self.trash = Statistic(RANDOM_SEED+_id,AVG_TRASH,TRASH_STDDEV)
         pass
     
     def get_type(self):
@@ -311,7 +311,7 @@ class Inoccupation(HumanType):
 class AFF(HumanType):
     def __init__(self, _id):
         HumanType.__init__(self, _id)
-        self.out_time= TimeStructContstraintToDay(6, 30, Statistic(RANDOM_SEED, AVG_TIME, STDDEV)) #
+        self.out_time= TimeStructContstraintToDay(6, 30, Statistic(RANDOM_SEED+_id, AVG_TIME, STDDEV)) #
         pass
         
     def get_type(self):

@@ -1,7 +1,6 @@
 import os
 import sys
 from datetime import datetime
-
 from PySide2.QtCore import *
 from PySide2.QtWidgets import *
 from data_component import Parameter
@@ -138,7 +137,6 @@ class controlBox(QObject):
         se.get_engine("sname").register_entity(gv)
         i = 0
         j = 0
-        id = 0
         for building in self.scenario:
             g = GarbageCan(0, self.parameter.simulation_time, "gc[{0}]".format(i), 'sname',
                            self.parameter.GARBAGECAN_SIZE, self.outputlocation)
@@ -147,10 +145,11 @@ class controlBox(QObject):
                 ftype = FamilyType(self.parameter.TEMP_CAN_SIZE)
                 f = Family(0, self.parameter.simulation_time, "family", 'sname', ftype)
                 for htype in flist:
-                    id += 1
                     name = htype.get_name()
                     # name= name.split('<')[0]+"("+ str(id)+")"
                     cname = "check[{0}]".format(name)
+                    htype.trash.init_seed(htype.get_id()+self.parameter.RANDOM_SEED)
+                    htype.out_time.stat.init_seed(htype.get_id()+self.parameter.RANDOM_SEED)
                     h1 = Human(0, self.parameter.simulation_time, cname, "sname", htype)
                     ch = Check(0, self.parameter.simulation_time, name, "sname", htype)
                     se.get_engine("sname").register_entity(h1)
