@@ -2,7 +2,7 @@ from evsim.system_simulator import SystemSimulator
 from evsim.behavior_model_executor import BehaviorModelExecutor
 from evsim.system_message import SysMessage
 from evsim.definition import *
-
+from experiments.UI.config import *
 from pohangsim.core_component import Statistic
 
 class Check(BehaviorModelExecutor):
@@ -20,12 +20,14 @@ class Check(BehaviorModelExecutor):
         self.insert_output_port("check") # to garbage can
         self.insert_output_port("gov_report")
 
-        self.stat=Statistic(0,20,4)
+        self.stat=Statistic(RANDOM_SEED,20,4)  #Satisfaction mean and stddev
         self.htype = htype
 #        self.satis_func = satis_func
 #        self.satisfaction = 100
 #        self.hid = hid
-
+        #init seed
+        self.htype.out_time.stat.init_seed()
+        self.htype.trash.init_seed()
     def get_satis(self, trash):
         if trash > 0.5:
             return -10

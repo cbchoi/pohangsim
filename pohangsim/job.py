@@ -119,7 +119,7 @@ class StudentWithVacation(HumanType):
         return TimeStruct(24,51, Statistic(RANDOM_SEED, 0, 1))
   
     def get_out(self):
-        if self.approach == False:
+        if not self.approach:
             self.approach=True
             self.vacation=False
             return TimeStruct(1464,0,Statistic(RANDOM_SEED, 0, 1)) # 방학대기 

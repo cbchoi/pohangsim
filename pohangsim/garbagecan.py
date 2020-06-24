@@ -118,7 +118,7 @@ class GarbageCan(BehaviorModelExecutor):
         self.insert_input_port(in_p)
         self.insert_output_port(out_p)
         
-        return (in_p, out_p)
+        return in_p, out_p
 
     def get_human_port_map(self):
         return self.human_map
@@ -135,7 +135,7 @@ class GarbageCan(BehaviorModelExecutor):
         self.insert_input_port(in_p)
         self.insert_output_port(out_p)
         
-        return (in_p, out_p)
+        return in_p, out_p
 
     def get_family_port_map(self):
         return self.family_map        

@@ -24,6 +24,8 @@ class Statistic(object):
         # calculate delta
         val = self.random.normalvariate(self.mean, self.stddev)
         return val
+    def init_seed(self):
+        self.random = random.Random(self.rseed)
         
 class TimeStruct(object):
     def __init__(self, hour, minute, stat):
@@ -84,7 +86,7 @@ class TimeStructConstraintRandom(TimeStruct):
         # next : prev_hour + random delta < end_hour;  prev_hour = prev_hour + random_delta
         #      : prev_hour + random delta > end_hour then (24 - end_hour) + start_hour + random delta; prev_hour = start_hour + random delta
 
-        if self.initial == False:
+        if not self.initial:
             self.prev_time = self.start_hour.get_unit_time() + self.stat.get_delta()
             self.initial=True
             return self.prev_time

@@ -19,6 +19,9 @@ class Human(BehaviorModelExecutor):
         self.insert_input_port("end")
         
         self.insert_output_port("trash")  #쓰레기 배출포트?
+        #init seed
+        self.human.out_time.stat.init_seed()
+        self.human.trash.init_seed()
 
     def ext_trans(self,port, msg):
         if port == "start":
