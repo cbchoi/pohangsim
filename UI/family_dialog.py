@@ -1,4 +1,4 @@
-from scenario_editor import *
+from UI.scenario_editor import *
 #ui
 from PySide2.QtWidgets import *
 from PySide2.QtUiTools import QUiLoader

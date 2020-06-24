@@ -3,8 +3,8 @@ from evsim.behavior_model_executor import BehaviorModelExecutor
 from evsim.system_message import SysMessage
 from evsim.definition import *
 
-import contexts
-from experiments.UI.config import *
+import pohangsim.contexts
+from UI.config import *
 
 
 class GarbageTruck(BehaviorModelExecutor):

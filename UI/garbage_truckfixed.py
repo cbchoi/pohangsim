@@ -3,11 +3,9 @@ from evsim.behavior_model_executor import BehaviorModelExecutor
 from evsim.system_message import SysMessage
 from evsim.definition import *
 
-from config import *
+from UI.config import *
 import os, sys
-
-
-# from instance.config import *
+#from instance.config import *
 
 class GarbageTruck(BehaviorModelExecutor):
     def __init__(self, instance_time, destruct_time, name, engine_name, storage, schedule, outp):
@@ -21,73 +19,74 @@ class GarbageTruck(BehaviorModelExecutor):
 
         self.insert_input_port("start")
         self.insert_input_port("end")
-
+        
         self.garbage_id_map = {}
         self.garbage_port_map = {}
         self.truck_storage = storage
-        self.extended_storage = storage  # 2 * storage
-        self.original_storage = storage
+        self.extended_storage = storage#2 * storage
+        self.original_storage=storage
         self.truck_current_storage = 0
-
+        
+        
         # for analysis
         self.accummulated_garbage = 0
-
+        
         self.schedule = schedule
         # schedule = [(current_can_id, next_can_delay)]
         self.cur_index = 0
-        # for file save
-        self.outname = outp
-        # print(schedule)
+        #for file save
+        self.outname=outp
+        #print(schedule)
 
     def register_garbage_can(self, garbage_can_id):
         in_p = "trash_from_can[{0}]".format(garbage_can_id)
         out_p = "empty_can[{0}]".format(garbage_can_id)
-        # print ('[truck_id]',garbage_can_id)
-
+        #print ('[truck_id]',garbage_can_id)
+        
         self.garbage_id_map[garbage_can_id] = out_p
         self.garbage_port_map[in_p] = 0
-
+        
         self.insert_input_port(in_p)
         self.insert_output_port(out_p)
-
+        
         return in_p, out_p
-
+        
     def get_garbage_can_port_map(self):
         return self.garbage_map
-
+        
     def ext_trans(self, port, msg):
-        # print(port)
+        #print(port)    
         if port == "start":
             self._cur_state = "INITAL_APPROACH"
         elif port == "end":
             self._cur_state = "IDLE"
         elif port in self.garbage_port_map:
-            self.garbage_port_map[port] += msg.retrieve()[0]  # 각 건물별 쓰레기 수거량 분석
+            self.garbage_port_map[port] += msg.retrieve()[0] # 각 건물별 쓰레기 수거량 분석
             self.truck_current_storage += msg.retrieve()[0]
-            # print("self.truck_current_storage", self.truck_current_storage)
+            #print("self.truck_current_storage", self.truck_current_storage)
             self.accummulated_garbage += msg.retrieve()[0]
 
             ev_t = SystemSimulator().get_engine("sname").get_global_time()
 
             if self.outname is not None:
-                with open("{0}/truck.csv".format(self.outname), 'a') as file:
+                with open("{0}/truck.csv".format(self.outname),'a') as file:
                     file.write(str(ev_t))
                     file.write(",")
                     file.write(str(self.cur_index))
                     file.write(",")
-                    file.write(str(self.schedule[self.cur_index - 1][0]))
+                    file.write(str(self.schedule[self.cur_index-1][0]))
                     file.write(",")
                     file.write(str(self.truck_current_storage))
                     file.write(",")
                     file.write(str(self.accummulated_garbage))
                     file.write("\n")
-            # print(self.cur_index)
-            # print("[truck_storage]"+  str(port) + ":" +str(self.garbage_port_map[port]),self.truck_current_storage)
-
+            #print(self.cur_index)
+            #print("[truck_storage]"+  str(port) + ":" +str(self.garbage_port_map[port]),self.truck_current_storage)
+            
     def output(self):
         if self._cur_state == "REQUEST":
             msg = SysMessage(self.get_name(), self.garbage_id_map[self.schedule[self.cur_index][0]])
-            msg.insert(self.truck_storage - self.truck_current_storage)
+            msg.insert(self.truck_storage-self.truck_current_storage)
             return msg
         return None
 
@@ -106,7 +105,4 @@ class GarbageTruck(BehaviorModelExecutor):
         elif self._cur_state == "APPROACH":
             self.cur_index = 0       
             self.truck_current_storage = 0
-            self.schedule=self.schedule[::-1] # 역전패턴
             self._cur_state = "REQUEST"
-            
-

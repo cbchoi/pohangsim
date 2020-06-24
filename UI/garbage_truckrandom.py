@@ -3,7 +3,7 @@ from evsim.behavior_model_executor import BehaviorModelExecutor
 from evsim.system_message import SysMessage
 from evsim.definition import *
 
-from config import *
+from UI.config import *
 import os, sys, random
 
 

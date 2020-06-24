@@ -1,5 +1,5 @@
 import os
-from config import *
+from UI.config import *
 
 import time
 from functools import wraps

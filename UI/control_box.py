@@ -3,11 +3,11 @@ import sys
 from datetime import datetime
 from PySide2.QtCore import *
 from PySide2.QtWidgets import *
-from data_component import Parameter
+from UI.data_component import Parameter
 
-from garbage_truckfixed import GarbageTruck as GarbageTruckf
-from garbage_truckpalindrome import GarbageTruck as GarbageTruckp
-from garbage_truckrandom import GarbageTruck as GarbageTruckr
+from UI.garbage_truckfixed import GarbageTruck as GarbageTruckf
+from UI.garbage_truckpalindrome import GarbageTruck as GarbageTruckp
+from UI.garbage_truckrandom import GarbageTruck as GarbageTruckr
 #
 from pohangsim.check import Check
 from pohangsim.clock import Clock
@@ -103,7 +103,7 @@ class controlBox(QObject):
             os.makedirs("output")
 
         if self.parameter.VERBOSE is True:
-            self.outputlocation = self.scenario.memo + "_" + str(self.parameter.TIME_STDDEV) + "trash" + str(
+            self.outputlocation ="verbose/"+ self.scenario.memo + "_" + str(self.parameter.TIME_STDDEV) + "trash" + str(
                 self.parameter.TRASH_STDDEV) + "_" + str(self.parameter.GARBAGECAN_SIZE) +self.now
             if not os.path.exists(self.outputlocation):
                 os.makedirs(self.outputlocation)

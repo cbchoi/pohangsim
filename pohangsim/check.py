@@ -21,7 +21,7 @@ class Check(BehaviorModelExecutor):
         self.insert_output_port("gov_report")
         self.htype = htype
         #print(self.htype.get_id()+RANDOM_SEED,file=sys.__stdout__)
-        from experiments.UI.config import RANDOM_SEED
+        from UI.config import RANDOM_SEED
         self.stat = Statistic(RANDOM_SEED + self.htype.get_id(), 20, 4)  # Satisfaction mean and stddev
 #        self.satis_func = satis_func
 #        self.satisfaction = 100
