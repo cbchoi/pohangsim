@@ -109,8 +109,7 @@ class controlBox(QObject):
                 os.makedirs(self.outputlocation)
         else:
             self.outputlocation = None
-        sys.stdout=open("output/"+self.scenario.memo + "_" + str(self.parameter.TIME_STDDEV) + "trash" + str(
-                self.parameter.TRASH_STDDEV) + "_" + str(self.parameter.GARBAGECAN_SIZE)+self.now+".log",'a')
+        sys.stdout=open("output/"+self.scenario.memo + "_" + str(self.parameter.TIME_STDDEV) + "trash" + str(self.parameter.TRASH_STDDEV) + "_" + str(self.parameter.GARBAGECAN_SIZE)+self.now+".log",'a')
         se = SystemSimulator()
         se.register_engine("sname", self.parameter.SIMULATION_MODE, self.parameter.TIME_DENSITY)
         se.get_engine("sname").register_entity(self.loopback)
@@ -148,8 +147,9 @@ class controlBox(QObject):
                     name = htype.get_name()
                     # name= name.split('<')[0]+"("+ str(id)+")"
                     cname = "check[{0}]".format(name)
-                    htype.trash.init_seed(htype.get_id()+self.parameter.RANDOM_SEED)
-                    htype.out_time.stat.init_seed(htype.get_id()+self.parameter.RANDOM_SEED)
+                    #Initialize htype
+                    htype.set_satisfaction(100)
+                    htype.init_seed(htype.get_id()+self.parameter.RANDOM_SEED)
                     h1 = Human(0, self.parameter.simulation_time, cname, "sname", htype)
                     ch = Check(0, self.parameter.simulation_time, name, "sname", htype)
                     se.get_engine("sname").register_entity(h1)
@@ -191,8 +191,10 @@ class controlBox(QObject):
         SystemSimulator().get_engine("sname").simulate(self.timer)
         sim_t = SystemSimulator().get_engine("sname").get_global_time()
         self.progressBar.setValue(sim_t)
+        #print(sim_t,file=sys.__stdout__)
         if sim_t / self.parameter.simulation_time >= 1:
             self.worker.stop()
+            SystemSimulator().get_engine("sname").destroy_entity()
             SystemSimulator().get_engine("sname").simulation_stop()
             sys.stdout.close()
             sys.stdout= sys.__stdout__

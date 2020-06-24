@@ -2,9 +2,9 @@ from evsim.system_simulator import SystemSimulator
 from evsim.behavior_model_executor import BehaviorModelExecutor
 from evsim.system_message import SysMessage
 from evsim.definition import *
-from experiments.UI.config import *
 from pohangsim.core_component import Statistic
 
+import sys
 class Check(BehaviorModelExecutor):
     def __init__(self, instance_time, destruct_time, name, engine_name, htype):
         BehaviorModelExecutor.__init__(self, instance_time, destruct_time, name, engine_name)
@@ -19,13 +19,13 @@ class Check(BehaviorModelExecutor):
         
         self.insert_output_port("check") # to garbage can
         self.insert_output_port("gov_report")
-
-        self.stat=Statistic(RANDOM_SEED,20,4)  #Satisfaction mean and stddev
         self.htype = htype
+        #print(self.htype.get_id()+RANDOM_SEED,file=sys.__stdout__)
+        from experiments.UI.config import RANDOM_SEED
+        self.stat = Statistic(RANDOM_SEED + self.htype.get_id(), 20, 4)  # Satisfaction mean and stddev
 #        self.satis_func = satis_func
 #        self.satisfaction = 100
 #        self.hid = hid
-        #init seed
 
     def get_satis(self, trash):
         if trash > 0.5:
@@ -57,7 +57,7 @@ class Check(BehaviorModelExecutor):
                     self.htype.satisfaction += self.stat.get_delta()
                     self._cur_state = "REPORT"
                 #print(self.htype.)
-                #print(SystemSimulator().get_engine("sname").get_global_time(),"[check] "+self.get_name() + ":" + str(self.htype.satisfaction))
+                #print(SystemSimulator().get_engine("sname").get_global_time(),"[check] "+self.get_name() + ":" + str(self.htype.satisfaction),file=sys.__stdout__)
 
     def output(self):
         if self._cur_state=="CHECK":

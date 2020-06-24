@@ -1,4 +1,4 @@
-import random
+import random, sys
 
 from pohangsim.core_component import Statistic
 from pohangsim.core_component import HumanType
@@ -14,6 +14,7 @@ from experiments.UI.config  import *
 class Homemaker(HumanType):
     def __init__(self,_id):
         HumanType.__init__(self ,_id)
+        self._id =_id
         self.out_time = TimeStructContstraintToDay(13,00, Statistic(RANDOM_SEED+_id, AVG_TIME, TIME_STDDEV))
         #self.out_time = TimeStructContstraintToDayDeterministic(13,00)
         #self.out_time= TimeStructConstraintRandom(self.get_wakeup(), self.get_sleep(), Statistic(0, 10, 6))
@@ -63,10 +64,15 @@ class Homemaker(HumanType):
         """
     def is_vacation(self):
         return False
-
+    def init_seed(self,h_id):
+        self.out_time = TimeStructContstraintToDay(13, 00, Statistic(h_id, AVG_TIME, TIME_STDDEV))
+        # self.out_time = TimeStructContstraintToDayDeterministic(13,00)
+        # self.out_time= TimeStructConstraintRandom(self.get_wakeup(), self.get_sleep(), Statistic(0, 10, 6))
+        self.trash = Statistic(h_id, AVG_TRASH, TRASH_STDDEV)
 class Student(HumanType):
     def __init__(self,_id):
         HumanType.__init__(self ,_id)
+        self._id = _id
         self.out_time = TimeStructContstraintToDay(7,58, Statistic(RANDOM_SEED+_id, AVG_TIME, TIME_STDDEV))
         self.trash = Statistic(RANDOM_SEED+_id,AVG_TRASH,TRASH_STDDEV)
         pass
@@ -99,10 +105,13 @@ class Student(HumanType):
 
     def is_vacation(self):
         return False
-
+    def init_seed(self,h_id):
+        self.out_time = TimeStructContstraintToDay(7, 58, Statistic(h_id, AVG_TIME, TIME_STDDEV))
+        self.trash = Statistic(h_id, AVG_TRASH, TRASH_STDDEV)
 class StudentWithVacation(HumanType):
     def __init__(self,_id):
         HumanType.__init__(self ,_id)
+        self._id = _id
         self.approach = False
         self.count=0
         self.vacation=True
@@ -164,10 +173,13 @@ class StudentWithVacation(HumanType):
             return True
         else:
             return False
-
+    def init_seed(self):
+        self.trash.init_seed(self._id + RANDOM_SEED)
+        self.out_time.stat.init_seed(self._id + RANDOM_SEED)
 class Blue_collar(HumanType):
     def __init__(self,_id):
         HumanType.__init__(self ,_id)
+        self._id = _id
         self.out_time = TimeStructContstraintToDay(6,22, Statistic(RANDOM_SEED+_id, AVG_TIME, TIME_STDDEV))
         #self.out_time = TimeStructContstraintToDayDeterministic(6,22)
         self.trash = Statistic(RANDOM_SEED+_id,AVG_TRASH,TRASH_STDDEV)
@@ -206,10 +218,13 @@ class Blue_collar(HumanType):
         
     def is_vacation(self):
         return False
-
+    def init_seed(self,h_id):
+        self.out_time = TimeStructContstraintToDay(6, 22, Statistic(h_id, AVG_TIME, TIME_STDDEV))
+        self.trash = Statistic( h_id, AVG_TRASH, TRASH_STDDEV)
 class Self_employment(HumanType):
     def __init__(self,_id):
         HumanType.__init__(self ,_id)
+        self._id = _id
         pass
     
     def get_type(self):
@@ -240,9 +255,13 @@ class Self_employment(HumanType):
 
     def is_vacation(self):
         return False
+    def init_seed(self):
+        self.trash.init_seed(self._id + RANDOM_SEED)
+        self.out_time.stat.init_seed(self._id + RANDOM_SEED)
 class White_collar(HumanType):
     def __init__(self,_id):
         HumanType.__init__(self ,_id)
+        self._id = _id
         pass
     
     def get_type(self):
@@ -273,10 +292,14 @@ class White_collar(HumanType):
 
     def is_vacation(self):
         return False
+    def init_seed(self):
+        self.trash.init_seed(self._id + RANDOM_SEED)
+        self.out_time.stat.init_seed(self._id + RANDOM_SEED)
     
 class Inoccupation(HumanType):
     def __init__(self,_id):
         HumanType.__init__(self ,_id)
+        self._id = _id
         pass
     
     def get_type(self):
@@ -307,10 +330,14 @@ class Inoccupation(HumanType):
 
     def is_vacation(self):
         return False
+    def init_seed(self):
+        self.trash.init_seed(self._id + RANDOM_SEED)
+        self.out_time.stat.init_seed(self._id + RANDOM_SEED)
 
 class AFF(HumanType):
     def __init__(self, _id):
         HumanType.__init__(self, _id)
+        self._id = _id
         self.out_time= TimeStructContstraintToDay(6, 30, Statistic(RANDOM_SEED+_id, AVG_TIME, STDDEV)) #
         pass
         
@@ -341,3 +368,6 @@ class AFF(HumanType):
             return 50
     def is_vacation(self):
         return False
+    def init_seed(self):
+        self.trash.init_seed(self._id + RANDOM_SEED)
+        self.out_time.stat.init_seed(self._id + RANDOM_SEED)

@@ -1,17 +1,17 @@
+from evsim.system_simulator import SystemSimulator
 from evsim.behavior_model_executor import BehaviorModelExecutor
 from evsim.definition import *
 from evsim.system_message import SysMessage
+
+import sys
 
 class Human(BehaviorModelExecutor):
     def __init__(self, instance_time, destruct_time, name, engine_name, human):
         BehaviorModelExecutor.__init__(self, instance_time, destruct_time, name, engine_name)
         self.human= human
         self.init_state("IDLE")
-        
         self.insert_state("IDLE", Infinite)
-##
         unit_t = self.human.get_out().get_unit_time()
-        #print(self.human.get_type(), " out time:", unit_t)
         self.insert_state("WAIT", unit_t)
         #self.insert_state("WAIT", 1)
   
@@ -29,7 +29,7 @@ class Human(BehaviorModelExecutor):
                         
     def output(self):
         if self._cur_state == "WAIT":
-            #print("[human] " + self.get_name())
+            #print("[human] " + self.get_name(), self.human.get_trash(),SystemSimulator().get_engine("sname").get_global_time(),file=sys.__stdout__)
             msg = SysMessage(self.get_name(), "trash")
             msg.insert(self.human)
 

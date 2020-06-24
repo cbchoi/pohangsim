@@ -89,23 +89,23 @@ class BuildingTypeManager(QDialog):
 			item = re.findall("\d+",item.text())
 			item= list(map(int, item))
 			if self.B1.isChecked():
-				family = FamilyClass(item[0], item[1], item[2], item[3])
-				dv[0].add(family)
+				family1 = FamilyClass(item[0], item[1], item[2], item[3])
+				dv[0].add(family1)
 			if self.B2.isChecked():
-				family = FamilyClass(item[0], item[1], item[2], item[3])
-				dv[1].add(family)
+				family2 = FamilyClass(item[0], item[1], item[2], item[3])
+				dv[1].add(family2)
 			if self.B3.isChecked():
-				family = FamilyClass(item[0], item[1], item[2], item[3])
-				dv[2].add(family)
+				family3 = FamilyClass(item[0], item[1], item[2], item[3])
+				dv[2].add(family3)
 			if self.B1_2.isChecked():
-				family = FamilyClass(item[0], item[1], item[2], item[3])
-				dv[3].add(family)
+				family4 = FamilyClass(item[0], item[1], item[2], item[3])
+				dv[3].add(family4)
 			if self.B2_2.isChecked():
-				family = FamilyClass(item[0], item[1], item[2], item[3])
-				dv[4].add(family)
+				family5 = FamilyClass(item[0], item[1], item[2], item[3])
+				dv[4].add(family5)
 			if self.B3_2.isChecked():
-				family = FamilyClass(item[0], item[1], item[2], item[3])
-				dv[5].add(family)
+				family6 = FamilyClass(item[0], item[1], item[2], item[3])
+				dv[5].add(family6)
 		self.update_page()
 
 
