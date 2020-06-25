@@ -73,7 +73,6 @@ class controlBox(QObject):
         self.parameter.AVG_TIME = self.AverageTime.value()
         self.parameter.AVG_TRASH = self.AverageTrash.value()
         self.parameter.GARBAGECAN_SIZE = self.GarbageCanSize.value()
-        self.parameter.TEMP_CAN_SIZE = self.FamilyCanSize.value()
         self.parameter.GARBAGETRUCK_SIZE = self.GarbageTruckSize.value()
         self.parameter.TIME_STDDEV = self.TimeStandardDeviation.value()
         self.parameter.TRASH_STDDEV = self.TrashStandardDeviation.value()

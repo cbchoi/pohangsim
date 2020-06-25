@@ -4,7 +4,6 @@ class Parameter:
         self.AVG_TIME = 0
         self.AVG_TRASH = 0
         self.GARBAGECAN_SIZE = 0
-        self.TEMP_CAN_SIZE = 0
         self.GARBAGETRUCK_SIZE = 0
         self.TIME_STDDEV = 0
         self.TRASH_STDDEV = 0
@@ -22,7 +21,6 @@ class Parameter:
             "\nAVG_TIME=" + str(self.AVG_TIME) + \
             "\nAVG_TRASH=" + str(self.AVG_TRASH) + \
             "\nGARBAGECAN_SIZE=" + str(self.GARBAGECAN_SIZE) + \
-            "\nTEMP_CAN_SIZE=" + str(self.TEMP_CAN_SIZE) + \
             "\nGARBAGETRUCK_SIZE=" + str(self.GARBAGETRUCK_SIZE) + \
             "\nTIME_STDDEV=" + str(self.TIME_STDDEV) + \
             "\nTRASH_STDDEV=" + str(self.TRASH_STDDEV) + \
