@@ -141,7 +141,7 @@ class controlBox(QObject):
                            self.parameter.GARBAGECAN_SIZE, self.outputlocation)
             se.get_engine("sname").register_entity(g)
             for flist in building:
-                ftype = FamilyType(self.parameter.TEMP_CAN_SIZE)
+                ftype = FamilyType(flist.cansize)
                 f = Family(0, self.parameter.simulation_time, "family", 'sname', ftype)
                 for htype in flist:
                     name = htype.get_name()
