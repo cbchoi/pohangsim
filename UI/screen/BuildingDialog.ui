@@ -505,10 +505,10 @@
   <widget class="QPushButton" name="AddtoBuilding">
    <property name="geometry">
     <rect>
-     <x>1020</x>
+     <x>1002</x>
      <y>620</y>
-     <width>93</width>
-     <height>28</height>
+     <width>141</width>
+     <height>31</height>
     </rect>
    </property>
    <property name="text">
